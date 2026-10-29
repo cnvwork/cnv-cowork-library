@@ -17,6 +17,7 @@ scenarios/<id>/
   cowork/SKILL.md    kỹ năng cho trợ lý Cowork: cấu trúc dự án, cách code tiếp, việc KHÔNG được làm
   …                  mã nguồn
 skills/<nhóm>/<tên>.md  kỹ năng CÓ SẴN của trợ lý (nhóm: chung hoặc mã ngành) — nơi DUY NHẤT sửa kỹ năng có sẵn
+changelog.json       sửa câu chữ nhật ký «Có gì mới» của app không cần ra bản mới (rỗng = không đè gì)
 library.config.json  khoá công khai (app ghim cùng khoá này), github.owner / repo, danh sách nhóm, chuỗi được phép khi quét
 tools/               check.mjs, build.mjs, verify.mjs, keygen.mjs (Node ≥ 22.2, không cần cài gì)
 dist/                (không commit) gói .zip + skills-<sha>.json + catalog.json đã ký + RELEASE.md: thứ gắn vào GitHub Release
@@ -58,6 +59,20 @@ danh mục, app đang chạy tự tải khi sha256 đổi, không cần bản ap
 - Công cụ trợ lý nhắc trong hướng dẫn (`search_contacts`…) phải có thật trong app: app kiểm bản chụp của nó bằng test.
 - Bộ cài Cowork mang một bản chụp để máy chưa tải được gì vẫn có kỹ năng: ở repo `cnv-cowork` chạy `npm run skills:sync`
   khi muốn bản cài mới mang luôn bộ mới.
+
+## Nhật ký «Có gì mới» của app
+
+Nhật ký chính nằm trong app (`src/shared/changelog.json` của repo `cnv-cowork`, đóng gói theo bản). `changelog.json` ở đây
+chỉ để **sửa câu chữ sau khi bản đã phát** (hoặc bổ sung bản bị sót) mà không cần ra bản app mới: mục ở đây đè mục CÙNG số
+bản trong app; app chỉ hiện các bản không mới hơn bản đang chạy. Khuôn giống hệt app:
+
+```json
+[{ "build": 38, "date": "2026-10-29", "items": [{ "type": "new", "text": "Một câu bằng lời người dùng." }] }]
+```
+
+Mới nhất trước, `type` là `new` («Mới») hoặc `fix` («Sửa»), câu ≤ 180 ký tự, không thuật ngữ / không nhắc commit.
+`npm run check` kiểm khuôn; sai khuôn thì app bỏ cả nhật ký trên mạng và dùng bản đóng gói. `build` đưa nhật ký vào thẳng
+`catalog.json` (`content.changelog`, không thêm tệp), phát hành như dưới; mọi máy thấy ở lần làm mới danh mục kế tiếp.
 
 ## Phát hành (GitHub Releases)
 

@@ -8,7 +8,7 @@
 // Không bao giờ commit khoá bí mật.
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadConfig, loadScenario, loadSkills, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
+import { buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadChangelog, loadConfig, loadScenario, loadSkills, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
 
 function arg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -66,14 +66,20 @@ if (skills.entries.length) {
   console.log(`✔ ${name}: ${skills.entries.length} kỹ năng, ${(pack.length / 1024).toFixed(0)} KB`);
 }
 
+const changelog = loadChangelog();
+problems.push(...changelog.problems);
+if (changelog.entries.length) console.log(`✔ changelog: ${changelog.entries.length} bản đè nhật ký «Có gì mới» của app`);
+
 if (problems.length) {
   console.error('Chưa đóng gói được:');
   for (const line of problems) console.error(`   ${line}`);
   process.exit(1);
 }
 
-// `content`: nội dung app tự cập nhật không cần bản app mới (bộ kỹ năng có sẵn). App cũ không biết trường này thì bỏ qua.
-const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios, content: { skills: skillPack } };
+// `content`: nội dung app tự cập nhật không cần bản app mới (bộ kỹ năng có sẵn; nhật ký «Có gì mới» nằm luôn trong danh mục
+// vì nhỏ). App cũ không biết trường nào thì bỏ qua.
+const content = { skills: skillPack, ...(changelog.entries.length ? { changelog: changelog.entries } : {}) };
+const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios, content };
 const envelope = signCatalog(payload, await signingKey(arg('key-file')));
 openCatalog(envelope, config.public_key); // khoá bí mật phải khớp khoá công khai app ghim
 fs.writeFileSync(path.join(DIST, 'catalog.json'), `${JSON.stringify(envelope, null, 2)}\n`);

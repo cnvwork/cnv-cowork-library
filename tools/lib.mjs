@@ -398,3 +398,43 @@ export function openCatalog(envelope, publicKeyPem) {
   if (!ok) throw new Error('Chữ ký danh mục không khớp khoá công khai.');
   return JSON.parse(Buffer.from(envelope.payload, 'base64url').toString('utf8'));
 }
+
+// ── Nhật ký «Có gì mới» của app ──────────────────────────────────────────────────────────────
+
+/**
+ * `changelog.json` ở gốc repo: sửa câu chữ nhật ký «Có gì mới» của Cowork không cần ra bản app (app đè mục CÙNG số bản của
+ * bản đóng gói `src/shared/changelog.json`; thêm được bản bị sót). Rỗng = không đè gì. Khuôn và luật trùng
+ * `changelogProblems` của app (`src/shared/changelog.ts`): sai khuôn thì app bỏ cả nhật ký trên mạng, dùng bản đóng gói.
+ */
+export const CHANGELOG_FILE = path.join(ROOT, 'changelog.json');
+export const CHANGELOG_TEXT_MAX = 180;
+
+export function loadChangelog() {
+  if (!fs.existsSync(CHANGELOG_FILE)) return { entries: [], problems: [] };
+  let entries;
+  try {
+    entries = JSON.parse(fs.readFileSync(CHANGELOG_FILE, 'utf8'));
+  } catch (err) {
+    return { entries: [], problems: [`changelog.json: không đọc được JSON (${err.message}).`] };
+  }
+  if (!Array.isArray(entries)) return { entries: [], problems: ['changelog.json: phải là một danh sách.'] };
+  const problems = [];
+  let previous = Number.POSITIVE_INFINITY;
+  for (const entry of entries) {
+    const where = `changelog.json bản ${entry?.build}`;
+    if (!Number.isInteger(entry?.build) || entry.build <= 0) problems.push(`${where}: số bản không hợp lệ.`);
+    if (entry?.build >= previous) problems.push(`${where}: phải xếp mới nhất trước, không trùng số bản.`);
+    previous = entry?.build;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(entry?.date ?? '') || Number.isNaN(Date.parse(entry.date))) problems.push(`${where}: ngày phải dạng YYYY-MM-DD.`);
+    if (!Array.isArray(entry?.items) || !entry.items.length) problems.push(`${where}: chưa có dòng nào.`);
+    for (const item of entry?.items ?? []) {
+      if (item?.type !== 'new' && item?.type !== 'fix') problems.push(`${where}: loại «${item?.type}» lạ (new | fix).`);
+      const text = typeof item?.text === 'string' ? item.text.trim() : '';
+      if (!text) problems.push(`${where}: có dòng trống.`);
+      if (text.length > CHANGELOG_TEXT_MAX) problems.push(`${where}: dòng dài quá ${CHANGELOG_TEXT_MAX} ký tự.`);
+      if (/`|\bcommit\b|\bmigration\b|\bIPC\b|\bnpm\b/i.test(text)) problems.push(`${where}: dòng có từ kỹ thuật («${text.slice(0, 40)}…»).`);
+    }
+  }
+  return { entries, problems };
+}
+
