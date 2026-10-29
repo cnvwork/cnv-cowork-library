@@ -72,8 +72,10 @@ fs.writeFileSync(
 
 Repo: ${where} (CÔNG KHAI). Chỉ đăng khi người phụ trách của CNV đã duyệt.
 
-1. Kiểm \`npm run check\` sạch, đẩy nhánh \`main\` lên GitHub (\`git push -u origin main\`).
-2. GitHub › Releases › Draft a new release › tag **${tag}** (tạo mới, trỏ vào commit vừa đẩy).
+1. Kiểm \`npm run check\` sạch, commit, đẩy nhánh \`main\`: \`git push origin main\` (remote push của repo là alias SSH
+   \`git@github-cnv-library:cnvwork/cnv-cowork-library.git\` trong \`~/.ssh/config\`, deploy key riêng của repo này).
+2. GitHub › Releases › Draft a new release › tag **${tag}** (tạo mới, trỏ vào commit vừa đẩy). Mỗi lần phát hành một
+   tag mới, không sửa release cũ.
 3. Kéo thả ĐỦ các tệp sau trong thư mục dist/ vào ô «Attach binaries»:
 ${files.map((file) => `   - ${file}`).join('\n')}
 4. Để trống «Set as a pre-release», chọn **Set as the latest release**, bấm Publish.

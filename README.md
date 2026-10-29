@@ -53,8 +53,9 @@ npm run build -- --tag v2026.10.29   # dist/<id>-<phiên bản>.zip + catalog.js
 npm run verify                       # kiểm lại chữ ký + sha256 như app
 ```
 
-Rồi làm theo `dist/RELEASE.md`: tạo release đúng tag đó trên GitHub, gắn `catalog.json` + mọi `.zip`, đặt là
-**latest**. App tải `https://github.com/<owner>/cnv-cowork-library/releases/latest/download/catalog.json` và gói theo
+Rồi làm theo `dist/RELEASE.md`: đẩy `main` (remote push là alias SSH `git@github-cnv-library:cnvwork/cnv-cowork-library.git`
+khai trong `~/.ssh/config`, dùng deploy key riêng của repo), tạo release đúng tag đó trên GitHub, gắn `catalog.json` + mọi
+`.zip`, đặt là **latest**. Bản phát hành đầu: `v2026.10.29`. App tải `https://github.com/<owner>/cnv-cowork-library/releases/latest/download/catalog.json` và gói theo
 link ghim tag ghi trong danh mục; chỉ theo chuyển hướng tới `github.com`, `objects.githubusercontent.com`,
 `release-assets.githubusercontent.com`; không gọi `api.github.com` (giới hạn 60 lần / giờ). Chủ repo
 (`github.owner`) điền ở `library.config.json` và hằng số `LIBRARY_GITHUB_OWNER` của app
