@@ -9,6 +9,7 @@ import zlib from 'node:zlib';
 
 export const ROOT = path.resolve(import.meta.dirname, '..');
 export const SCENARIOS = path.join(ROOT, 'scenarios');
+export const SKILLS = path.join(ROOT, 'skills');
 export const DIST = path.join(ROOT, 'dist');
 export const CATALOG_FORMAT = 'cnv-cowork-library-catalog';
 /** Chuỗi đứng trước dữ liệu khi ký: chữ ký danh mục không dùng lại được cho việc khác (và ngược lại). */
@@ -127,9 +128,12 @@ function denylist() {
   }
 }
 
-/** Dòng đáng ngờ trong các tệp chữ. `allow`: chuỗi cho phép (IP ví dụ, hash thư viện đã biết). */
-export function scanSecrets(files, allow = []) {
-  const denied = denylist();
+/**
+ * Dòng đáng ngờ trong các tệp chữ. `allow`: chuỗi cho phép (IP ví dụ, hash thư viện đã biết). `allowWords`: chữ trong
+ * danh sách cấm được phép ở nhóm tệp này (vd tên nền tảng trong kỹ năng bán hàng).
+ */
+export function scanSecrets(files, allow = [], allowWords = []) {
+  const denied = denylist().filter((word) => !allowWords.includes(word));
   const findings = [];
   for (const file of files) {
     if (!TEXT_EXT.test(file.rel) || file.rel.includes('/vendor/')) continue;
@@ -232,6 +236,79 @@ export function scenarioIds() {
     .filter((dirent) => dirent.isDirectory() && !dirent.name.startsWith('.'))
     .map((dirent) => dirent.name)
     .sort();
+}
+
+// ── Bộ kỹ năng ─────────────────────────────────────────────────────────────────────────────
+
+export const SKILL_PACK_FORMAT = 'cnv-cowork-skills';
+/** Nhóm = thư mục: `chung` (dùng chung) + mã ngành, khớp `INDUSTRIES` của app (src/shared/skills.ts). */
+export const SKILL_GROUPS = ['chung', 'bat-dong-san', 'bao-hiem', 'o-to', 'ban-le', 'spa-lam-dep', 'giao-duc', 'fnb', 'du-lich', 'noi-that', 'tai-chinh', 'phan-phoi', 'y-te', 'cong-nghe'];
+const SKILL_MAX_CHARS = 30_000;
+const SKILL_MAX_COUNT = 500;
+
+function headerValue(head, key) {
+  return new RegExp(`^${key}:[ \\t]*(.*)$`, 'm').exec(head)?.[1].trim() ?? '';
+}
+
+/**
+ * Kỹ năng có sẵn của trợ lý: `skills/<nhóm>/<name>.md` (SKILL.md: phần đầu --- name / description … --- rồi hướng dẫn).
+ * Kiểm phần app kiểm theo luật «có sẵn» (tên tệp = name, thư mục = industry, không trùng tên / lệnh); app vẫn kiểm lại đủ.
+ */
+export function loadSkills(config = {}) {
+  const entries = [];
+  const problems = [];
+  if (!fs.existsSync(SKILLS)) return { entries, problems };
+  const names = new Map();
+  const commands = new Map();
+  for (const group of fs.readdirSync(SKILLS).filter((name) => !name.startsWith('.')).sort()) {
+    const groupDir = path.join(SKILLS, group);
+    if (!fs.lstatSync(groupDir).isDirectory()) {
+      problems.push(`skills/${group}: chỉ được có thư mục nhóm`);
+      continue;
+    }
+    if (!SKILL_GROUPS.includes(group)) problems.push(`skills/${group}: nhóm không có (dùng ${SKILL_GROUPS.join(', ')})`);
+    for (const file of fs.readdirSync(groupDir).filter((name) => name !== '.DS_Store').sort()) {
+      const rel = `${group}/${file}`;
+      const abs = path.join(groupDir, file);
+      if (!/^[a-z0-9]+(-[a-z0-9]+)*\.md$/.test(file) || !fs.lstatSync(abs).isFile()) {
+        problems.push(`skills/${rel}: tên tệp chữ thường không dấu, gạch nối, đuôi .md`);
+        continue;
+      }
+      const content = fs.readFileSync(abs, 'utf8').replace(/\r\n/g, '\n');
+      const head = /^---\n([\s\S]*?)\n---\n/.exec(content)?.[1];
+      if (head === undefined) {
+        problems.push(`skills/${rel}: thiếu phần đầu --- … ---`);
+        continue;
+      }
+      const name = headerValue(head, 'name');
+      const industry = headerValue(head, 'industry');
+      const command = headerValue(head, 'command').toLowerCase();
+      if (`${name}.md` !== file) problems.push(`skills/${rel}: tên tệp phải trùng "name" (${name || 'trống'})`);
+      if (!headerValue(head, 'description')) problems.push(`skills/${rel}: thiếu "description"`);
+      if ((group === 'chung' ? '' : group) !== industry) problems.push(`skills/${rel}: thư mục «${group}» không khớp "industry" (${industry || 'trống'})`);
+      if (content.length > SKILL_MAX_CHARS) problems.push(`skills/${rel}: dài quá ${SKILL_MAX_CHARS.toLocaleString('vi-VN')} ký tự`);
+      if (names.has(name)) problems.push(`skills/${rel}: trùng tên với ${names.get(name)}`);
+      names.set(name, rel);
+      if (command) {
+        if (commands.has(command)) problems.push(`skills/${rel}: trùng lệnh ${command} với ${commands.get(command)}`);
+        commands.set(command, rel);
+      }
+      entries.push({ path: rel, content, abs });
+    }
+  }
+  if (entries.length > SKILL_MAX_COUNT) problems.push(`skills: quá ${SKILL_MAX_COUNT} kỹ năng`);
+  const files = entries.map((entry) => ({ rel: `skills/${entry.path}`, abs: entry.abs, size: Buffer.byteLength(entry.content) }));
+  problems.push(...scanSecrets(files, config.scan_allow ?? [], config.skills_scan_allow_words ?? []).map((line) => `bí mật? ${line}`));
+  return { entries, problems };
+}
+
+/**
+ * Bộ kỹ năng dựng cố định (sắp theo đường dẫn, không khoảng trắng thừa): cùng nội dung thì cùng sha256. App tính đúng
+ * kiểu này cho bản đóng sẵn trong bộ cài (`skills/builtin/snapshot.json`) để biết khỏi tải lại.
+ */
+export function buildSkillPack(entries) {
+  const skills = [...entries].sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0)).map((entry) => ({ path: entry.path, content: entry.content }));
+  return Buffer.from(JSON.stringify({ format: SKILL_PACK_FORMAT, version: 1, skills }), 'utf8');
 }
 
 // ── Zip cố định ────────────────────────────────────────────────────────────────────────────

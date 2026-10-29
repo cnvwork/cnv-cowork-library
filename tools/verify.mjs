@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Kiểm một danh mục đã phát hành giống app làm: chữ ký, rồi sha256 + kích thước từng gói nằm cạnh catalog.json.
+// Kiểm một danh mục đã phát hành giống app làm: chữ ký, rồi sha256 + kích thước từng gói (và bộ kỹ năng) cạnh catalog.json.
 //   node tools/verify.mjs [dist/catalog.json]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,6 +14,14 @@ for (const scenario of payload.scenarios) {
   const ok = data && data.length === scenario.archive.bytes && sha256(data) === scenario.archive.sha256;
   if (!ok) failed = true;
   console.log(`${ok ? '✔' : '✖'} ${scenario.id} ${scenario.version} (${scenario.archive.url})`);
+}
+const pack = payload.content?.skills;
+if (pack) {
+  const packPath = path.join(path.dirname(file), pack.url.split('/').pop());
+  const data = fs.existsSync(packPath) ? fs.readFileSync(packPath) : null;
+  const ok = data && data.length === pack.bytes && sha256(data) === pack.sha256 && JSON.parse(data.toString('utf8')).skills.length === pack.count;
+  if (!ok) failed = true;
+  console.log(`${ok ? '✔' : '✖'} bộ kỹ năng: ${pack.count} kỹ năng (${pack.url})`);
 }
 console.log(`Chữ ký đúng, ký lúc ${payload.issued_at}.`);
 process.exit(failed ? 1 : 0);

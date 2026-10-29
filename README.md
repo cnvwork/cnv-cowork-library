@@ -16,9 +16,10 @@ scenarios/<id>/
   README.md          hướng dẫn cho người dùng (mở trong VS Code / Finder)
   cowork/SKILL.md    kỹ năng cho trợ lý Cowork: cấu trúc dự án, cách code tiếp, việc KHÔNG được làm
   …                  mã nguồn
+skills/<nhóm>/<tên>.md  kỹ năng CÓ SẴN của trợ lý (nhóm: chung hoặc mã ngành) — nơi DUY NHẤT sửa kỹ năng có sẵn
 library.config.json  khoá công khai (app ghim cùng khoá này), github.owner / repo, danh sách nhóm, chuỗi được phép khi quét
 tools/               check.mjs, build.mjs, verify.mjs, keygen.mjs (Node ≥ 22.2, không cần cài gì)
-dist/                (không commit) gói .zip + catalog.json đã ký + RELEASE.md: thứ gắn vào GitHub Release
+dist/                (không commit) gói .zip + skills-<sha>.json + catalog.json đã ký + RELEASE.md: thứ gắn vào GitHub Release
 ```
 
 ## Luật cho mã trong kịch bản
@@ -46,12 +47,27 @@ App giải nén theo luật của Thư mục làm việc, sai một tệp là t�
 3. `npm run check` cho tới khi sạch.
 4. Commit.
 
+## Kỹ năng có sẵn của trợ lý
+
+`skills/<nhóm>/<tên>.md` là kỹ năng có sẵn mọi máy Cowork dùng (báo giá, chăm sóc khách, kịch bản theo ngành…). Sửa / thêm
+ở đây, `npm run check`, rồi phát hành như dưới: `build` đóng cả thư mục thành MỘT tệp `skills-<sha256>.json` ghim trong
+danh mục, app đang chạy tự tải khi sha256 đổi, không cần bản app mới. Luật (app kiểm lại đủ, sai thì bỏ kỹ năng đó):
+
+- Tên tệp = `name` trong phần đầu (chữ thường không dấu, gạch nối); thư mục = `industry` (`chung` thì không có `industry`).
+- Không trùng `name` / `command`; tối đa 30.000 ký tự; chỉ là chữ (không mã chạy, không link tải thêm).
+- Công cụ trợ lý nhắc trong hướng dẫn (`search_contacts`…) phải có thật trong app: app kiểm bản chụp của nó bằng test.
+- Bộ cài Cowork mang một bản chụp để máy chưa tải được gì vẫn có kỹ năng: ở repo `cnv-cowork` chạy `npm run skills:sync`
+  khi muốn bản cài mới mang luôn bộ mới.
+
 ## Phát hành (GitHub Releases)
 
 ```bash
 npm run build -- --tag v2026.10.29   # dist/<id>-<phiên bản>.zip + catalog.json (ký bằng khoá trong Keychain) + RELEASE.md
 npm run verify                       # kiểm lại chữ ký + sha256 như app
 ```
+
+CNV Work (`api.cnvwork.com/api/v1/cowork/catalog`) tự chép `catalog.json` của release mới nhất trong vòng 5 phút; app đọc
+ở đó trước, lỗi thì đọc thẳng GitHub. Gói zip và bộ kỹ năng app luôn tải từ GitHub theo link ghim tag.
 
 Rồi làm theo `dist/RELEASE.md`: đẩy `main` (remote push là alias SSH `git@github-cnv-library:cnvwork/cnv-cowork-library.git`
 khai trong `~/.ssh/config`, dùng deploy key riêng của repo), tạo release đúng tag đó trên GitHub, gắn `catalog.json` + mọi

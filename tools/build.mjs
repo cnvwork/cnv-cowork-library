@@ -1,13 +1,14 @@
 #!/usr/bin/env node
-// Đóng gói mọi kịch bản thành dist/<id>-<phiên bản>.zip rồi dựng dist/catalog.json đã ký Ed25519, sẵn để gắn vào một
-// GitHub Release (dist/RELEASE.md ghi từng bước). Không đăng gì lên mạng.
+// Đóng gói mọi kịch bản thành dist/<id>-<phiên bản>.zip, bộ kỹ năng thành dist/skills-<sha256 12 ký tự>.json, rồi dựng
+// dist/catalog.json đã ký Ed25519 (ghim sha256 của từng tệp), sẵn để gắn vào một GitHub Release (dist/RELEASE.md ghi từng
+// bước). Không đăng gì lên mạng.
 //   node tools/build.mjs                     (khoá bí mật từ Keychain macOS, mục "CNV Cowork library signing key")
 //   node tools/build.mjs --tag v2026.10.29   (tên tag của bản phát hành; mặc định vNĂM.THÁNG.NGÀY-GIỜPHÚT)
 //   node tools/build.mjs --key-file <tệp>    (PEM hoặc PKCS#8 DER base64, tệp nằm ngoài repo)
 // Không bao giờ commit khoá bí mật.
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadConfig, loadScenario, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
+import { buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadConfig, loadScenario, loadSkills, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
 
 function arg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -54,17 +55,29 @@ for (const id of scenarioIds()) {
   console.log(`✔ ${name}: ${files.length} tệp, ${(zip.length / 1024).toFixed(0)} KB`);
 }
 
+const skills = loadSkills(config);
+problems.push(...skills.problems);
+let skillPack = null;
+if (skills.entries.length) {
+  const pack = buildSkillPack(skills.entries);
+  const name = `skills-${sha256(pack).slice(0, 12)}.json`;
+  fs.writeFileSync(path.join(DIST, name), pack);
+  skillPack = { url: archiveUrl(name), sha256: sha256(pack), bytes: pack.length, count: skills.entries.length };
+  console.log(`✔ ${name}: ${skills.entries.length} kỹ năng, ${(pack.length / 1024).toFixed(0)} KB`);
+}
+
 if (problems.length) {
   console.error('Chưa đóng gói được:');
   for (const line of problems) console.error(`   ${line}`);
   process.exit(1);
 }
 
-const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios };
+// `content`: nội dung app tự cập nhật không cần bản app mới (bộ kỹ năng có sẵn). App cũ không biết trường này thì bỏ qua.
+const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios, content: { skills: skillPack } };
 const envelope = signCatalog(payload, await signingKey(arg('key-file')));
 openCatalog(envelope, config.public_key); // khoá bí mật phải khớp khoá công khai app ghim
 fs.writeFileSync(path.join(DIST, 'catalog.json'), `${JSON.stringify(envelope, null, 2)}\n`);
-const files = ['catalog.json', ...scenarios.map((scenario) => scenario.archive.url.split('/').pop())];
+const files = ['catalog.json', ...scenarios.map((scenario) => scenario.archive.url.split('/').pop()), ...(skillPack ? [skillPack.url.split('/').pop()] : [])];
 const where = owner ? `https://github.com/${owner}/${repo}` : '(chưa điền github.owner trong library.config.json)';
 fs.writeFileSync(
   path.join(DIST, 'RELEASE.md'),
@@ -86,5 +99,5 @@ App chỉ tải qua link tải thẳng github.com/…/releases/…/download/… 
 không gọi api.github.com. Xoá / sửa release cũ thì danh mục cũ trong máy người dùng vẫn trỏ gói theo tag cũ: giữ lại.
 `,
 );
-console.log(`✔ dist/catalog.json: ${scenarios.length} kịch bản, ký lúc ${payload.issued_at}, tag ${tag}`);
+console.log(`✔ dist/catalog.json: ${scenarios.length} kịch bản, ${skillPack?.count ?? 0} kỹ năng, ký lúc ${payload.issued_at}, tag ${tag}`);
 console.log(`  Bước đăng lên GitHub: dist/RELEASE.md`);
