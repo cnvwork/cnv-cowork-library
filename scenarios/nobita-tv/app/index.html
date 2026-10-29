@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1920, user-scalable=no">
+    <title>Nobita TV</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/announce.css">
+</head>
+<body>
+    <div id="home" class="apps-left">
+        <header class="topbar">
+            <div id="brand" class="brand">Nobita TV</div>
+            <div class="clock">
+                <div id="time">--:--</div>
+                <div id="date"></div>
+            </div>
+            <div class="slogan-wrap"><div class="slogan">Hãy ba hoa chít choè theo cách của bạn!</div></div>
+            <nav class="actions">
+                <div class="focusable pill" data-action="interval" id="btnInterval"></div>
+            </nav>
+        </header>
+        <main class="panes">
+            <!-- Left: weather on top (looked at most), apps, then one line of small print.
+                 Right: the 9:16 album frame, full height, its controls stacked beside it. -->
+            <section class="pane apps-pane">
+                <div id="weather" class="weather hidden"></div>
+                <div id="appGrid" class="grid"></div>
+                <div class="pane-foot">
+                    <div class="more" id="moreApps">
+                        <div class="focusable icon-btn small" data-action="moreApps"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></div>
+                        <span id="moreAppsLabel"></span>
+                    </div>
+                    <div class="pane-note" id="photoNote"></div>
+                </div>
+            </section>
+            <nav class="photo-tools">
+                <div class="focusable icon-btn" data-action="orderSeq" id="btnOrderSeq"><svg viewBox="0 0 24 24"><path d="M4 6h9M4 12h6M4 18h3M17 5v14M13.5 15.5 17 19l3.5-3.5"/></svg></div>
+                <div class="focusable icon-btn" data-action="orderRandom" id="btnOrderRandom"><svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></div>
+                <div class="focusable icon-btn" data-action="fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></div>
+            </nav>
+            <section class="pane photo-pane">
+                <div id="photoFrame" class="frame focusable" data-action="photos">
+                    <div id="slides" class="slides">
+                        <!-- shown while a clip loads: a pixel boy with round glasses jumping at a brick -->
+                        <div id="loader" class="loader hidden">
+                            <div class="loader-stage">
+                                <div class="loader-block"></div>
+                                <div class="loader-coin"></div>
+                                <div class="loader-runner" id="loaderRunner"></div>
+                                <div class="loader-shadow"></div>
+                            </div>
+                            <div class="loader-text" id="loaderText"></div>
+                        </div>
+                    </div>
+                    <div id="photoTitle" class="frame-chip">Album</div>
+                    <!-- page-coloured corners: the TV's video layer ignores rounded corners -->
+                    <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+                    <div id="soundBadge" class="sound-badge hidden"></div>
+                    <div id="photoMsg" class="message">
+                        <div class="title"></div>
+                        <div class="hint"></div>
+                    </div>
+                    <div id="photoCaption" class="caption hidden">
+                        <span class="album"></span><span class="count"></span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- "Phóng to": the photo / clip big on the left, its album and position on the right -->
+    <div id="fullscreen" class="hidden">
+        <div class="zoom-media" id="zoomMedia"><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div></div>
+        <div class="zoom-info">
+            <div class="zoom-head">
+                <div id="fsBrand"><span class="name">Nobita TV</span><span class="time"></span></div>
+            </div>
+            <div class="zoom-body" id="zoomBody"></div>
+            <div class="zoom-hint"><b>◀ ▶</b>Đổi ảnh<b>3</b>Tiếng<b>6</b>/<b>OK</b>Quay lại</div>
+        </div>
+        <div id="fsCaption" class="caption hidden"><span class="album"></span><span class="count"></span></div>
+    </div>
+
+    <div id="menu" class="hidden">
+        <div class="box">
+            <div class="title"></div>
+            <div class="items"></div>
+        </div>
+    </div>
+
+    <!-- Shown for 5 seconds every time the app starts -->
+    <div id="splash">
+        <canvas width="48" height="27"></canvas>
+        <div class="dim"></div>
+        <div class="splash-text">
+            <div class="splash-brand">Nobita TV</div>
+            <div class="splash-welcome">Chào mừng về nhà</div>
+            <div class="slogan splash-slogan">Hãy ba hoa chít choè theo cách của bạn!</div>
+            <div class="splash-count">
+                <svg viewBox="0 0 200 200"><circle class="track" cx="100" cy="100" r="90"/><circle class="ring" cx="100" cy="100" r="90"/></svg>
+                <span id="splashNum">5</span>
+            </div>
+            <div class="splash-hint">Bấm OK để vào ngay</div>
+        </div>
+        <img class="splash-photo hidden" id="splashPhoto" alt="">
+        <div class="splash-credit">Code by Nobita</div>
+    </div>
+
+    <!-- Thông báo: big running text with music over everything (key 4, or sent from your relay) -->
+    <div id="announce" class="hidden"></div>
+
+    <!-- "Video": a code first, then the USB drives' videos, then one playing full screen.
+         Nothing on screen says the videos come from a USB drive. -->
+    <div id="usbLock" class="usb-screen hidden">
+        <div class="usb-lock-card">
+            <div class="usb-lock-title">Video</div>
+            <div class="usb-dots" id="usbDots"></div>
+            <div class="usb-lock-msg" id="usbLockMsg"></div>
+            <div class="usb-keypad" id="usbKeypad"></div>
+            <div class="usb-lock-hint"><b>Back</b>Thoát</div>
+        </div>
+    </div>
+    <div id="usbBrowser" class="usb-screen hidden">
+        <div class="usb-head"><div class="usb-title">Video</div><div class="usb-sub" id="usbSub"></div><div class="usb-page" id="usbPage"></div></div>
+        <div class="usb-list usb-grid" id="usbList"></div>
+        <div class="usb-hint"><b>◀ ▶ ▲ ▼</b>Chọn<b>⏪ ⏩</b>Trang trước / sau<b>OK</b>Xem<b>Back</b>Thoát</div>
+    </div>
+    <div id="usbPlayer" class="usb-player hidden">
+        <video id="usbVideo"></video>
+        <div class="usb-paused-sign"><svg viewBox="0 0 24 24" width="120" height="120"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="#fff"/></svg></div>
+        <div class="usb-failed">Không phát được video này trên TV</div>
+        <div class="usb-osd" id="usbOsd">
+            <div class="usb-osd-name"></div>
+            <div class="usb-bar"><div class="usb-bar-fill"></div></div>
+            <div class="usb-osd-row"><span class="usb-osd-time"></span>
+                <span class="usb-osd-hint"><b>OK</b>Dừng / chạy<b>◀ ▶</b>Tua 10 giây<b>▲ ▼</b>Video trước / sau<b>Back</b>Danh sách</span></div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+    <script src="js/config.js"></script>
+    <script src="js/announce.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

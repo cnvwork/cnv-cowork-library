@@ -1,0 +1,13 @@
+{
+  "name": "cnv-cowork-library",
+  "private": true,
+  "type": "module",
+  "description": "Thư viện kịch bản (mã nguồn mẫu) của CNV Cowork: viết, kiểm, đóng gói, ký danh mục",
+  "scripts": {
+    "check": "node tools/check.mjs",
+    "build": "node tools/build.mjs",
+    "verify": "node tools/verify.mjs",
+    "keygen": "node tools/keygen.mjs"
+  },
+  "engines": { "node": ">=22.2" }
+}

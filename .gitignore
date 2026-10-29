@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.DS_Store
+# Khoá ký danh mục nằm ở Keychain, không bao giờ ở repo.
+*.pem
+*.key
+*.p12
+*.p8

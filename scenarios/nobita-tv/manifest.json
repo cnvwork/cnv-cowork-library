@@ -1,0 +1,18 @@
+{
+  "id": "nobita-tv",
+  "name": "Nobita TV",
+  "summary": "Màn hình chính tự làm cho TV Samsung: app hay dùng, album ảnh Google Drive / USB, thời tiết, thông báo chữ chạy.",
+  "description": "App web Tizen chạy trên TV Samsung (Tizen 5.0 trở lên, đời 2019 về sau). Gồm ô app hay dùng, trình chiếu ảnh từ thư mục Google Drive chia sẻ và từ USB, thời tiết 7 ngày (Open-Meteo, không cần key), màn hình thông báo chữ chạy có nhạc, ô «Video» có mã để phát video trong USB.\n\nTải về rồi sửa tiếp: đổi tên, album, thành phố trong js/config.js, thêm ô app, đổi giao diện. Trợ lý Cowork đọc được mã và đề xuất sửa từng tệp (bạn duyệt trước khi ghi). Cài lên TV bằng script có sẵn hoặc Tizen Studio, mỗi người dùng chứng chỉ Samsung của mình.",
+  "category": "tv",
+  "version": "1.0.0",
+  "requirements": [
+    "TV Samsung chạy Tizen 5.0 trở lên (đời 2019 về sau), cùng mạng Wi-Fi với máy tính",
+    "Máy Mac có Tizen Studio 6 (bản CLI) + Samsung TV Extension + Samsung Certificate Extension",
+    "Tài khoản Samsung và chứng chỉ Samsung RIÊNG của bạn, có mã DUID của TV",
+    "Bật Developer mode trên TV (README.md hướng dẫn)"
+  ],
+  "license": "Mã nguồn của CNV, được dùng và sửa cho TV của bạn. html2canvas (js/vendor) giấy phép MIT.",
+  "tags": ["tv", "samsung", "tizen", "web"],
+  "readme": "README.md",
+  "skill": "cowork/SKILL.md"
+}

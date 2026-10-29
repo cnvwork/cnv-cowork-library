@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Thông báo – xem thử</title>
+<link rel="stylesheet" href="css/announce.css">
+<style>
+  body { margin: 0; background: #111; color: #ddd; font: 14px sans-serif; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 12px; }
+  .cell { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #000; }
+  .label { padding: 4px 0; }
+  .full { position: fixed; inset: 0; }
+</style>
+</head>
+<body>
+<script src="js/announce.js"></script>
+<script>
+  var q = new URLSearchParams(location.search);
+  var list = NobitaAnnounce.TEMPLATES;
+  if (q.has('t')) {
+    var host = document.createElement('div');
+    host.className = 'full';
+    document.body.appendChild(host);
+    var cfg = Object.assign({}, list[+q.get('t')] || {}, JSON.parse(q.get('cfg') || '{}'));
+    NobitaAnnounce.show(host, cfg, { hint: 'OK: tắt thông báo' });
+  } else {
+    var grid = document.createElement('div');
+    grid.className = 'grid';
+    document.body.appendChild(grid);
+    list.forEach(function (t, i) {
+      var wrap = document.createElement('div');
+      wrap.innerHTML = '<div class="label">' + i + '. ' + t.name + '</div><div class="cell"></div>';
+      grid.appendChild(wrap);
+      NobitaAnnounce.show(wrap.querySelector('.cell'), t, {});
+    });
+  }
+</script>
+</body>
+</html>

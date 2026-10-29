@@ -1,0 +1,738 @@
+/* TV Home — 1920×1080 canvas (Samsung TV web apps always render at this size). */
+html, body {
+    margin: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: #0a0e16;
+    color: #fff;
+    font-family: "SamsungOne", "Samsung Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.hidden { display: none !important; }
+
+#home {
+    box-sizing: border-box;
+    width: 1920px;
+    height: 1080px;
+    /* 5% overscan-safe margins */
+    padding: 54px 96px 40px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #0e1522 0%, #1a2333 55%, #0a0e16 100%);
+}
+
+/* ---------- Top bar ---------- */
+.topbar { display: flex; align-items: center; margin-bottom: 24px; }
+.brand {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 1px;
+    padding-right: 36px;
+    margin-right: 36px;
+    border-right: 2px solid rgba(255, 255, 255, 0.18);
+    background: linear-gradient(90deg, #ffffff, #9cc3ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.clock { flex: none; }
+
+/* The slogan: a cheeky yellow speech bubble that shakes now and then, like someone mid-boast. */
+.slogan-wrap { flex: 1; display: flex; justify-content: center; }
+.slogan {
+    position: relative;
+    display: inline-block;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-size: 28px;
+    font-weight: 700;
+    font-style: italic;
+    color: #1d1a10;
+    background: linear-gradient(135deg, #ffe066, #ffb84d);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    transform: rotate(-3deg);
+    animation: slogan-wiggle 9s ease-in-out infinite;
+}
+/* bubble tail, pointing back at the TV's name */
+.slogan::after {
+    content: '';
+    position: absolute;
+    left: 34px;
+    bottom: -14px;
+    border-width: 16px 14px 0 0;
+    border-style: solid;
+    border-color: #ffd25a transparent transparent transparent;
+}
+@keyframes slogan-wiggle {
+    0%, 88%, 100% { transform: rotate(-3deg) scale(1); }
+    90% { transform: rotate(3deg) scale(1.06); }
+    92% { transform: rotate(-6deg) scale(1.06); }
+    94% { transform: rotate(4deg) scale(1.04); }
+    96% { transform: rotate(-4deg) scale(1.02); }
+}
+.splash-slogan { margin-top: 26px; font-size: 32px; }
+#time { font-size: 56px; font-weight: 300; line-height: 1; letter-spacing: 1px; }
+#date { font-size: 26px; color: #b4bccb; margin-top: 6px; white-space: nowrap; }
+.actions { display: flex; }
+.actions .pill + .pill { margin-left: 12px; }
+.pill {
+    padding: 12px 22px;
+    border-radius: 40px;
+    font-size: 23px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    white-space: nowrap;
+    transition: transform 0.12s ease-out, background-color 0.12s;
+}
+.pill.focused { background: #fff; color: #000; transform: scale(1.06); }
+
+/* ---------- Two panes ---------- */
+.panes { flex: 1; display: flex; min-height: 0; }
+.apps-pane { margin-right: 16px; }
+/* Album controls, stacked beside the frame so the frame can use the full height */
+.photo-tools { flex: none; display: flex; flex-direction: column; margin-right: 20px; }
+.photo-tools .icon-btn + .icon-btn { margin-top: 16px; }
+.pane { display: flex; flex-direction: column; min-height: 0; min-width: 0; } /* long notes must not widen a pane */
+.apps-pane { flex: 1; }
+.photo-pane { flex: none; } /* width follows the 9:16 frame (set in sizeFrame) */
+.apps-right .apps-pane { order: 2; }
+.pane h2 {
+    margin: 10px 0 4px 24px;
+    font-size: 34px;
+    font-weight: 500;
+}
+.pane h2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pane-head { display: flex; align-items: center; margin-right: 24px; }
+.pane-head h2 { flex: 1; min-width: 0; margin-bottom: 0; }
+.pane-head .pill,
+.pane-head .icon-btn { margin-left: 14px; }
+
+/* Round icon buttons: play order (lit when active) and "more apps". */
+.icon-btn {
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b4bccb;
+    background: rgba(255, 255, 255, 0.08);
+    transition: transform 0.12s ease-out, background-color 0.12s;
+}
+.icon-btn svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.icon-btn.active { color: #9cc3ff; background: rgba(156, 195, 255, 0.22); }
+.icon-btn.focused { color: #000; background: #fff; transform: scale(1.1); }
+.icon-btn.small { width: 44px; height: 44px; }
+.icon-btn.small svg { width: 22px; height: 22px; }
+
+/* Small print under the panes: "more apps" on the left, shortcut keys under the photo frame. */
+.pane-foot { flex: none; display: flex; align-items: center; justify-content: space-between; margin: 0 24px; }
+.pane-foot .more { display: flex; align-items: center; }
+.pane-foot .more span { margin-left: 14px; font-size: 20px; color: #8f98a8; }
+.pane-note { font-size: 18px; color: #8f98a8; white-space: nowrap; }
+/* "Album" / "Clip" label in the frame's corner */
+.frame-chip {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    padding: 6px 18px;
+    border-radius: 22px;
+    font-size: 22px;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.5);
+}
+.pane-note b {
+    display: inline-block;
+    min-width: 24px;
+    margin: 0 5px 0 12px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+    color: #d8deea;
+    background: rgba(255, 255, 255, 0.12);
+}
+.pane-note b:first-child { margin-left: 0; }
+.pane h2 small { font-size: 22px; font-weight: 400; color: #b4bccb; margin-left: 14px; }
+
+/* ---------- App grid ---------- */
+.grid {
+    position: relative; /* tiles' offsetTop is measured from here when scrolling */
+    flex: 1;
+    overflow: hidden;
+    padding: 6px 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: max-content;
+    gap: 14px 24px;
+    align-content: center; /* one row of apps sits midway in the free space */
+    scroll-behavior: smooth;
+}
+/* Icon-only app tiles: the app's own icon, its name underneath, no frame around it. */
+.grid.expanded { align-content: start; }
+.tile {
+    position: relative;
+    padding: 12px 0 6px;
+    text-align: center;
+    transition: transform 0.12s ease-out;
+}
+.tile .icon,
+.tile .initials {
+    display: block;
+    width: 176px;
+    height: 176px;
+    margin: 0 auto;
+    transition: transform 0.15s ease-out;
+}
+/* Rounded like a phone's home screen. */
+.tile .icon {
+    object-fit: cover;
+    border-radius: 22%;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+.tile .announce-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ff2e93 0%, #8a2be2 52%, #1e90ff 100%);
+}
+.tile .initials {
+    border-radius: 40px;
+    line-height: 176px;
+    font-size: 64px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.92);
+}
+.tile .label {
+    margin-top: 12px;
+    font-size: 27px;
+    color: #b4bccb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tile .pin {
+    position: absolute;
+    top: 8px;
+    right: 40px;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 20px;
+    color: #ffd45c;
+    background: rgba(0, 0, 0, 0.6);
+}
+.tile.focused { z-index: 2; }
+.tile.focused .icon,
+.tile.focused .initials { transform: scale(1.15); filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.45)); }
+.tile.focused .label { color: #fff; font-weight: 600; }
+
+/* ---------- Weather (7 days): temperature and sun / rain only ---------- */
+.weather {
+    flex: none;
+    display: flex;
+    align-items: center;
+    margin: 0 24px 16px;
+    padding: 24px 26px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.06);
+}
+.wx-now {
+    flex: none;
+    display: flex;
+    align-items: center;
+    width: 330px;
+    padding-right: 18px;
+    margin-right: 6px;
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+.wx-now .ic { flex: none; margin-right: 14px; }
+.wx-temp { font-size: 88px; font-weight: 300; line-height: 1; }
+.wx-city { font-size: 20px; color: #8f98a8; margin-top: 6px; }
+.wx-days { flex: 1; display: flex; }
+.wx-day { flex: 1; text-align: center; }
+.wx-day .d { font-size: 22px; color: #b4bccb; white-space: nowrap; }
+.wx-day .ic { display: block; margin: 6px auto 4px; }
+.wx-day .t { font-size: 32px; font-weight: 600; line-height: 1.15; }
+.wx-day .tmin { font-size: 22px; color: #8f98a8; }
+.wx-day .w {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    margin-top: 4px;
+    font-size: 21px;
+    font-weight: 600;
+    color: #6fb6ff;
+}
+.wx-day .w svg { margin-right: 3px; }
+
+/* ---------- Photo frame ---------- */
+.frame {
+    position: relative;
+    flex: 1;
+    margin: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #1c2433;
+    transition: transform 0.12s ease-out;
+}
+/* The TV draws video on its own hardware layer, which ignores transforms: no zoom on focus, and the
+   ring is a layer of its own above the clip instead of a shadow the clip would cover. */
+.corner { position: absolute; z-index: 5; width: 26px; height: 26px; pointer-events: none; }
+.corner.tl { top: 0; left: 0; }
+.corner.tr { top: 0; right: 0; }
+.corner.bl { bottom: 0; left: 0; }
+.corner.br { bottom: 0; right: 0; }
+.frame.focused::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 6;
+    border: 4px solid #fff;
+    border-radius: 24px;
+    pointer-events: none;
+}
+
+/* The slideshow element moves between the frame and the fullscreen view. */
+.slides { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.slide {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity 0.9s ease-in-out;
+}
+.slide.show { opacity: 1; }
+/* Tiny canvas stretched to full size: a cheap blur that fills empty bars around the photo. */
+.slide canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.slide .dim { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.45); }
+.slide img, .slide video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+.slide.video { background: #0b0f17; transition: none; } /* the video layer can't fade anyway */
+
+.message {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    padding: 0 48px;
+    text-align: center;
+}
+.message .title { font-size: 38px; margin-bottom: 16px; }
+.message .hint { font-size: 24px; color: #b4bccb; line-height: 1.5; }
+
+.caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 70px 30px 22px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+    font-size: 26px;
+    transition: opacity 0.5s;
+}
+.caption .album { display: block; font-weight: 500; line-height: 1.35; } /* captions show in full */
+.caption.empty { display: none; }
+.caption .count { color: #b4bccb; margin-left: 16px; }
+.caption .hint { font-size: 22px; color: #b4bccb; margin-top: 8px; }
+.caption.faded { opacity: 0; }
+
+/* ---------- Clip loading: pixel runner bumping a brick (all moves share one 1s beat) ---------- */
+.loader {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 45%, #1f2b44, #0b0f17 70%);
+}
+.loader-stage { position: relative; width: 140px; height: 250px; }
+.loader-block {
+    position: absolute;
+    top: 0; left: 42px;
+    width: 56px; height: 42px;
+    background:
+        linear-gradient(#8a3d16, #8a3d16) 0 13px / 100% 3px no-repeat,
+        linear-gradient(#8a3d16, #8a3d16) 0 27px / 100% 3px no-repeat,
+        linear-gradient(#8a3d16, #8a3d16) 26px 0 / 3px 13px no-repeat,
+        linear-gradient(#8a3d16, #8a3d16) 12px 16px / 3px 11px no-repeat,
+        linear-gradient(#8a3d16, #8a3d16) 40px 16px / 3px 11px no-repeat,
+        linear-gradient(#8a3d16, #8a3d16) 26px 30px / 3px 12px no-repeat,
+        #d9772f;
+    box-shadow: inset 0 0 0 3px #8a3d16;
+    animation: block-bump 1s infinite;
+}
+.loader-coin {
+    position: absolute;
+    top: 4px; left: 58px;
+    width: 24px; height: 30px;
+    border-radius: 50%;
+    background: #ffd23f;
+    box-shadow: inset -5px 0 0 #e0a800, inset 0 0 0 3px #b07d00;
+    opacity: 0;
+    animation: coin-pop 1s infinite;
+}
+.loader-runner { position: absolute; left: 21px; bottom: 14px; animation: runner-jump 1s infinite; }
+.loader-runner svg { display: block; }
+.loader-runner .legs-air { opacity: 0; animation: legs-air 1s infinite steps(1); }
+.loader-runner .legs-ground { animation: legs-ground 1s infinite steps(1); }
+.loader-shadow {
+    position: absolute;
+    left: 40px; bottom: 4px;
+    width: 60px; height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    animation: shadow-shrink 1s infinite;
+}
+.loader-text { margin-top: 28px; padding: 0 30px; text-align: center; font-size: 26px; font-weight: 600; color: #ffe066; }
+@keyframes runner-jump {
+    0%, 100% { transform: translateY(0); animation-timing-function: ease-out; }
+    45% { transform: translateY(-96px); animation-timing-function: ease-in; }
+}
+@keyframes block-bump { 0%, 40%, 58%, 100% { transform: translateY(0); } 47% { transform: translateY(-12px); } }
+@keyframes coin-pop {
+    0%, 44% { opacity: 0; transform: translateY(0) scaleX(1); }
+    52% { opacity: 1; transform: translateY(-38px) scaleX(0.4); }
+    64% { opacity: 1; transform: translateY(-64px) scaleX(1); }
+    80%, 100% { opacity: 0; transform: translateY(-76px) scaleX(0.4); }
+}
+@keyframes legs-air { 0% { opacity: 0; } 12% { opacity: 1; } 82% { opacity: 0; } }
+@keyframes legs-ground { 0% { opacity: 1; } 12% { opacity: 0; } 82% { opacity: 1; } }
+@keyframes shadow-shrink { 0%, 100% { transform: scale(1); opacity: 1; } 45% { transform: scale(0.5); opacity: 0.4; } }
+
+/* Speaker in the frame's corner while a clip plays (remote key 5 toggles sound). */
+.sound-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Fullscreen ---------- */
+#fullscreen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 10;
+    background: linear-gradient(135deg, #0e1522 0%, #1a2333 55%, #0a0e16 100%);
+}
+/* 9:16 like the album frame, as tall as the screen allows; the clip moves in here */
+.zoom-media {
+    position: absolute;
+    top: 50px; left: 96px;
+    width: 551px; height: 980px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #0b0f17;
+}
+.zoom-info {
+    position: absolute;
+    top: 50px; bottom: 50px;
+    left: 711px; right: 96px;
+    display: flex;
+    flex-direction: column;
+}
+.zoom-head { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+#fsBrand { padding: 10px 24px; border-radius: 40px; background: rgba(255, 255, 255, 0.08); font-size: 26px; }
+#fsBrand .name { font-weight: 700; }
+#fsBrand .time { margin-left: 14px; color: #d8deea; }
+.zoom-body { flex: 1; min-height: 0; overflow: hidden; }
+.zoom-caption { font-size: 40px; font-weight: 600; line-height: 1.35; }
+.zoom-sub { margin-top: 10px; font-size: 26px; color: #b4bccb; }
+.zoom-hint { flex: none; margin-top: 16px; font-size: 20px; color: #8f98a8; }
+.zoom-hint b {
+    display: inline-block;
+    margin: 0 6px 0 16px;
+    padding: 1px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #d8deea;
+    background: rgba(255, 255, 255, 0.12);
+}
+.zoom-hint b:first-child { margin-left: 0; }
+
+/* ---------- Long-press menu ---------- */
+#menu {
+    position: fixed;
+    top: 0; left: 0;
+    width: 1920px;
+    height: 1080px;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 20;
+}
+#menu .box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 640px;
+    transform: translate(-50%, -50%);
+    padding: 40px;
+    border-radius: 24px;
+    background: #1e2636;
+}
+#menu .title { font-size: 38px; margin-bottom: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#menu .pill { margin-top: 14px; text-align: center; }
+
+/* ---------- Start-up splash ---------- */
+#splash {
+    position: fixed;
+    top: 0; left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 40;
+    background: #0a0e16;
+    transition: opacity 0.6s ease-out;
+}
+#splash.leaving { opacity: 0; }
+#splash canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+#splash .dim { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 14, 0.6); }
+.splash-photo {
+    position: absolute;
+    right: 160px;
+    top: 90px;
+    height: 900px;
+    border-radius: 28px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.splash-text { position: absolute; left: 160px; top: 230px; }
+.splash-brand {
+    font-size: 132px;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(90deg, #ffffff, #9cc3ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.splash-welcome { font-size: 44px; color: #d8deea; margin-top: 22px; }
+.splash-count { position: relative; width: 200px; height: 200px; margin-top: 70px; }
+.splash-count svg { position: absolute; top: 0; left: 0; width: 200px; height: 200px; transform: rotate(-90deg); }
+.splash-count circle { fill: none; stroke-width: 10; }
+.splash-count .track { stroke: rgba(255, 255, 255, 0.15); }
+.splash-count .ring {
+    stroke: #9cc3ff;
+    stroke-linecap: round;
+    stroke-dasharray: 566;
+    animation: splash-ring 5s linear forwards;
+}
+@keyframes splash-ring { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 566; } }
+#splashNum {
+    position: absolute;
+    top: 0; left: 0;
+    width: 200px;
+    line-height: 200px;
+    text-align: center;
+    font-size: 96px;
+    font-weight: 300;
+}
+.splash-hint { font-size: 28px; color: #b4bccb; margin-top: 36px; }
+.splash-credit {
+    position: absolute;
+    left: 160px;
+    bottom: 60px;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+#announce { position: fixed; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 35; background: #000; overflow: hidden; }
+
+/* ---------- Video USB ---------- */
+.tile .usb-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ff5f6d 0%, #e8366c 45%, #b0237a 100%);
+}
+.tile .usb-icon .lock-badge {
+    position: absolute;
+    right: 10px; bottom: 10px;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex; align-items: center; justify-content: center;
+}
+.usb-screen {
+    position: fixed;
+    left: 0; top: 0;
+    width: 1920px; height: 1080px;
+    z-index: 33;
+    background: linear-gradient(135deg, #0e1522 0%, #1a2333 55%, #0a0e16 100%);
+}
+#usbLock { display: flex; align-items: center; justify-content: center; }
+#usbLock.hidden { display: none !important; }
+.usb-lock-card {
+    width: 560px;
+    padding: 56px 60px 40px;
+    border-radius: 32px;
+    background: #151d2b;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+.usb-lock-card.shake { animation: usb-shake 0.4s; }
+@keyframes usb-shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-18px); } 40%, 80% { transform: translateX(18px); } }
+.usb-lock-title { font-size: 44px; font-weight: 700; }
+.usb-dots { margin: 34px 0 18px; }
+.usb-dots span {
+    display: inline-block;
+    width: 30px; height: 30px;
+    margin: 0 14px;
+    border-radius: 50%;
+    border: 3px solid #9cc3ff;
+}
+.usb-dots span.on { background: #9cc3ff; }
+.usb-lock-msg { font-size: 24px; color: #b4bccb; min-height: 32px; }
+.usb-lock-msg.wrong { color: #ff7a8a; }
+.usb-keypad { display: flex; flex-wrap: wrap; justify-content: center; margin: 26px auto 10px; width: 420px; }
+.usb-keypad .key {
+    width: 120px; height: 88px;
+    margin: 8px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 40px; font-weight: 600;
+    line-height: 88px;
+}
+.usb-keypad .key.focused { background: #fff; color: #000; }
+.usb-lock-hint, .usb-hint { font-size: 22px; color: #8f98a8; }
+.usb-lock-hint { margin-top: 16px; }
+.usb-lock-hint b, .usb-hint b, .usb-osd-hint b {
+    display: inline-block;
+    margin: 0 8px 0 18px;
+    padding: 1px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #d8deea;
+    background: rgba(255, 255, 255, 0.12);
+}
+#usbBrowser { box-sizing: border-box; padding: 54px 96px 40px; display: flex; flex-direction: column; }
+#usbBrowser.hidden { display: none !important; }
+.usb-head { display: flex; align-items: baseline; margin-bottom: 26px; }
+.usb-title { font-size: 52px; font-weight: 700; }
+.usb-sub { margin-left: 26px; font-size: 26px; color: #b4bccb; }
+.usb-list { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+.usb-row {
+    display: flex;
+    align-items: center;
+    height: 88px;
+    padding: 0 26px;
+    margin-bottom: 8px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.04);
+}
+.usb-row svg { flex: none; margin-right: 22px; }
+.usb-row-text { min-width: 0; }
+.usb-name { font-size: 30px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.usb-folder { font-size: 22px; color: #8f98a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.usb-row-text { flex: 1; }
+.usb-resume { flex: none; margin-left: 20px; padding: 6px 16px; border-radius: 20px; font-size: 22px; background: rgba(156, 195, 255, 0.18); color: #9cc3ff; }
+.usb-row.focused .usb-resume { background: #0b6bd3; color: #fff; }
+.usb-row.focused { background: #fff; color: #000; }
+.usb-row.focused .usb-folder { color: #4a5568; }
+.usb-row.focused svg rect { stroke: #0b6bd3; }
+.usb-row.focused svg path { fill: #0b6bd3; }
+.usb-hint { margin-top: 18px; }
+.usb-page { margin-left: auto; font-size: 24px; color: #8f98a8; }
+/* thumbnail grid: 5 x 3 cards of 320 px */
+.usb-grid { display: flex; flex-wrap: wrap; align-content: flex-start; overflow: visible; padding-top: 10px; }
+.usb-card { width: 320px; margin: 0 24px 30px 0; transition: transform 0.12s ease-out; }
+.usb-card:nth-child(5n) { margin-right: 0; }
+.usb-thumb {
+    position: relative;
+    width: 320px; height: 180px;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+.usb-thumb img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
+.usb-thumb .usb-play { position: relative; z-index: 1; opacity: 0.85; }
+.usb-thumb img ~ .usb-dur, .usb-thumb img ~ .usb-prog { z-index: 2; }
+.usb-dur {
+    position: absolute; right: 10px; bottom: 10px; z-index: 2;
+    padding: 2px 10px; border-radius: 8px;
+    background: rgba(0, 0, 0, 0.75); font-size: 20px; font-weight: 600;
+}
+.usb-prog { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; z-index: 2; background: rgba(255, 255, 255, 0.25); }
+.usb-prog div { height: 100%; background: #ff4d6d; }
+.usb-card-title {
+    margin-top: 12px;
+    font-size: 24px; font-weight: 600; line-height: 1.3;
+    max-height: 62px; overflow: hidden; /* two lines */
+    color: #d8deea;
+}
+.usb-card .usb-resume { display: inline-block; margin: 8px 0 0; padding: 3px 12px; font-size: 19px; }
+.usb-card.focused { transform: scale(1.07); }
+.usb-card.focused .usb-thumb { box-shadow: 0 0 0 5px #fff, 0 18px 40px rgba(0, 0, 0, 0.6); }
+.usb-card.focused .usb-card-title { color: #fff; }
+.usb-card.focused .usb-resume { background: #0b6bd3; color: #fff; }
+.usb-player {
+    position: fixed;
+    left: 0; top: 0;
+    width: 1920px; height: 1080px;
+    z-index: 34;
+    background: #000;
+}
+.usb-player video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+.usb-osd {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 120px 96px 44px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.usb-player.osd .usb-osd { opacity: 1; }
+.usb-osd-name { font-size: 34px; font-weight: 600; margin-bottom: 18px; }
+.usb-bar { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
+.usb-bar-fill { height: 100%; width: 0; background: #9cc3ff; }
+.usb-osd-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+.usb-osd-time { font-size: 26px; }
+.usb-osd-hint { font-size: 20px; color: #b4bccb; }
+.usb-paused-sign, .usb-failed {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+.usb-player.paused .usb-paused-sign { display: block; }
+.usb-player.failed .usb-paused-sign { display: none; }
+.usb-player.failed .usb-failed { display: block; padding: 22px 40px; border-radius: 18px; background: rgba(0, 0, 0, 0.7); font-size: 30px; }
+
+#toast {
+    position: fixed;
+    left: 50%;
+    bottom: 60px;
+    transform: translateX(-50%);
+    padding: 18px 36px;
+    border-radius: 40px;
+    background: rgba(20, 26, 38, 0.95);
+    font-size: 26px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 30;
+    pointer-events: none;
+}
+#toast.show { opacity: 1; }

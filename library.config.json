@@ -1,0 +1,27 @@
+{
+  "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEADFovXX58lBShz+zHjV3a4mhB8vZJ7X3Jqr5VJxjkPiU=\n-----END PUBLIC KEY-----",
+  "github": {
+    "owner": "cnvwork",
+    "repo": "cnv-cowork-library"
+  },
+  "categories": [
+    {
+      "id": "tv",
+      "label": "Ứng dụng TV",
+      "description": "App chạy trên TV thông minh (Samsung Tizen…), cài từ máy tính."
+    },
+    {
+      "id": "web",
+      "label": "Trang web",
+      "description": "Trang giới thiệu, trang bán hàng, trang đặt lịch chạy trên trình duyệt."
+    },
+    {
+      "id": "automation",
+      "label": "Tự động hoá",
+      "description": "Script và mẫu tự động hoá việc lặp lại."
+    }
+  ],
+  "scan_allow": [
+    "192.168.1.50"
+  ]
+}
