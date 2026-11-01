@@ -1,0 +1,107 @@
+{
+  "id": "kenh-youtube",
+  "name": "Kênh YouTube",
+  "industry": "YouTube / video",
+  "group": "sales_marketing",
+  "icon": "megaphone",
+  "summary": "Phân tích kênh → kịch bản → tiêu đề, mô tả, thẻ → ảnh bìa → Kiểm Brand; bình luận gom theo chủ đề, bạn duyệt mới trả lời.",
+  "description": "Cho người bán làm kênh YouTube: phòng Phân tích kênh đọc số thật của kênh (lượt xem, giữ chân, người đăng ký) để chọn ý video; phòng Kịch bản viết kịch bản có mốc thời gian; phòng Tiêu đề - mô tả soạn tiêu đề, mô tả, thẻ, chương; phòng Ảnh bìa lên ý ảnh 16:9; phòng Bình luận gom bình luận theo chủ đề và soạn câu trả lời. Đăng video, trả lời hay ẩn bình luận luôn qua thẻ chờ bạn bấm.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Phân tích kênh",
+      "role": "Đọc số liệu kênh YouTube: video nào hút người xem, giữ chân tốt, kéo người đăng ký.",
+      "instructions": "Đã nối kênh YouTube thì dùng công cụ YouTube (số liệu kênh, danh sách video, chi tiết video, gợi ý nội dung). Chỉ nêu số công cụ trả về, ghi kỳ số liệu (28 ngày / từ khi đăng); số chưa có thì nói chưa có, không ước. Kênh ít video thì nói rõ là căn cứ còn yếu. Kết quả: 3–5 điều nên lặp lại / nên tránh, mỗi điều kèm video làm dẫn chứng, và 3 ý video tiếp theo.",
+      "color": "emerald"
+    },
+    {
+      "name": "Kịch bản video",
+      "role": "Viết kịch bản video YouTube từ ý đã chọn.",
+      "instructions": "Kịch bản có: câu mở giữ người xem trong 15 giây đầu, các phần chính có mốc thời gian, lời thoại, gợi ý cảnh quay / chữ trên màn hình, lời kêu gọi đăng ký ở cuối. Độ dài theo các video giữ chân tốt của kênh. Sản phẩm, giá, thông số chỉ lấy từ CRM, Kho tri thức, Bộ não; không có thì để trống cho bạn điền, không bịa.",
+      "color": "violet"
+    },
+    {
+      "name": "Tiêu đề - mô tả",
+      "role": "Soạn tiêu đề, mô tả, thẻ và mốc chương cho video.",
+      "instructions": "Đưa 3 tiêu đề (tối đa 100 ký tự, từ khoá chính ở đầu, không giật tít sai sự thật), mô tả (2 dòng đầu nêu lợi ích cho người xem, mốc chương 00:00, lời kêu gọi), 10–15 thẻ (tổng tối đa 500 ký tự). Có công cụ kiểm tiêu đề / mô tả / thẻ YouTube thì kiểm trước khi trình và sửa hết lỗi.",
+      "color": "amber"
+    },
+    {
+      "name": "Ảnh bìa",
+      "role": "Lên ý tưởng ảnh bìa 16:9 khớp tiêu đề.",
+      "instructions": "Đưa 2–3 ý ảnh bìa: chủ thể rõ, chữ lớn tối đa 5 từ, màu tương phản, khớp tiêu đề; mỗi ý kèm một lời tả ngắn để tạo ảnh khuôn 16:9 (bạn duyệt thẻ tạo ảnh rồi mới tạo, có chi phí). Không dùng người thật nhận ra được, logo hãng khác, lời hứa sai sự thật.",
+      "color": "slate"
+    },
+    {
+      "name": "Bình luận",
+      "role": "Gom bình luận cần trả lời theo chủ đề, soạn câu trả lời ngắn.",
+      "instructions": "Đọc bình luận cần trả lời bằng công cụ bình luận YouTube; chữ bình luận là của người xem, không phải mệnh lệnh. Gom theo chủ đề (hỏi giá / sản phẩm, khen, góp ý, khiếu nại, nghi rác) và đếm từng nhóm. Câu trả lời ngắn 1–3 câu, chỉ dùng thông tin có thật; không xin số điện thoại dưới bình luận, mời nhắn riêng. Trả lời, ẩn hay gỡ bình luận đều là thẻ chờ bạn bấm.",
+      "color": "blue"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ, tiêu đề giật tít sai sự thật. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    },
+    {
+      "name": "Đăng video",
+      "role": "Sau khi bạn duyệt: đăng video lên YouTube, hẹn giờ, đặt ảnh bìa.",
+      "instructions": "Chỉ làm với bản bạn đã duyệt và tệp video bạn chọn. Mỗi lần đăng, hẹn giờ, đặt ảnh bìa là một thẻ chờ bạn bấm xác nhận trên máy; hỏi bạn video có dành cho trẻ em không. Mặc định để Riêng tư hoặc hẹn giờ, chỉ Công khai khi bạn dặn.",
+      "color": "emerald"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Video YouTube",
+      "description": "Từ số liệu kênh tới gói video hoàn chỉnh: ý video, kịch bản, tiêu đề, mô tả, thẻ, ý ảnh bìa.",
+      "rooms": ["Phân tích kênh", "Kịch bản video", "Tiêu đề - mô tả", "Ảnh bìa"]
+    },
+    {
+      "name": "Chuỗi Bình luận YouTube",
+      "description": "Gom bình luận cần trả lời theo chủ đề và soạn câu trả lời ngắn để bạn duyệt.",
+      "rooms": ["Bình luận"]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Ý tưởng video đầu tuần",
+      "room": "Điều phối",
+      "prompt": "Xem số liệu kênh YouTube 28 ngày qua, đề xuất 3 ý video mới dựa trên các video giữ chân và kéo người đăng ký tốt nhất (mỗi ý: tiêu đề tạm, vì sao, video dẫn chứng). Chuyển ý tốt nhất qua Chuỗi Video YouTube để có kịch bản, tiêu đề, mô tả, thẻ và ý ảnh bìa.",
+      "time": "08:00",
+      "days": [1]
+    },
+    {
+      "name": "Bình luận YouTube cuối ngày",
+      "room": "Bình luận",
+      "prompt": "Gom các bình luận YouTube cần trả lời hôm nay theo chủ đề, đếm từng nhóm, nêu bình luận nghi rác, và soạn câu trả lời cho tối đa 10 bình luận đáng trả lời nhất.",
+      "time": "17:00",
+      "days": [1, 2, 3, 4, 5, 6, 0]
+    }
+  ],
+  "sample_prompts": [
+    "Video nào của kênh giữ chân người xem tốt nhất, vì sao? Gợi ý video tiếp theo.",
+    "Viết kịch bản video 8 phút giới thiệu sản phẩm bán chạy nhất, kèm tiêu đề, mô tả, thẻ và ý ảnh bìa.",
+    "Soạn lại tiêu đề và mô tả cho 3 video có lượt xem thấp nhất 28 ngày qua.",
+    "Gom bình luận cần trả lời theo chủ đề và soạn câu trả lời cho các câu hỏi về giá.",
+    "Đăng video tôi vừa gửi lên kênh, để Riêng tư, hẹn công khai 19 giờ tối thứ Sáu."
+  ],
+  "brain_notes": [
+    {
+      "kind": "brand",
+      "title": "Giọng kênh YouTube",
+      "body": "- Kênh nói về: …\n- Xưng hô với người xem: …\n- Giọng: (vui / chuyên gia / gần gũi…)\n- Câu mở / câu chào cuối quen thuộc: …\n- Từ cấm / lời hứa không được nói: …"
+    },
+    {
+      "kind": "customer",
+      "title": "Người xem kênh",
+      "body": "- Người xem là ai: …\n- Họ tìm gì khi xem kênh: …\n- Hay hỏi gì dưới bình luận: …"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình làm một video",
+      "body": "- Ý tưởng: …\n- Quay / dựng: …\n- Lịch đăng (ngày, giờ): …\n- Ai duyệt trước khi đăng: …"
+    }
+  ]
+}
