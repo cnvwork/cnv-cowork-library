@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Kiểm một danh mục đã phát hành giống app làm: chữ ký, rồi sha256 + kích thước từng gói (và bộ kỹ năng) cạnh catalog.json.
+// Kiểm một danh mục đã phát hành giống app làm: chữ ký, rồi sha256 + kích thước từng gói (và bộ kỹ năng, mẫu văn phòng) cạnh catalog.json.
 //   node tools/verify.mjs [dist/catalog.json]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -22,6 +22,14 @@ if (pack) {
   const ok = data && data.length === pack.bytes && sha256(data) === pack.sha256 && JSON.parse(data.toString('utf8')).skills.length === pack.count;
   if (!ok) failed = true;
   console.log(`${ok ? '✔' : '✖'} bộ kỹ năng: ${pack.count} kỹ năng (${pack.url})`);
+}
+const offices = payload.content?.offices;
+if (offices) {
+  const packPath = path.join(path.dirname(file), offices.url.split('/').pop());
+  const data = fs.existsSync(packPath) ? fs.readFileSync(packPath) : null;
+  const ok = data && data.length === offices.bytes && sha256(data) === offices.sha256 && JSON.parse(data.toString('utf8')).offices.length === offices.count;
+  if (!ok) failed = true;
+  console.log(`${ok ? '✔' : '✖'} mẫu văn phòng: ${offices.count} mẫu (${offices.url})`);
 }
 console.log(`Chữ ký đúng, ký lúc ${payload.issued_at}.`);
 process.exit(failed ? 1 : 0);

@@ -1,0 +1,94 @@
+{
+  "id": "bat-dong-san",
+  "name": "Môi giới bất động sản",
+  "industry": "Bất động sản",
+  "group": "professional",
+  "icon": "building",
+  "summary": "Tra cứu dự án → tư vấn khách theo nhu cầu, giá / pháp lý / tiến độ chỉ từ tài liệu dự án; không cam kết.",
+  "description": "Cho môi giới, sàn nhỏ: Tra cứu dự án lấy giá, pháp lý, tiến độ, chính sách bán hàng CHỈ từ tài liệu dự án trong Kho tri thức; Tư vấn khách BĐS soạn tin theo ngân sách, nhu cầu ở / đầu tư; Nội dung dự án viết bài giới thiệu. Không cam kết lợi nhuận, giá tăng, ngày bàn giao hay khả năng vay ngoài tài liệu chủ đầu tư.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tra cứu dự án",
+      "role": "Lấy giá, pháp lý, tiến độ, chính sách bán hàng từ tài liệu dự án.",
+      "instructions": "Giá, mã căn, diện tích, pháp lý (sổ, giấy phép xây dựng), tiến độ, chính sách thanh toán / chiết khấu CHỈ lấy từ tài liệu dự án và bảng giá trong Kho tri thức (tra bằng search_knowledge_base / search_price_list); ghi rõ tài liệu nào, ngày cập nhật. Không có thì ghi «chưa có thông tin», không đoán.",
+      "color": "emerald"
+    },
+    {
+      "name": "Tư vấn khách BĐS",
+      "role": "Soạn tin tư vấn theo ngân sách, vị trí, mục đích ở hay đầu tư của khách.",
+      "instructions": "Dựa trên kết quả tra cứu và thông tin khách trong CRM. KHÔNG cam kết lợi nhuận, giá sẽ tăng, ngày bàn giao, khả năng vay ngân hàng ngoài tài liệu chủ đầu tư; không hứa chiết khấu ngoài chính sách. Rủi ro / điểm cần kiểm (pháp lý, tiến độ) nói rõ. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "violet"
+    },
+    {
+      "name": "Nội dung dự án",
+      "role": "Viết bài giới thiệu dự án, căn hộ, tin đăng.",
+      "instructions": "Thông tin chỉ từ tài liệu dự án; không dùng từ ngữ hứa hẹn («chắc chắn lời», «giá tốt nhất thị trường») khi không có căn cứ. Có lời kêu gọi để lại số / nhắn tin.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Tư vấn BĐS",
+      "description": "Tư vấn một khách: tra dự án hợp nhu cầu rồi soạn tin tư vấn, so sánh căn.",
+      "rooms": [
+        "Tra cứu dự án",
+        "Tư vấn khách BĐS"
+      ]
+    },
+    {
+      "name": "Chuỗi Nội dung dự án",
+      "description": "Bài giới thiệu dự án, tin đăng căn hộ, nội dung mở bán.",
+      "rooms": [
+        "Tra cứu dự án",
+        "Nội dung dự án"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Rà khách xem nhà tuần này",
+      "room": "Tư vấn khách BĐS",
+      "prompt": "Rà khách có lịch xem nhà tuần này và khách nóng chưa được liên hệ 7 ngày. Liệt kê kèm nhu cầu, căn phù hợp (theo tài liệu dự án) và câu mở lời gợi ý.",
+      "time": "08:30",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Khách có 3 tỷ, cần căn 2 phòng ngủ để ở: tư vấn các căn phù hợp kèm pháp lý và tiến độ.",
+    "So sánh 2 dự án đang bán về giá, chính sách thanh toán, pháp lý.",
+    "Viết tin đăng cho căn góc tầng 12, đúng thông tin trong bảng giá.",
+    "Khách hỏi dự án bao giờ có sổ: soạn câu trả lời theo tài liệu chủ đầu tư."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Dự án đang bán",
+      "body": "- Tên dự án: … — chủ đầu tư: …\n- Vị trí: …\n- Bảng giá cập nhật ngày: … (tải vào Kho tri thức)"
+    },
+    {
+      "kind": "product",
+      "title": "Pháp lý dự án",
+      "body": "- Giấy phép xây dựng: …\n- Tình trạng sổ: …\n- Tài liệu gốc: …"
+    },
+    {
+      "kind": "process",
+      "title": "Chính sách bán hàng dự án",
+      "body": "- Tiến độ thanh toán: …\n- Chiết khấu: …\n- Hỗ trợ vay: … (theo văn bản ngân hàng / chủ đầu tư)"
+    },
+    {
+      "kind": "customer",
+      "title": "Khách mục tiêu bất động sản",
+      "body": "- Mua ở: …\n- Đầu tư: …\n- Câu hỏi hay gặp: …"
+    }
+  ]
+}

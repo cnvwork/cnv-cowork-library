@@ -1,0 +1,94 @@
+{
+  "id": "o-to",
+  "name": "Showroom - dịch vụ ô tô",
+  "industry": "Ô tô",
+  "group": "services",
+  "icon": "car",
+  "summary": "Tư vấn xe theo bảng giá / tài liệu hãng, gợi ý giờ lái thử - bảo dưỡng (bạn duyệt), nhắc bảo dưỡng định kỳ.",
+  "description": "Cho showroom, đại lý, gara: Tư vấn xe trả lời giá, phiên bản, thông số, khuyến mãi từ bảng giá / tài liệu hãng; Đặt lịch lái thử - bảo dưỡng gợi ý giờ trống, lịch hẹn thành thẻ chờ duyệt; Chăm sóc sau bán nhắc bảo dưỡng định kỳ; Nội dung ô tô viết bài giới thiệu xe. Không hứa giá lăn bánh khi thiếu thuế phí địa phương.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tư vấn xe",
+      "role": "Tư vấn dòng xe, phiên bản, giá, khuyến mãi, trả góp.",
+      "instructions": "Giá, phiên bản, thông số, khuyến mãi, lãi suất trả góp CHỈ từ bảng giá và tài liệu hãng / ngân hàng trong Kho tri thức. Giá lăn bánh chỉ ước tính khi có đủ thuế phí của tỉnh khách; thiếu thì nói rõ. Không hứa quà tặng, giảm giá ngoài chương trình. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "emerald"
+    },
+    {
+      "name": "Đặt lịch lái thử - bảo dưỡng",
+      "role": "Gợi ý giờ trống, đề xuất lịch lái thử / bảo dưỡng chờ bạn duyệt.",
+      "instructions": "Xem giờ trống trong Lịch (find_free_slots) để gợi ý 2–3 giờ; khách chọn thì đề xuất lịch hẹn qua thẻ chờ duyệt (schedule_follow_up), không tự chốt. Nhắc khách mang bằng lái (lái thử) / sổ bảo dưỡng.",
+      "color": "violet"
+    },
+    {
+      "name": "Chăm sóc sau bán",
+      "role": "Nhắc bảo dưỡng định kỳ, hỏi thăm sau mua xe, xin đánh giá.",
+      "instructions": "Mốc bảo dưỡng theo km / thời gian lấy từ lịch bảo dưỡng của hãng và ngày giao xe trong CRM. Tin ngắn, đúng xe của khách. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Nội dung ô tô",
+      "role": "Viết bài giới thiệu xe, so sánh phiên bản, khuyến mãi.",
+      "instructions": "Thông số, giá đúng tài liệu; so sánh với xe khác chỉ dựa trên số liệu có nguồn, không chê bai hãng khác.",
+      "color": "blue"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Tư vấn xe",
+      "description": "Khách hỏi xe, giá, muốn lái thử: tư vấn phiên bản rồi gợi ý giờ lái thử.",
+      "rooms": [
+        "Tư vấn xe",
+        "Đặt lịch lái thử - bảo dưỡng"
+      ]
+    },
+    {
+      "name": "Chuỗi Nội dung xe",
+      "description": "Bài giới thiệu xe mới, so sánh phiên bản, chương trình khuyến mãi.",
+      "rooms": [
+        "Nội dung ô tô"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Nhắc bảo dưỡng định kỳ",
+      "room": "Chăm sóc sau bán",
+      "prompt": "Tìm khách sắp tới mốc bảo dưỡng trong 2 tuần (theo ngày giao xe và lịch bảo dưỡng hãng). Soạn tin nhắc riêng cho từng khách kèm gợi ý giờ trống.",
+      "time": "09:00",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Khách hỏi giá lăn bánh bản cao nhất ở Hà Nội và trả góp 70%.",
+    "So sánh 2 phiên bản đang bán về trang bị và giá.",
+    "Gợi ý 3 giờ lái thử cuối tuần cho khách vừa nhắn.",
+    "Viết bài giới thiệu chương trình khuyến mãi tháng này."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Dòng xe và bảng giá",
+      "body": "- Dòng xe: … — phiên bản … — giá niêm yết …\n- Bảng giá cập nhật ngày: …"
+    },
+    {
+      "kind": "product",
+      "title": "Chương trình khuyến mãi tháng",
+      "body": "- Ưu đãi: …\n- Áp dụng tới ngày: …"
+    },
+    {
+      "kind": "process",
+      "title": "Lịch bảo dưỡng định kỳ",
+      "body": "- Mốc: 1.000 km / … tháng, 5.000 km …\n- Hạng mục mỗi mốc: …"
+    }
+  ]
+}

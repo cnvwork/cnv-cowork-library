@@ -1,0 +1,89 @@
+{
+  "id": "cskh",
+  "name": "Chăm sóc khách hàng",
+  "industry": "CSKH",
+  "group": "sales_marketing",
+  "icon": "headphones",
+  "summary": "Tra cứu khách → soạn trả lời / xử lý khiếu nại → Kiểm Brand; hỏi thăm khách sau mua mỗi tuần.",
+  "description": "Cho người tự lo chăm sóc khách: phòng Tra cứu khách tìm đơn, lịch sử, chính sách áp dụng; phòng Trả lời khách soạn câu trả lời / hướng xử lý khiếu nại theo chính sách; Chăm sóc định kỳ hỏi thăm khách cũ. Mọi tin gửi khách qua thẻ chờ duyệt.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tra cứu khách",
+      "role": "Tìm thông tin khách, đơn hàng, lịch sử trao đổi liên quan.",
+      "instructions": "Tra CRM, đơn bán hàng, thư, Bộ não, Kho tri thức. Tóm tắt sự việc và chính sách áp dụng, ghi rõ nguồn; thiếu thì nói thiếu.",
+      "color": "emerald"
+    },
+    {
+      "name": "Trả lời khách",
+      "role": "Soạn câu trả lời / hướng xử lý khiếu nại cho khách.",
+      "instructions": "Lịch sự, nhận lỗi khi có lỗi, hứa điều làm được theo chính sách. Không hứa đền bù ngoài chính sách. Gửi khách chỉ qua thẻ chờ duyệt.",
+      "color": "violet"
+    },
+    {
+      "name": "Chăm sóc định kỳ",
+      "role": "Nhắc khách cũ, hỏi thăm sau mua, xin đánh giá / giới thiệu.",
+      "instructions": "Tin ngắn, ấm, có chi tiết riêng của từng khách. Mọi tin gửi khách tạo thẻ chờ duyệt.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi CSKH",
+      "description": "Trả lời câu hỏi, xử lý khiếu nại, đổi trả của một khách: tra cứu rồi soạn câu trả lời theo chính sách.",
+      "rooms": [
+        "Tra cứu khách",
+        "Trả lời khách"
+      ]
+    },
+    {
+      "name": "Chuỗi Chăm sóc khách cũ",
+      "description": "Hỏi thăm sau mua, nhắc khách lâu không quay lại, xin đánh giá / giới thiệu.",
+      "rooms": [
+        "Tra cứu khách",
+        "Chăm sóc định kỳ"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Hỏi thăm khách sau mua",
+      "room": "Chăm sóc định kỳ",
+      "prompt": "Tìm khách mua hàng 7–10 ngày trước, soạn tin hỏi thăm riêng cho từng người (tối đa 10), đề xuất gửi qua thẻ chờ duyệt.",
+      "time": "09:00",
+      "days": [
+        3
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Khách phàn nàn giao hàng chậm: tra đơn và soạn câu trả lời theo chính sách.",
+    "Soạn tin hỏi thăm cho những khách mua tuần trước.",
+    "Khách lâu không quay lại: liệt kê 10 người đáng nhắc và soạn tin cho từng người.",
+    "Tóm tắt các khiếu nại tháng này và đề xuất sửa chính sách nào."
+  ],
+  "brain_notes": [
+    {
+      "kind": "process",
+      "title": "Chính sách đổi trả - bảo hành",
+      "body": "- Đổi trả trong … ngày, điều kiện: …\n- Bảo hành: …\n- Trường hợp không áp dụng: …"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình xử lý khiếu nại",
+      "body": "Nhận → xin lỗi / ghi nhận → tra cứu → đề xuất cách xử lý theo chính sách → bạn duyệt → trả lời khách → ghi lại."
+    },
+    {
+      "kind": "brand",
+      "title": "Giọng thương hiệu",
+      "body": "- Xưng hô: …\n- Giọng: ấm áp, nhận lỗi rõ ràng\n- Không hứa: đền bù ngoài chính sách"
+    }
+  ]
+}

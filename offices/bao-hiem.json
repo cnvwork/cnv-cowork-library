@@ -1,0 +1,88 @@
+{
+  "id": "bao-hiem",
+  "name": "Tư vấn bảo hiểm",
+  "industry": "Bảo hiểm",
+  "group": "professional",
+  "icon": "shield",
+  "summary": "Phân tích nhu cầu → tư vấn sản phẩm chỉ theo điều khoản có sẵn; nhắc phí đến hạn, hỗ trợ thủ tục bồi thường.",
+  "description": "Cho tư vấn viên, đại lý bảo hiểm: Phân tích nhu cầu bảo hiểm gom hoàn cảnh, mối lo của khách; Tư vấn sản phẩm bảo hiểm so sánh quyền lợi CHỈ từ tài liệu sản phẩm, quy tắc điều khoản trong Kho tri thức; Chăm sóc hợp đồng nhắc phí đến hạn, ngày kỷ niệm, hỗ trợ thủ tục bồi thường. Không cam kết chi trả, lãi suất ngoài điều khoản.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Phân tích nhu cầu bảo hiểm",
+      "role": "Gom hoàn cảnh, mối lo, khả năng đóng phí của khách.",
+      "instructions": "Từ trao đổi và CRM: gia đình, người phụ thuộc, thu nhập, khoản vay, bảo hiểm đã có, mối lo chính. Hỏi tự nhiên, không hỏi dồn; thông tin nhạy cảm (sức khoẻ) chỉ ghi khi khách tự nói. Thiếu gì thì ghi thành câu hỏi.",
+      "color": "emerald"
+    },
+    {
+      "name": "Tư vấn sản phẩm bảo hiểm",
+      "role": "So sánh, gợi ý sản phẩm theo đúng quy tắc điều khoản.",
+      "instructions": "Quyền lợi, phí, loại trừ, thời gian chờ CHỈ từ tài liệu sản phẩm / quy tắc điều khoản trong Kho tri thức, ghi rõ tài liệu. Minh hoạ quyền lợi là ví dụ, không phải cam kết. KHÔNG hứa chi trả, lãi suất, giá trị hoàn lại ngoài điều khoản; nêu rõ loại trừ chính. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "violet"
+    },
+    {
+      "name": "Chăm sóc hợp đồng",
+      "role": "Nhắc phí đến hạn, ngày kỷ niệm hợp đồng, hỗ trợ thủ tục bồi thường.",
+      "instructions": "Ngày đóng phí, số hợp đồng lấy từ CRM / ghi chú. Thủ tục bồi thường hướng dẫn theo tài liệu của công ty bảo hiểm; không khẳng định hồ sơ sẽ được chi trả. Không nêu chi tiết sức khoẻ trong tin. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Tư vấn bảo hiểm",
+      "description": "Tư vấn một khách: phân tích nhu cầu rồi gợi ý, so sánh sản phẩm theo điều khoản.",
+      "rooms": [
+        "Phân tích nhu cầu bảo hiểm",
+        "Tư vấn sản phẩm bảo hiểm"
+      ]
+    },
+    {
+      "name": "Chuỗi Chăm sóc hợp đồng",
+      "description": "Nhắc phí, chúc mừng ngày kỷ niệm hợp đồng, hướng dẫn thủ tục bồi thường.",
+      "rooms": [
+        "Chăm sóc hợp đồng"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Nhắc phí đến hạn trong 2 tuần",
+      "room": "Chăm sóc hợp đồng",
+      "prompt": "Rà hợp đồng có kỳ đóng phí trong 14 ngày tới (theo CRM / ghi chú). Soạn tin nhắc riêng cho từng khách, lịch sự, kèm cách đóng phí.",
+      "time": "09:00",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Khách 35 tuổi, 2 con nhỏ, đang vay mua nhà: phân tích nhu cầu và gợi ý sản phẩm phù hợp.",
+    "So sánh 2 gói bảo hiểm sức khoẻ về quyền lợi, loại trừ, thời gian chờ.",
+    "Khách hỏi thủ tục bồi thường nằm viện: soạn hướng dẫn theo tài liệu công ty.",
+    "Soạn tin chúc mừng ngày kỷ niệm hợp đồng cho khách tháng này."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Sản phẩm bảo hiểm đang tư vấn",
+      "body": "- Sản phẩm: … — quyền lợi chính … — phí từ …\n- Quy tắc điều khoản: … (tải vào Kho tri thức)"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình bồi thường",
+      "body": "- Giấy tờ cần: …\n- Nộp qua: …\n- Thời gian xử lý: … (theo tài liệu công ty)"
+    },
+    {
+      "kind": "customer",
+      "title": "Khách hàng bảo hiểm mục tiêu",
+      "body": "- Nhóm khách: …\n- Mối lo thường gặp: …\n- Câu từ chối hay gặp: …"
+    }
+  ]
+}

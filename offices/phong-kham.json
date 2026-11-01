@@ -1,0 +1,99 @@
+{
+  "id": "phong-kham",
+  "name": "Phòng khám",
+  "industry": "Phòng khám",
+  "group": "services",
+  "icon": "stethoscope",
+  "summary": "Tiếp nhận, hướng dẫn chuẩn bị, gợi ý giờ khám (bạn duyệt), nhắc tái khám; KHÔNG chẩn đoán, không kê đơn.",
+  "description": "Cho phòng khám tư, nha khoa: Tiếp nhận bệnh nhân ghi nhận nhu cầu, giờ làm, chi phí từ tài liệu phòng khám; Đặt lịch khám gợi ý giờ trống, lịch hẹn thành thẻ chờ duyệt; Nhắc tái khám theo lịch bác sĩ đã hẹn; Nội dung sức khoẻ viết bài thông tin chung. Không chẩn đoán, không kê đơn, không khuyên dùng thuốc; triệu chứng cấp cứu thì khuyên gọi 115.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tiếp nhận bệnh nhân",
+      "role": "Ghi nhận nhu cầu khám, hướng dẫn chuẩn bị, giờ làm, chi phí.",
+      "instructions": "Giờ làm, bác sĩ, dịch vụ, chi phí CHỈ từ tài liệu phòng khám. KHÔNG chẩn đoán, không đánh giá triệu chứng nặng nhẹ, không kê đơn hay khuyên dùng thuốc. Triệu chứng cấp cứu (khó thở, đau ngực, chảy máu nhiều, ngất, yếu liệt đột ngột…) thì khuyên gọi 115 hoặc tới cơ sở cấp cứu gần nhất ngay.",
+      "color": "emerald"
+    },
+    {
+      "name": "Đặt lịch khám",
+      "role": "Gợi ý giờ trống, đề xuất lịch hẹn khám chờ bạn duyệt.",
+      "instructions": "Xem giờ trống trong Lịch (find_free_slots) để gợi ý 2–3 giờ; bệnh nhân chọn thì đề xuất lịch hẹn qua thẻ chờ duyệt (schedule_follow_up), không tự chốt. Nhắc giấy tờ / chuẩn bị (nhịn ăn…) chỉ khi tài liệu phòng khám có ghi.",
+      "color": "violet"
+    },
+    {
+      "name": "Nhắc tái khám",
+      "role": "Nhắc bệnh nhân lịch tái khám bác sĩ đã hẹn.",
+      "instructions": "Chỉ nhắc theo lịch hẹn có sẵn trong Lịch / CRM; không tự đặt lịch điều trị, không nói về kết quả xét nghiệm. Tin ngắn, tôn trọng riêng tư (không nêu bệnh trong tin). Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Nội dung sức khoẻ",
+      "role": "Viết bài thông tin sức khoẻ chung, giới thiệu dịch vụ.",
+      "instructions": "Thông tin chung có nguồn trong Kho tri thức; không cam kết khỏi bệnh, không so sánh chê bai cơ sở khác, không dùng hình ảnh / lời của bệnh nhân khi chưa có đồng ý. Bài quảng cáo dịch vụ y tế cần bạn kiểm theo quy định trước khi đăng.",
+      "color": "blue"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Tiếp nhận",
+      "description": "Bệnh nhân hỏi khám, chi phí, muốn đặt lịch: tiếp nhận rồi gợi ý giờ khám.",
+      "rooms": [
+        "Tiếp nhận bệnh nhân",
+        "Đặt lịch khám"
+      ]
+    },
+    {
+      "name": "Chuỗi Nội dung sức khoẻ",
+      "description": "Bài thông tin sức khoẻ chung, giới thiệu dịch vụ phòng khám.",
+      "rooms": [
+        "Nội dung sức khoẻ"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Nhắc lịch tái khám ngày mai",
+      "room": "Nhắc tái khám",
+      "prompt": "Rà lịch tái khám ngày mai. Soạn tin nhắc riêng cho từng bệnh nhân (giờ, bác sĩ, giấy tờ mang theo), không nêu tên bệnh trong tin.",
+      "time": "17:00",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Bệnh nhân hỏi khám tổng quát gồm những gì và chi phí bao nhiêu.",
+    "Gợi ý 3 giờ trống tuần này cho bệnh nhân muốn khám răng.",
+    "Viết bài về lịch tiêm phòng cho trẻ theo tài liệu phòng khám.",
+    "Soạn tin nhắc bệnh nhân tái khám tuần sau."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Dịch vụ và bảng giá khám",
+      "body": "- Dịch vụ: … — chi phí …\n- Bảo hiểm áp dụng: …"
+    },
+    {
+      "kind": "company",
+      "title": "Giờ làm việc và bác sĩ",
+      "body": "- Giờ làm: …\n- Bác sĩ: … — chuyên khoa …"
+    },
+    {
+      "kind": "process",
+      "title": "Hướng dẫn chuẩn bị trước khi khám",
+      "body": "- Nhịn ăn khi: …\n- Giấy tờ mang theo: …"
+    }
+  ]
+}

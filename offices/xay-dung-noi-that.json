@@ -1,0 +1,101 @@
+{
+  "id": "xay-dung-noi-that",
+  "name": "Xây dựng - nội thất",
+  "industry": "Xây dựng - nội thất",
+  "group": "services",
+  "icon": "hammer",
+  "summary": "Khảo sát nhu cầu → báo giá theo đơn giá có sẵn; cập nhật tiến độ cho chủ nhà; bài khoe công trình.",
+  "description": "Cho đội thi công, xưởng nội thất: Khảo sát nhu cầu gom diện tích, phong cách, ngân sách; Báo giá thi công bóc tách theo đơn giá có trong Kho tri thức (hạng mục chưa có giá để trống); Tiến độ công trình soạn cập nhật cho chủ nhà; Nội dung công trình viết bài khoe công trình. Báo giá, tin gửi khách qua thẻ chờ duyệt.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Khảo sát nhu cầu",
+      "role": "Gom thông tin công trình: diện tích, phong cách, ngân sách, hiện trạng.",
+      "instructions": "Từ tin nhắn, ảnh, ghi chú khách gửi: liệt kê hạng mục, diện tích, phong cách, ngân sách, thời gian mong muốn. Thông tin còn thiếu để báo giá thì ghi thành câu hỏi cho khách.",
+      "color": "emerald"
+    },
+    {
+      "name": "Báo giá thi công",
+      "role": "Bóc tách hạng mục, báo giá theo đơn giá có sẵn.",
+      "instructions": "Đơn giá vật tư / nhân công CHỈ từ bảng đơn giá trong Kho tri thức (search_price_list). Hạng mục chưa có đơn giá thì để trống, ghi [CẦN BÁO GIÁ], không ước bừa. Nêu rõ giả định khối lượng. Báo giá tạo qua thẻ chờ duyệt.",
+      "color": "violet"
+    },
+    {
+      "name": "Tiến độ công trình",
+      "role": "Tổng hợp tiến độ, soạn cập nhật cho chủ nhà.",
+      "instructions": "Tiến độ lấy từ task, ghi chú, ảnh bạn gửi; việc trễ nói rõ lý do có trong dữ liệu và kế hoạch xử lý. Không hứa ngày bàn giao khi bạn chưa xác nhận. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Nội dung công trình",
+      "role": "Viết bài khoe công trình, giới thiệu dịch vụ.",
+      "instructions": "Mô tả đúng công trình đã làm (phong cách, vật liệu, thời gian); ảnh và địa chỉ nhà khách chỉ dùng khi đã có đồng ý của chủ nhà.",
+      "color": "blue"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Báo giá công trình",
+      "description": "Khách cần báo giá thi công / nội thất: khảo sát nhu cầu rồi bóc tách báo giá.",
+      "rooms": [
+        "Khảo sát nhu cầu",
+        "Báo giá thi công"
+      ]
+    },
+    {
+      "name": "Chuỗi Cập nhật chủ nhà",
+      "description": "Báo cáo tiến độ, hình ảnh, việc tuần tới cho chủ nhà.",
+      "rooms": [
+        "Tiến độ công trình"
+      ]
+    },
+    {
+      "name": "Chuỗi Nội dung công trình",
+      "description": "Bài khoe công trình đã hoàn thiện, giới thiệu dịch vụ.",
+      "rooms": [
+        "Nội dung công trình"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Cập nhật tiến độ cuối tuần",
+      "room": "Tiến độ công trình",
+      "prompt": "Tổng hợp tiến độ tuần này của từng công trình đang thi công (task, ghi chú), soạn tin cập nhật cho từng chủ nhà kèm việc tuần tới.",
+      "time": "16:00",
+      "days": [
+        6
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Khách muốn làm tủ bếp chữ L dài 4m: lập báo giá theo đơn giá có sẵn.",
+    "Soạn tin cập nhật tiến độ công trình nhà anh Nam tuần này.",
+    "Viết bài khoe căn hộ phong cách Japandi vừa bàn giao.",
+    "Liệt kê câu hỏi cần hỏi khách trước khi báo giá sửa nhà phố."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Đơn giá thi công",
+      "body": "Bảng đơn giá trong Kho tri thức: …\n- Vật tư chính: …\n- Nhân công: …"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình thi công",
+      "body": "Khảo sát → thiết kế / báo giá → ký hợp đồng → thi công → nghiệm thu → bàn giao → bảo hành."
+    },
+    {
+      "kind": "process",
+      "title": "Chính sách bảo hành công trình",
+      "body": "- Thời gian bảo hành: …\n- Không bảo hành khi: …"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "id": "fnb",
+  "name": "Quán ăn - cà phê",
+  "industry": "F&B",
+  "group": "services",
+  "icon": "utensils",
+  "summary": "Viết thực đơn, combo, khuyến mãi; soạn trả lời đặt bàn / đơn mang về; phản hồi đánh giá của khách.",
+  "description": "Cho quán ăn, quán cà phê, tiệm bánh: Thực đơn và khuyến mãi viết bài giới thiệu món, combo theo giá có thật; Đặt bàn và đơn soạn trả lời đặt bàn, đơn mang về theo giờ mở cửa; Phản hồi khách F&B trả lời đánh giá, góp ý. Không hứa đền bù ngoài chính sách quán.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Thực đơn và khuyến mãi",
+      "role": "Viết bài giới thiệu món, combo, chương trình khuyến mãi.",
+      "instructions": "Món, giá, combo, khuyến mãi CHỈ từ thực đơn / bảng giá có sẵn; thiếu thì để trống cho bạn điền. Câu chữ gợi vị giác, ngắn, có lời kêu gọi đặt bàn / đặt món.",
+      "color": "amber"
+    },
+    {
+      "name": "Đặt bàn và đơn",
+      "role": "Soạn trả lời khách đặt bàn, đặt món mang về.",
+      "instructions": "Kiểm giờ mở cửa, sức chứa, phí giao trong ghi chú của quán; giờ đã kín hoặc ngoài giờ thì gợi ý giờ khác. Đặt bàn / đơn chỉ chốt khi bạn duyệt. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "emerald"
+    },
+    {
+      "name": "Phản hồi khách F&B",
+      "role": "Trả lời đánh giá, góp ý, phàn nàn về món, phục vụ.",
+      "instructions": "Cảm ơn, nhận lỗi rõ ràng khi có lỗi, nói việc quán sẽ làm. Không hứa đền bù / tặng ngoài chính sách quán; trường hợp ngộ độc, dị vật thì chuyển bạn ngay. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "violet"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Nội dung quán",
+      "description": "Bài giới thiệu món mới, combo, khuyến mãi cuối tuần.",
+      "rooms": [
+        "Thực đơn và khuyến mãi"
+      ]
+    },
+    {
+      "name": "Chuỗi Phản hồi khách",
+      "description": "Trả lời đánh giá, góp ý, phàn nàn của khách.",
+      "rooms": [
+        "Phản hồi khách F&B"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Ý tưởng khuyến mãi cuối tuần",
+      "room": "Thực đơn và khuyến mãi",
+      "prompt": "Đề xuất 3 ý tưởng món / combo / khuyến mãi cho cuối tuần này dựa trên thực đơn và giá hiện có, kèm một bài đăng mẫu cho ý hay nhất.",
+      "time": "15:00",
+      "days": [
+        4
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Viết bài giới thiệu món mới kèm giá.",
+    "Khách đặt bàn 10 người tối thứ Bảy 19h: soạn câu trả lời xác nhận chờ tôi duyệt.",
+    "Trả lời đánh giá 2 sao chê món ra chậm.",
+    "Lên combo trưa văn phòng từ thực đơn hiện có."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Thực đơn và giá",
+      "body": "- Món chính: …\n- Đồ uống: …\n- Combo: … (thực đơn trong Kho tri thức)"
+    },
+    {
+      "kind": "company",
+      "title": "Giờ mở cửa và địa chỉ quán",
+      "body": "- Địa chỉ: …\n- Giờ mở cửa: …\n- Sức chứa: … chỗ, phí giao: …"
+    },
+    {
+      "kind": "process",
+      "title": "Chính sách đặt bàn",
+      "body": "- Đặt cọc khi: …\n- Giữ bàn tối đa: … phút\n- Huỷ bàn: …"
+    }
+  ]
+}

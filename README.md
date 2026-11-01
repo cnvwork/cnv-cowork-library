@@ -17,6 +17,7 @@ scenarios/<id>/
   cowork/SKILL.md    kỹ năng cho trợ lý Cowork: cấu trúc dự án, cách code tiếp, việc KHÔNG được làm
   …                  mã nguồn
 skills/<nhóm>/<tên>.md  kỹ năng CÓ SẴN của trợ lý (nhóm: chung hoặc mã ngành) — nơi DUY NHẤT sửa kỹ năng có sẵn
+offices/<id>.json       mẫu Thư viện văn phòng (văn phòng AI theo ngành) — nơi DUY NHẤT sửa mẫu văn phòng
 changelog.json       sửa câu chữ nhật ký «Có gì mới» của app không cần ra bản mới (rỗng = không đè gì)
 library.config.json  khoá công khai (app ghim cùng khoá này), github.owner / repo, danh sách nhóm, chuỗi được phép khi quét
 tools/               check.mjs, build.mjs, verify.mjs, keygen.mjs (Node ≥ 22.2, không cần cài gì)
@@ -47,6 +48,21 @@ App giải nén theo luật của Thư mục làm việc, sai một tệp là t�
    bản mới tải vào thư mục khác, không ghi đè).
 3. `npm run check` cho tới khi sạch.
 4. Commit.
+
+## Mẫu Thư viện văn phòng
+
+`offices/<id>.json` là mẫu văn phòng AI theo ngành (luật sư, bất động sản, sales, kế toán, spa…) hiện ở Cowork › Văn phòng
+AI › Thư viện. `build` đóng cả thư mục thành MỘT tệp `offices-<sha256>.json` ghim trong danh mục, app tự tải khi sha256 đổi.
+Luật (app kiểm lại đủ, sai thì bỏ mẫu đó):
+
+- Tên tệp = `id`; `group` ∈ sales_marketing / office / professional / services; `icon` trong danh sách của `tools/lib.mjs`.
+- Phòng không trùng tên, không tên «Điều phối» (app tự có); tên phòng nên riêng theo ngành (áp hai mẫu có phòng trùng tên
+  thì app dùng lại phòng đã có, giữ lời dặn cũ) — trừ «Kiểm Brand» dùng chung.
+- Chuỗi chỉ ghi các phòng làm việc, KHÔNG ghi Kiểm Brand (luôn tự chạy cuối); lịch chạy ở phòng có trong mẫu hoặc «Điều phối».
+- Lời dặn chỉ dùng thông tin có thật; mọi thứ gửi / đăng / ghi qua thẻ chờ duyệt; luật riêng của ngành (luật: chỉ trích điều
+  luật có trong Kho tri thức; y tế: không chẩn đoán; tài chính: chỉ soạn nháp; BĐS: không cam kết).
+- Tên ghi chú Bộ não không có ký tự `\ / : * ? " < > | # ^ [ ]`.
+- Bộ cài Cowork mang bản chụp: ở repo `cnv-cowork` chạy `npm run offices:sync`.
 
 ## Kỹ năng có sẵn của trợ lý
 

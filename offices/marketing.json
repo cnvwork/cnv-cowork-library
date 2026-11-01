@@ -1,0 +1,93 @@
+{
+  "id": "marketing",
+  "name": "Marketing nội dung",
+  "industry": "Marketing",
+  "group": "sales_marketing",
+  "icon": "megaphone",
+  "summary": "Nghiên cứu → bài Fanpage → kịch bản TikTok → Kiểm Brand, bạn duyệt rồi mới đăng.",
+  "description": "Cho cá nhân / nhóm nhỏ làm marketing: phòng Nghiên cứu lấy ý từ khách, đối thủ, sản phẩm có thật; phòng Nội dung viết bài Fanpage; phòng TikTok chuyển thành kịch bản video; Kiểm Brand soát giọng thương hiệu; phòng Phát hành chỉ làm với bản bạn đã duyệt, mọi việc đăng / gửi qua thẻ chờ duyệt.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Nghiên cứu",
+      "role": "Tìm hiểu khách hàng, đối thủ, sản phẩm để lấy ý cho nội dung.",
+      "instructions": "Tra CRM, Kho tri thức, Bộ não (khách, đối thủ, sản phẩm). Chỉ ghi điều có trong dữ liệu, ghi rõ nguồn; thiếu thì nói thiếu, không đoán. Kết quả: 3–5 ý chính, mỗi ý kèm căn cứ.",
+      "color": "emerald"
+    },
+    {
+      "name": "Nội dung Fanpage",
+      "role": "Viết bài đăng Fanpage từ ý của phòng Nghiên cứu.",
+      "instructions": "Bài ngắn, mở đầu gây chú ý, có lời kêu gọi nhắn tin, đúng giọng thương hiệu. Giá, ưu đãi, thông số chỉ lấy từ dữ liệu có thật; không có thì để trống cho bạn điền, không bịa.",
+      "color": "violet"
+    },
+    {
+      "name": "TikTok",
+      "role": "Chuyển nội dung thành kịch bản video TikTok ngắn.",
+      "instructions": "Kịch bản 30–60 giây: câu mở 3 giây đầu, các cảnh, lời thoại, chữ trên màn hình, lời kêu gọi. Giữ đúng thông tin của bài gốc, không thêm số liệu mới.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    },
+    {
+      "name": "Phát hành",
+      "role": "Sau khi bạn duyệt: lên lịch đăng, soạn tin / thư gửi khách.",
+      "instructions": "Chỉ làm với bản bạn đã duyệt. Mọi việc đăng, gửi tin, gửi thư đều tạo thẻ chờ bạn bấm xác nhận, không tự gửi.",
+      "color": "blue"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Marketing",
+      "description": "Bài đăng Fanpage, kịch bản video TikTok, nội dung chiến dịch từ ý tưởng tới bản nháp.",
+      "rooms": [
+        "Nghiên cứu",
+        "Nội dung Fanpage",
+        "TikTok"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Ý tưởng nội dung đầu tuần",
+      "room": "Điều phối",
+      "prompt": "Lên 5 ý tưởng bài đăng cho tuần này dựa trên sản phẩm, khách và đối thủ trong Bộ não; mỗi ý một dòng kèm lý do. Chuyển qua Chuỗi Marketing để có bản nháp bài hay nhất.",
+      "time": "08:00",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Viết 3 bài Fanpage giới thiệu sản phẩm bán chạy nhất tháng này, kèm kịch bản TikTok cho bài hay nhất.",
+    "Lên ý tưởng nội dung cho chương trình khuyến mãi cuối tháng, dựa trên khách đang quan tâm.",
+    "So sánh sản phẩm của mình với đối thủ chính rồi viết một bài nêu điểm khác biệt.",
+    "Chuyển bài đăng gần nhất thành kịch bản video 45 giây."
+  ],
+  "brain_notes": [
+    {
+      "kind": "brand",
+      "title": "Giọng thương hiệu",
+      "body": "- Xưng hô với khách: …\n- Giọng: (thân thiện / chuyên gia / trẻ trung…)\n- Từ nên dùng: …\n- Từ cấm / lời hứa không được nói: …"
+    },
+    {
+      "kind": "customer",
+      "title": "Chân dung khách hàng",
+      "body": "- Khách là ai: …\n- Họ cần gì, sợ gì: …\n- Hay hỏi gì trước khi mua: …"
+    },
+    {
+      "kind": "competitor",
+      "title": "Đối thủ chính",
+      "body": "- Tên đối thủ: …\n- Giá / ưu điểm của họ: …\n- Mình khác họ ở: …"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình duyệt nội dung",
+      "body": "Nghiên cứu → Nội dung Fanpage → TikTok → Kiểm Brand → bạn duyệt → Phát hành (qua thẻ chờ duyệt)."
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "id": "ban-hang-online",
+  "name": "Bán hàng online",
+  "industry": "Bán hàng online",
+  "group": "sales_marketing",
+  "icon": "shopping-bag",
+  "summary": "Soạn bài sản phẩm, tư vấn khách hỏi giá / size / ship, rà đơn tồn mỗi sáng; Kiểm Brand trước khi đăng.",
+  "description": "Cho shop bán qua Fanpage, Zalo, sàn: phòng Soạn bài sản phẩm viết mô tả và bài đăng từ thông tin có thật; Tư vấn đơn online soạn câu trả lời khách hỏi giá, size, phí ship; Theo dõi đơn rà đơn chưa giao, giao chậm, hoàn. Giá, khuyến mãi chỉ lấy từ bảng giá; gửi khách qua thẻ chờ duyệt.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Soạn bài sản phẩm",
+      "role": "Viết mô tả sản phẩm, bài đăng Fanpage / sàn từ thông tin có thật.",
+      "instructions": "Lấy tên, công dụng, chất liệu, kích thước, giá, khuyến mãi từ sản phẩm trong CRM, bảng giá, Kho tri thức. Thiếu thông số nào thì để chỗ trống cho bạn điền, không bịa. Bài ngắn, có lợi ích rõ, có lời kêu gọi nhắn tin đặt hàng.",
+      "color": "violet"
+    },
+    {
+      "name": "Tư vấn đơn online",
+      "role": "Soạn câu trả lời khách hỏi giá, còn hàng, size, phí ship, cách đặt.",
+      "instructions": "Tra sản phẩm và bảng giá trước khi trả lời; còn hàng / phí ship không có trong dữ liệu thì nói sẽ kiểm tra lại. Gợi ý size theo bảng size có sẵn, không đoán. Không giảm giá ngoài chương trình đang chạy. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "emerald"
+    },
+    {
+      "name": "Theo dõi đơn",
+      "role": "Rà đơn chưa giao, giao chậm, bị hoàn; soạn tin báo khách.",
+      "instructions": "Đọc đơn bán hàng và ghi chú trong CRM: đơn quá hạn giao, đơn hoàn, khách chưa xác nhận. Liệt kê theo mức gấp kèm việc cần làm; tin báo khách lịch sự, nói rõ lý do có trong dữ liệu. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Đăng sản phẩm",
+      "description": "Bài giới thiệu sản phẩm, bài đăng Fanpage / sàn, nội dung khuyến mãi.",
+      "rooms": [
+        "Soạn bài sản phẩm"
+      ]
+    },
+    {
+      "name": "Chuỗi Chốt đơn online",
+      "description": "Trả lời khách hỏi giá, size, ship, cách đặt hàng cho đúng chính sách.",
+      "rooms": [
+        "Tư vấn đơn online"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Rà đơn tồn mỗi sáng",
+      "room": "Theo dõi đơn",
+      "prompt": "Rà các đơn chưa giao quá 2 ngày, đơn bị hoàn và đơn khách chưa xác nhận. Liệt kê theo mức gấp, đề xuất tin báo khách cho từng đơn.",
+      "time": "08:30",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Viết bài đăng giới thiệu 3 sản phẩm mới về, kèm giá và khuyến mãi đang chạy.",
+    "Khách hỏi áo size M còn không và ship về Đà Nẵng bao nhiêu: soạn câu trả lời.",
+    "Đơn nào đang giao chậm hoặc bị hoàn tuần này? Soạn tin báo cho từng khách.",
+    "Lên nội dung cho chương trình xả hàng cuối tháng."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Bảng giá và khuyến mãi đang chạy",
+      "body": "- Sản phẩm bán chạy: …\n- Giá niêm yết: … (bảng giá trong Kho tri thức)\n- Khuyến mãi tháng này: … — hết hạn ngày …"
+    },
+    {
+      "kind": "process",
+      "title": "Chính sách giao hàng và đổi trả",
+      "body": "- Phí ship: …\n- Thời gian giao: nội thành … ngày, tỉnh … ngày\n- Đổi trả trong … ngày, điều kiện: …"
+    },
+    {
+      "kind": "brand",
+      "title": "Giọng thương hiệu",
+      "body": "- Xưng hô với khách: …\n- Giọng: …\n- Từ nên dùng: …\n- Từ cấm / lời hứa không được nói: …"
+    }
+  ]
+}

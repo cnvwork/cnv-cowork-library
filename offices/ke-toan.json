@@ -1,0 +1,89 @@
+{
+  "id": "ke-toan",
+  "name": "Kế toán",
+  "industry": "Kế toán",
+  "group": "office",
+  "icon": "calculator",
+  "summary": "Đối chiếu số liệu, nhắc công nợ, báo cáo thu chi — chỉ là bản NHÁP để kế toán duyệt, không ghi sổ, không nộp thuế.",
+  "description": "Cho chủ shop / kế toán công ty nhỏ: phòng Đối chiếu số liệu gom đơn bán, báo giá, thanh toán có trong CRM thành bảng đối chiếu; Nhắc công nợ soạn tin nhắc khách lịch sự; Báo cáo thu chi tổng hợp báo cáo nháp. Mọi thứ là bản nháp: không hạch toán, không kê khai, không nộp thuế, không chuyển tiền.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Đối chiếu số liệu",
+      "role": "Gom đơn bán, báo giá, thanh toán đã ghi thành bảng đối chiếu.",
+      "instructions": "Chỉ đọc dữ liệu có thật (đơn bán hàng, báo giá, ghi chú thanh toán trong CRM, tệp bạn gửi kèm); mỗi con số ghi rõ nguồn. Số thiếu / lệch thì đánh dấu để bạn kiểm, không tự làm tròn hay suy ra. Đây là bản nháp, không phải sổ sách.",
+      "color": "emerald"
+    },
+    {
+      "name": "Nhắc công nợ",
+      "role": "Soạn tin / thư nhắc khách thanh toán đúng hạn, lịch sự.",
+      "instructions": "Nêu đúng số tiền, số đơn / hoá đơn, hạn thanh toán lấy từ bảng đối chiếu; giọng lịch sự, không đe doạ. Không tự đặt phí phạt, lãi chậm trả ngoài hợp đồng. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Báo cáo thu chi",
+      "role": "Tổng hợp báo cáo thu chi, doanh thu theo kỳ dạng nháp.",
+      "instructions": "Lập bảng theo kỳ bạn yêu cầu từ số liệu đã đối chiếu; ghi rõ khoản nào thiếu dữ liệu. KHÔNG hạch toán, không lập tờ khai thuế, không kết luận nghĩa vụ thuế; chỗ cần nghiệp vụ kế toán thì ghi [KẾ TOÁN XEM LẠI].",
+      "color": "violet"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Công nợ",
+      "description": "Nhắc khách thanh toán: đối chiếu số liệu rồi soạn tin nhắc từng khách.",
+      "rooms": [
+        "Đối chiếu số liệu",
+        "Nhắc công nợ"
+      ]
+    },
+    {
+      "name": "Chuỗi Báo cáo thu chi",
+      "description": "Báo cáo doanh thu, thu chi theo tuần / tháng dạng nháp.",
+      "rooms": [
+        "Đối chiếu số liệu",
+        "Báo cáo thu chi"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Rà công nợ đầu tuần",
+      "room": "Nhắc công nợ",
+      "prompt": "Rà các khoản khách còn nợ đã quá hạn hoặc tới hạn trong 7 ngày (theo đơn bán, báo giá, ghi chú thanh toán). Liệt kê kèm số tiền, hạn, và soạn tin nhắc cho từng khách để duyệt.",
+      "time": "09:00",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Lập bảng đối chiếu công nợ khách hàng tháng này.",
+    "Soạn tin nhắc thanh toán cho các khách quá hạn trên 15 ngày.",
+    "Tổng hợp doanh thu theo tuần của tháng trước thành bảng nháp.",
+    "Kiểm tra đơn nào đã giao mà chưa ghi nhận thanh toán."
+  ],
+  "brain_notes": [
+    {
+      "kind": "process",
+      "title": "Quy trình thu chi",
+      "body": "- Ai duyệt chi: …\n- Hạn thanh toán mặc định cho khách: … ngày\n- Chứng từ cần lưu: …"
+    },
+    {
+      "kind": "process",
+      "title": "Chính sách công nợ khách hàng",
+      "body": "- Hạn mức nợ: …\n- Nhắc lần 1 sau … ngày, lần 2 sau … ngày\n- Trường hợp chuyển bạn xử lý: …"
+    },
+    {
+      "kind": "note",
+      "title": "Lịch kê khai và báo cáo định kỳ",
+      "body": "- Kỳ kê khai: (tháng / quý)\n- Hạn nộp: …\n- Người phụ trách: … (kế toán dịch vụ / nội bộ)"
+    }
+  ]
+}

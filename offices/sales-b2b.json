@@ -1,0 +1,94 @@
+{
+  "id": "sales-b2b",
+  "name": "Sales B2B",
+  "industry": "Sales B2B",
+  "group": "sales_marketing",
+  "icon": "briefcase",
+  "summary": "Tìm hiểu khách → tư vấn / báo giá → Kiểm Brand; Chốt sale rà khách nóng mỗi tuần.",
+  "description": "Cho người bán cho doanh nghiệp: phòng Tìm hiểu khách gom lịch sử, nhu cầu, cơ hội đang mở; phòng Tư vấn - báo giá soạn đề xuất từ bảng giá có thật; Chốt sale rà cơ hội sắp tới hạn và gợi ý câu nói. Báo giá, tin gửi khách đều qua thẻ chờ duyệt.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tìm hiểu khách",
+      "role": "Gom thông tin khách: lịch sử mua, trao đổi, nhu cầu, cơ hội đang mở.",
+      "instructions": "Tra CRM, thư, Zalo (nếu được đọc), Bộ não. Tóm tắt ngắn: khách là ai, ai quyết định, cần gì, đã nói gì, còn vướng gì. Không đoán điều chưa có.",
+      "color": "emerald"
+    },
+    {
+      "name": "Tư vấn - báo giá",
+      "role": "Soạn lời tư vấn và báo giá theo nhu cầu khách.",
+      "instructions": "Giá, mã, chính sách chỉ lấy từ bảng giá / sản phẩm / Kho tri thức. Đề xuất gói phù hợp, nêu lý do. Không tự giảm giá ngoài chính sách. Tạo báo giá qua thẻ chờ duyệt.",
+      "color": "violet"
+    },
+    {
+      "name": "Chốt sale",
+      "role": "Rà cơ hội sắp chốt, xử lý từ chối, nhắc bước tiếp.",
+      "instructions": "Ưu tiên cơ hội giá trị cao, sắp tới hạn. Gợi ý câu nói cụ thể cho từng khách và bước tiếp theo; mọi tin gửi khách tạo thẻ chờ duyệt.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Báo giá",
+      "description": "Tư vấn và báo giá cho một khách / một cơ hội: tìm hiểu khách rồi soạn đề xuất, báo giá.",
+      "rooms": [
+        "Tìm hiểu khách",
+        "Tư vấn - báo giá"
+      ]
+    },
+    {
+      "name": "Chuỗi Chốt sale",
+      "description": "Rà cơ hội sắp chốt, khách im lặng: tìm hiểu tình hình rồi soạn cách xử lý từ chối, tin nhắc.",
+      "rooms": [
+        "Tìm hiểu khách",
+        "Chốt sale"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Rà khách nóng đầu tuần",
+      "room": "Chốt sale",
+      "prompt": "Rà các khách nóng chưa có hoạt động trong 7 ngày qua và các cơ hội sắp tới hạn chốt. Liệt kê tối đa 10 khách đáng gọi nhất kèm lý do và câu mở lời gợi ý.",
+      "time": "08:00",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Soạn báo giá cho khách vừa hỏi gói lớn nhất, kèm thư giới thiệu ngắn.",
+    "Những cơ hội nào sắp tới hạn chốt trong 2 tuần tới? Gợi ý bước tiếp cho từng cái.",
+    "Khách chê giá cao: soạn 3 cách trả lời dựa trên chính sách hiện có.",
+    "Tóm tắt mọi trao đổi với khách này trước buổi gặp ngày mai."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Gói sản phẩm và dịch vụ",
+      "body": "- Gói: … — giá niêm yết … — hợp với khách …\n- Chính sách chiết khấu được phép: …"
+    },
+    {
+      "kind": "customer",
+      "title": "Khách doanh nghiệp mục tiêu",
+      "body": "- Ngành / quy mô: …\n- Người quyết định thường là: …\n- Vấn đề họ hay gặp: …"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình bán hàng",
+      "body": "Tiếp cận → tìm hiểu nhu cầu → demo / tư vấn → báo giá → thương lượng → chốt → bàn giao."
+    },
+    {
+      "kind": "brand",
+      "title": "Giọng thương hiệu",
+      "body": "- Xưng hô: …\n- Giọng: chuyên nghiệp, rõ ràng\n- Lời hứa không được nói: …"
+    }
+  ]
+}

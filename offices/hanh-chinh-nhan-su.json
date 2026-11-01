@@ -1,0 +1,88 @@
+{
+  "id": "hanh-chinh-nhan-su",
+  "name": "Hành chính - nhân sự",
+  "industry": "Hành chính - nhân sự",
+  "group": "office",
+  "icon": "users",
+  "summary": "Soạn tin tuyển dụng, câu hỏi phỏng vấn, thông báo nội bộ, biên bản họp; giải đáp quy định từ nội quy có sẵn.",
+  "description": "Cho người lo hành chính, nhân sự của công ty nhỏ: phòng Tuyển dụng soạn tin tuyển, câu hỏi phỏng vấn, đánh giá CV bạn gửi kèm; Chính sách nhân sự giải đáp quy định CHỈ từ nội quy, quy chế có trong Kho tri thức; Hành chính soạn thông báo, công văn, biên bản họp. Không tự đặt ra chính sách mới.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tuyển dụng",
+      "role": "Soạn tin tuyển dụng, câu hỏi phỏng vấn, nhận xét CV bạn gửi kèm.",
+      "instructions": "Tin tuyển dụng theo khuôn: mô tả việc, yêu cầu, quyền lợi (lương, phúc lợi chỉ ghi khi bạn đã cho; thiếu thì để trống). Nhận xét CV theo đúng yêu cầu vị trí, nêu điểm khớp / thiếu, không đánh giá theo tuổi, giới tính, quê quán, hôn nhân. Không gửi gì cho ứng viên khi bạn chưa duyệt.",
+      "color": "emerald"
+    },
+    {
+      "name": "Chính sách nhân sự",
+      "role": "Giải đáp nghỉ phép, chấm công, lương thưởng theo nội quy có sẵn.",
+      "instructions": "Chỉ trả lời theo nội quy, quy chế, hợp đồng mẫu trong Kho tri thức; trích đúng mục / điều của tài liệu. Tài liệu không nói tới thì nói chưa có quy định, đề nghị bạn quyết. Không tự đặt ra chính sách, không tư vấn pháp lý lao động thay luật sư.",
+      "color": "violet"
+    },
+    {
+      "name": "Hành chính",
+      "role": "Soạn thông báo nội bộ, công văn, biên bản họp, kế hoạch sự kiện.",
+      "instructions": "Văn bản theo khuôn trang trọng: tiêu đề, căn cứ (nếu có), nội dung, người nhận, ngày. Số liệu, tên người, ngày giờ chỉ lấy từ dữ liệu bạn đưa hoặc lịch / task có sẵn; thiếu thì để chỗ trống.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Tuyển dụng",
+      "description": "Tin tuyển dụng, câu hỏi phỏng vấn, nhận xét hồ sơ ứng viên.",
+      "rooms": [
+        "Tuyển dụng"
+      ]
+    },
+    {
+      "name": "Chuỗi Văn bản nội bộ",
+      "description": "Thông báo, công văn, quy định nội bộ: tra nội quy trước rồi soạn văn bản.",
+      "rooms": [
+        "Chính sách nhân sự",
+        "Hành chính"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Việc hành chính đầu tuần",
+      "room": "Hành chính",
+      "prompt": "Rà lịch và task tuần này: họp, sự kiện, hạn nộp giấy tờ, sinh nhật nhân viên (nếu có ghi chú). Liệt kê theo ngày kèm việc cần chuẩn bị.",
+      "time": "08:00",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Soạn tin tuyển nhân viên bán hàng part-time, kèm 8 câu hỏi phỏng vấn.",
+    "Nhân viên hỏi nghỉ phép năm được bao nhiêu ngày: trả lời theo nội quy công ty.",
+    "Soạn thông báo nghỉ lễ gửi toàn công ty.",
+    "Viết biên bản cuộc họp sáng nay từ ghi chú tôi gửi kèm."
+  ],
+  "brain_notes": [
+    {
+      "kind": "process",
+      "title": "Nội quy công ty",
+      "body": "Tài liệu gốc: … (tải vào Kho tri thức)\n- Giờ làm việc: …\n- Nghỉ phép: …\n- Chấm công: …"
+    },
+    {
+      "kind": "department",
+      "title": "Sơ đồ phòng ban",
+      "body": "- Ban giám đốc: …\n- Kinh doanh: …\n- Hành chính - nhân sự: …"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình tuyển dụng",
+      "body": "Đăng tin → nhận hồ sơ → lọc → phỏng vấn → thư mời nhận việc → hội nhập."
+    }
+  ]
+}

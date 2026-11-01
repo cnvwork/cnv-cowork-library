@@ -1,0 +1,87 @@
+{
+  "id": "giao-duc",
+  "name": "Trung tâm giáo dục",
+  "industry": "Giáo dục",
+  "group": "services",
+  "icon": "graduation-cap",
+  "summary": "Tư vấn tuyển sinh theo khoá học có thật, nhắc lịch học viên, viết nội dung khoá học; không hứa đầu ra.",
+  "description": "Cho trung tâm ngoại ngữ, kỹ năng, gia sư: Tư vấn tuyển sinh trả lời về khoá học, lịch khai giảng, học phí từ tài liệu có sẵn; Chăm sóc học viên nhắc lịch học, hỏi thăm, xin phản hồi; Nội dung giáo dục viết bài giới thiệu khoá. Không hứa điểm số, đầu ra, học bổng ngoài chính sách.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tư vấn tuyển sinh",
+      "role": "Tư vấn khoá học, lịch khai giảng, học phí cho phụ huynh / học viên.",
+      "instructions": "Khoá học, lịch, học phí, ưu đãi CHỈ từ tài liệu trong Kho tri thức / sản phẩm CRM. Hỏi trình độ, mục tiêu để gợi ý khoá phù hợp. Không hứa điểm số, đầu ra, cam kết việc làm ngoài chính sách có văn bản. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "emerald"
+    },
+    {
+      "name": "Chăm sóc học viên",
+      "role": "Nhắc lịch học, hỏi thăm tiến độ, xin phản hồi sau khoá.",
+      "instructions": "Tin ngắn, thân thiện, đúng tên học viên và lớp. Lịch học lấy từ lịch / task có sẵn. Học viên phàn nàn thì ghi nhận và chuyển bạn, không tự hứa hoàn học phí. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Nội dung giáo dục",
+      "role": "Viết bài giới thiệu khoá học, mẹo học, câu chuyện học viên.",
+      "instructions": "Thông tin khoá học đúng tài liệu; câu chuyện học viên chỉ dùng khi bạn đã cho (có đồng ý của họ). Không quảng cáo sai sự thật.",
+      "color": "violet"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Tuyển sinh",
+      "description": "Trả lời phụ huynh / học viên hỏi khoá học, học phí, lịch khai giảng.",
+      "rooms": [
+        "Tư vấn tuyển sinh"
+      ]
+    },
+    {
+      "name": "Chuỗi Nội dung khoá học",
+      "description": "Bài giới thiệu khoá, nội dung mùa tuyển sinh, mẹo học.",
+      "rooms": [
+        "Nội dung giáo dục"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Nhắc lịch học tuần tới",
+      "room": "Chăm sóc học viên",
+      "prompt": "Rà lịch học tuần tới và học viên vắng 2 buổi gần nhất. Soạn tin nhắc lịch cho từng lớp và tin hỏi thăm học viên vắng.",
+      "time": "19:00",
+      "days": [
+        0
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Phụ huynh hỏi khoá tiếng Anh cho bé 8 tuổi: tư vấn khoá phù hợp kèm học phí, lịch khai giảng.",
+    "Viết 3 bài đăng cho đợt tuyển sinh tháng sau.",
+    "Soạn tin xin phản hồi cho học viên vừa kết thúc khoá.",
+    "Học viên nào vắng nhiều buổi tháng này? Soạn tin hỏi thăm."
+  ],
+  "brain_notes": [
+    {
+      "kind": "product",
+      "title": "Danh sách khoá học",
+      "body": "- Khoá: … — thời lượng … — học phí …\n- Đối tượng: …"
+    },
+    {
+      "kind": "note",
+      "title": "Lịch khai giảng",
+      "body": "- Lớp … khai giảng ngày …\n- Lớp … khai giảng ngày …"
+    },
+    {
+      "kind": "process",
+      "title": "Chính sách học phí và bảo lưu",
+      "body": "- Đóng học phí: …\n- Bảo lưu: …\n- Hoàn học phí: …"
+    }
+  ]
+}

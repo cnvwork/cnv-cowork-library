@@ -10,6 +10,7 @@ import zlib from 'node:zlib';
 export const ROOT = path.resolve(import.meta.dirname, '..');
 export const SCENARIOS = path.join(ROOT, 'scenarios');
 export const SKILLS = path.join(ROOT, 'skills');
+export const OFFICES = path.join(ROOT, 'offices');
 export const DIST = path.join(ROOT, 'dist');
 export const CATALOG_FORMAT = 'cnv-cowork-library-catalog';
 /** Chuỗi đứng trước dữ liệu khi ký: chữ ký danh mục không dùng lại được cho việc khác (và ngược lại). */
@@ -438,3 +439,128 @@ export function loadChangelog() {
   return { entries, problems };
 }
 
+
+// ── Mẫu Thư viện văn phòng ─────────────────────────────────────────────────────────────────
+
+/**
+ * Mẫu văn phòng AI theo ngành (`offices/<id>.json`): các phòng (agent) có vai + lời dặn, chuỗi chuyền việc có tên (Kiểm
+ * Brand luôn tự chạy cuối, KHÔNG ghi trong chuỗi), lịch mẫu (app tạo sẵn nhưng để tắt), câu giao việc mẫu, khung ghi chú Bộ
+ * não. Luật khớp app (cnv-cowork `src/main/services/aiOffice/catalog.ts`, `src/shared/officeTemplates.ts`): mẫu sai thì
+ * app bỏ riêng mẫu đó.
+ */
+export const OFFICE_PACK_FORMAT = 'cnv-cowork-offices';
+export const OFFICE_GROUPS = ['sales_marketing', 'office', 'professional', 'services', 'other'];
+export const OFFICE_ICONS = ['megaphone', 'briefcase', 'shopping-bag', 'headphones', 'users', 'calculator', 'scale', 'building', 'graduation-cap', 'sparkles', 'utensils', 'stethoscope', 'hammer', 'shield', 'car'];
+const AGENT_COLORS = ['blue', 'violet', 'emerald', 'amber', 'rose', 'slate'];
+const BRAIN_KINDS = ['company', 'department', 'product', 'customer', 'process', 'competitor', 'brand', 'note'];
+const OFFICE = { rooms: 10, chains: 4, chainRooms: 6, schedules: 3, samplePrompts: 6, brainNotes: 12, name: 60, role: 200, instructions: 4000, summary: 160, description: 600, chainDescription: 300, prompt: 1000, noteTitle: 120, noteBody: 4000 };
+const COORDINATOR = 'Điều phối';
+const BRAIN_TITLE_FORBIDDEN = /[\\/:*?"<>|#^[\]\n\r\t]/;
+const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+const officeKey = (name) => name.normalize('NFC').replace(/\s+/g, ' ').trim().toLowerCase();
+
+function officeProblems(office, file) {
+  const problems = [];
+  const text = (value, max, label) => {
+    if (typeof value !== 'string' || !value.trim()) problems.push(`${label} trống`);
+    else if (value.trim().length > max) problems.push(`${label} dài quá ${max} ký tự`);
+  };
+  if (!ID.test(office.id ?? '') || office.id.length > 40) problems.push('id chữ thường không dấu, gạch nối, ≤ 40 ký tự');
+  if (`${office.id}.json` !== file) problems.push(`tên tệp phải là ${office.id}.json`);
+  text(office.name, OFFICE.name, 'name');
+  text(office.industry, OFFICE.name, 'industry');
+  if (!OFFICE_GROUPS.includes(office.group)) problems.push(`group «${office.group}» lạ (${OFFICE_GROUPS.join(', ')})`);
+  if (!OFFICE_ICONS.includes(office.icon)) problems.push(`icon «${office.icon}» lạ (${OFFICE_ICONS.join(', ')})`);
+  text(office.summary, OFFICE.summary, 'summary');
+  text(office.description, OFFICE.description, 'description');
+  if (!/^\d+\.\d+\.\d+$/.test(office.version ?? '')) problems.push('version dạng 1.0.0');
+  const rooms = Array.isArray(office.rooms) ? office.rooms : [];
+  if (rooms.length < 2 || rooms.length > OFFICE.rooms) problems.push(`rooms: 2–${OFFICE.rooms} phòng`);
+  const roomNames = new Set();
+  for (const room of rooms) {
+    text(room.name, OFFICE.name, 'phòng: name');
+    text(room.role, OFFICE.role, `phòng «${room.name}»: role`);
+    text(room.instructions, OFFICE.instructions, `phòng «${room.name}»: instructions`);
+    if (!AGENT_COLORS.includes(room.color)) problems.push(`phòng «${room.name}»: color lạ`);
+    const key = officeKey(room.name ?? '');
+    if (roomNames.has(key)) problems.push(`trùng phòng «${room.name}»`);
+    if (key === officeKey(COORDINATOR)) problems.push(`phòng «${room.name}» trùng tên Điều phối (app tự có)`);
+    roomNames.add(key);
+  }
+  if (!roomNames.has(officeKey(office.brand_check ?? ''))) problems.push(`brand_check «${office.brand_check}» không có trong rooms`);
+  const chains = Array.isArray(office.chains) ? office.chains : [];
+  if (!chains.length || chains.length > OFFICE.chains) problems.push(`chains: 1–${OFFICE.chains} chuỗi`);
+  const chainNames = new Set();
+  for (const chain of chains) {
+    text(chain.name, OFFICE.name, 'chuỗi: name');
+    text(chain.description, OFFICE.chainDescription, `chuỗi «${chain.name}»: description`);
+    if (chainNames.has(officeKey(chain.name ?? ''))) problems.push(`trùng chuỗi «${chain.name}»`);
+    chainNames.add(officeKey(chain.name ?? ''));
+    const steps = Array.isArray(chain.rooms) ? chain.rooms : [];
+    if (!steps.length || steps.length > OFFICE.chainRooms) problems.push(`chuỗi «${chain.name}»: 1–${OFFICE.chainRooms} phòng`);
+    if (new Set(steps.map(officeKey)).size !== steps.length) problems.push(`chuỗi «${chain.name}» lặp phòng`);
+    for (const step of steps) {
+      if (!roomNames.has(officeKey(step))) problems.push(`chuỗi «${chain.name}»: phòng lạ «${step}»`);
+      if (officeKey(step) === officeKey(office.brand_check ?? '')) problems.push(`chuỗi «${chain.name}»: không ghi Kiểm Brand (luôn tự chạy cuối)`);
+    }
+  }
+  const schedules = Array.isArray(office.schedules) ? office.schedules : [];
+  if (schedules.length > OFFICE.schedules) problems.push(`schedules: tối đa ${OFFICE.schedules}`);
+  for (const schedule of schedules) {
+    text(schedule.name, OFFICE.name, 'lịch: name');
+    text(schedule.prompt, OFFICE.prompt, `lịch «${schedule.name}»: prompt`);
+    if (!roomNames.has(officeKey(schedule.room ?? '')) && officeKey(schedule.room ?? '') !== officeKey(COORDINATOR)) problems.push(`lịch «${schedule.name}»: phòng lạ «${schedule.room}»`);
+    if (!HHMM.test(schedule.time ?? '')) problems.push(`lịch «${schedule.name}»: time dạng HH:mm`);
+    if (!Array.isArray(schedule.days) || !schedule.days.length || schedule.days.some((day) => !Number.isInteger(day) || day < 0 || day > 6)) problems.push(`lịch «${schedule.name}»: days 0–6 (0 = Chủ nhật)`);
+  }
+  const prompts = Array.isArray(office.sample_prompts) ? office.sample_prompts : [];
+  if (prompts.length < 3 || prompts.length > OFFICE.samplePrompts) problems.push(`sample_prompts: 3–${OFFICE.samplePrompts} câu`);
+  for (const prompt of prompts) text(prompt, OFFICE.prompt, 'sample_prompts');
+  const notes = Array.isArray(office.brain_notes) ? office.brain_notes : [];
+  if (notes.length > OFFICE.brainNotes) problems.push(`brain_notes: tối đa ${OFFICE.brainNotes}`);
+  const noteTitles = new Set();
+  for (const note of notes) {
+    text(note.title, OFFICE.noteTitle, 'ghi chú: title');
+    if (BRAIN_TITLE_FORBIDDEN.test(note.title ?? '') || (note.title ?? '').startsWith('.')) problems.push(`ghi chú «${note.title}»: tên có ký tự \\ / : * ? " < > | # ^ [ ]`);
+    if (!BRAIN_KINDS.includes(note.kind)) problems.push(`ghi chú «${note.title}»: kind lạ`);
+    if (typeof note.body !== 'string' || note.body.length > OFFICE.noteBody) problems.push(`ghi chú «${note.title}»: body`);
+    if (noteTitles.has(officeKey(note.title ?? ''))) problems.push(`trùng ghi chú «${note.title}»`);
+    noteTitles.add(officeKey(note.title ?? ''));
+  }
+  return problems;
+}
+
+export function loadOffices(config = {}) {
+  const entries = [];
+  const problems = [];
+  if (!fs.existsSync(OFFICES)) return { entries, problems };
+  for (const file of fs.readdirSync(OFFICES).filter((name) => name !== '.DS_Store').sort()) {
+    const abs = path.join(OFFICES, file);
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*\.json$/.test(file) || !fs.lstatSync(abs).isFile()) {
+      problems.push(`offices/${file}: tên tệp chữ thường không dấu, gạch nối, đuôi .json`);
+      continue;
+    }
+    let office;
+    try {
+      office = readJson(abs);
+    } catch (err) {
+      problems.push(`offices/${file}: không đọc được JSON (${err.message})`);
+      continue;
+    }
+    problems.push(...officeProblems(office, file).map((line) => `offices/${file}: ${line}`));
+    entries.push({ office, abs, rel: `offices/${file}` });
+  }
+  const files = entries.map((entry) => ({ rel: entry.rel, abs: entry.abs, size: fs.statSync(entry.abs).size }));
+  problems.push(...scanSecrets(files, config.scan_allow ?? [], config.skills_scan_allow_words ?? []).map((line) => `bí mật? ${line}`));
+  return { entries, problems };
+}
+
+/**
+ * Bộ mẫu dựng cố định (sắp theo id, không khoảng trắng thừa): cùng nội dung thì cùng sha256. App dựng y hệt cho bản chụp
+ * trong bộ cài (`npm run offices:sync` của cnv-cowork) để biết bộ trong danh mục trùng bản chụp mà khỏi tải.
+ */
+export function buildOfficePack(entries) {
+  const offices = entries.map((entry) => entry.office).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  return Buffer.from(JSON.stringify({ format: OFFICE_PACK_FORMAT, version: 1, offices }), 'utf8');
+}

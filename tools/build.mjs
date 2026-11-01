@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Đóng gói mọi kịch bản thành dist/<id>-<phiên bản>.zip, bộ kỹ năng thành dist/skills-<sha256 12 ký tự>.json, rồi dựng
+// Đóng gói mọi kịch bản thành dist/<id>-<phiên bản>.zip, bộ kỹ năng thành dist/skills-<sha256 12 ký tự>.json, mẫu Thư viện
+// văn phòng thành dist/offices-<sha256 12 ký tự>.json, rồi dựng
 // dist/catalog.json đã ký Ed25519 (ghim sha256 của từng tệp), sẵn để gắn vào một GitHub Release (dist/RELEASE.md ghi từng
 // bước). Không đăng gì lên mạng.
 //   node tools/build.mjs                     (khoá bí mật từ Keychain macOS, mục "CNV Cowork library signing key")
@@ -8,7 +9,7 @@
 // Không bao giờ commit khoá bí mật.
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadChangelog, loadConfig, loadScenario, loadSkills, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
+import { buildOfficePack, buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
 
 function arg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -66,6 +67,17 @@ if (skills.entries.length) {
   console.log(`✔ ${name}: ${skills.entries.length} kỹ năng, ${(pack.length / 1024).toFixed(0)} KB`);
 }
 
+const offices = loadOffices(config);
+problems.push(...offices.problems);
+let officePack = null;
+if (offices.entries.length) {
+  const pack = buildOfficePack(offices.entries);
+  const name = `offices-${sha256(pack).slice(0, 12)}.json`;
+  fs.writeFileSync(path.join(DIST, name), pack);
+  officePack = { url: archiveUrl(name), sha256: sha256(pack), bytes: pack.length, count: offices.entries.length };
+  console.log(`✔ ${name}: ${offices.entries.length} mẫu văn phòng, ${(pack.length / 1024).toFixed(0)} KB`);
+}
+
 const changelog = loadChangelog();
 problems.push(...changelog.problems);
 if (changelog.entries.length) console.log(`✔ changelog: ${changelog.entries.length} bản đè nhật ký «Có gì mới» của app`);
@@ -76,14 +88,19 @@ if (problems.length) {
   process.exit(1);
 }
 
-// `content`: nội dung app tự cập nhật không cần bản app mới (bộ kỹ năng có sẵn; nhật ký «Có gì mới» nằm luôn trong danh mục
+// `content`: nội dung app tự cập nhật không cần bản app mới (bộ kỹ năng có sẵn, mẫu Thư viện văn phòng; nhật ký «Có gì mới» nằm luôn trong danh mục
 // vì nhỏ). App cũ không biết trường nào thì bỏ qua.
-const content = { skills: skillPack, ...(changelog.entries.length ? { changelog: changelog.entries } : {}) };
+const content = { skills: skillPack, offices: officePack, ...(changelog.entries.length ? { changelog: changelog.entries } : {}) };
 const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios, content };
 const envelope = signCatalog(payload, await signingKey(arg('key-file')));
 openCatalog(envelope, config.public_key); // khoá bí mật phải khớp khoá công khai app ghim
 fs.writeFileSync(path.join(DIST, 'catalog.json'), `${JSON.stringify(envelope, null, 2)}\n`);
-const files = ['catalog.json', ...scenarios.map((scenario) => scenario.archive.url.split('/').pop()), ...(skillPack ? [skillPack.url.split('/').pop()] : [])];
+const files = [
+  'catalog.json',
+  ...scenarios.map((scenario) => scenario.archive.url.split('/').pop()),
+  ...(skillPack ? [skillPack.url.split('/').pop()] : []),
+  ...(officePack ? [officePack.url.split('/').pop()] : []),
+];
 const where = owner ? `https://github.com/${owner}/${repo}` : '(chưa điền github.owner trong library.config.json)';
 fs.writeFileSync(
   path.join(DIST, 'RELEASE.md'),

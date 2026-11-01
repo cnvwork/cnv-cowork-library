@@ -1,0 +1,95 @@
+{
+  "id": "luat-su",
+  "name": "Văn phòng luật",
+  "industry": "Luật sư",
+  "group": "professional",
+  "icon": "scale",
+  "summary": "Tóm tắt hồ sơ → tra cứu văn bản trong Kho tri thức → soạn thư tư vấn / rà hợp đồng có trích điều luật; luật sư duyệt.",
+  "description": "Cho luật sư, văn phòng luật nhỏ: Tóm tắt hồ sơ gom sự việc và giấy tờ còn thiếu; Tra cứu pháp lý CHỈ trích điều khoản từ văn bản pháp luật có trong Kho tri thức (đọc nguyên văn, ghi số hiệu + điều); Soạn thảo pháp lý viết bản nháp thư tư vấn, hợp đồng, đơn từ. Không đưa kết luận pháp lý thay luật sư; mọi bản gửi khách qua thẻ chờ duyệt.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Tóm tắt hồ sơ",
+      "role": "Tóm tắt sự việc, các bên, mốc thời gian, yêu cầu và giấy tờ còn thiếu.",
+      "instructions": "Đọc tài liệu khách gửi (tệp đính kèm, thư, ghi chú CRM). Tóm tắt khách quan: các bên, mốc thời gian, yêu cầu của khách, chứng cứ đã có, giấy tờ còn thiếu. Không đánh giá thắng thua, không nhận định pháp lý.",
+      "color": "emerald"
+    },
+    {
+      "name": "Tra cứu pháp lý",
+      "role": "Tìm và trích nguyên văn điều khoản từ văn bản pháp luật trong Kho tri thức.",
+      "instructions": "Chỉ dùng văn bản pháp luật có trong Kho tri thức: tìm bằng search_knowledge_base, đọc nguyên văn điều khoản bằng read_legal_document, trích kèm số hiệu văn bản và số điều / khoản. TUYỆT ĐỐI không trích điều luật theo trí nhớ. Văn bản cần mà chưa có trong Kho tri thức thì ghi rõ «chưa có căn cứ trong Kho tri thức» để luật sư bổ sung. Tài liệu có ghi hết hiệu lực / sửa đổi thì nêu.",
+      "color": "violet"
+    },
+    {
+      "name": "Soạn thảo pháp lý",
+      "role": "Soạn nháp thư tư vấn, hợp đồng, đơn từ dựa trên căn cứ đã trích.",
+      "instructions": "Chỉ dựa trên căn cứ phòng Tra cứu pháp lý đã trích (giữ nguyên số hiệu, điều). KHÔNG đưa kết luận pháp lý chắc chắn thay luật sư: viết «theo quy định tại …, có thể …», đánh dấu [LUẬT SƯ XEM LẠI] ở mọi chỗ cần nhận định. Không cam kết kết quả vụ việc. Mọi tin, thư gửi khách đều tạo thẻ chờ bạn duyệt, không tự gửi.",
+      "color": "amber"
+    },
+    {
+      "name": "Kiểm Brand",
+      "role": "Soát mọi bản nháp theo giọng và quy tắc thương hiệu trước khi trình bạn.",
+      "instructions": "Đối chiếu bản nháp với ghi chú Thương hiệu trong Bộ não và Hồ sơ kinh doanh: giọng, xưng hô, từ cấm, lời hứa quá đà, thông tin chưa có căn cứ. Kết luận Đạt / Cần sửa, chỉ rõ chỗ sai và đưa bản đã sửa. Không thêm thông tin mới.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Kiểm Brand",
+  "chains": [
+    {
+      "name": "Chuỗi Tư vấn pháp lý",
+      "description": "Thư tư vấn, trả lời câu hỏi pháp lý của khách: tóm tắt hồ sơ, tra điều luật, soạn bản nháp.",
+      "rooms": [
+        "Tóm tắt hồ sơ",
+        "Tra cứu pháp lý",
+        "Soạn thảo pháp lý"
+      ]
+    },
+    {
+      "name": "Chuỗi Rà soát hợp đồng",
+      "description": "Rà soát / soạn hợp đồng: chỉ ra điều khoản rủi ro kèm căn cứ, đề xuất sửa.",
+      "rooms": [
+        "Tra cứu pháp lý",
+        "Soạn thảo pháp lý"
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Hạn hồ sơ trong tuần",
+      "room": "Điều phối",
+      "prompt": "Rà task và lịch hẹn tuần này có hạn nộp hồ sơ, phiên làm việc, buổi gặp khách. Liệt kê theo ngày kèm giấy tờ cần chuẩn bị cho từng việc.",
+      "time": "08:00",
+      "days": [
+        1
+      ]
+    }
+  ],
+  "sample_prompts": [
+    "Tóm tắt hồ sơ khách vừa gửi và liệt kê giấy tờ còn thiếu.",
+    "Khách hỏi về quyền rút dữ liệu cá nhân: soạn thư tư vấn có trích điều luật trong Kho tri thức.",
+    "Rà soát hợp đồng thuê nhà đính kèm, chỉ ra điều khoản bất lợi cho khách kèm căn cứ.",
+    "Soạn thư hẹn lịch làm việc với khách mới, nêu giấy tờ cần mang theo."
+  ],
+  "brain_notes": [
+    {
+      "kind": "company",
+      "title": "Lĩnh vực hành nghề",
+      "body": "- Lĩnh vực chính: (doanh nghiệp, đất đai, hôn nhân gia đình, lao động…)\n- Luật sư phụ trách: …\n- Văn bản pháp luật đã tải vào Kho tri thức: …"
+    },
+    {
+      "kind": "product",
+      "title": "Biểu phí dịch vụ pháp lý",
+      "body": "- Tư vấn: …\n- Soạn thảo hợp đồng: …\n- Đại diện: … (theo thoả thuận)"
+    },
+    {
+      "kind": "process",
+      "title": "Quy trình tiếp nhận hồ sơ",
+      "body": "Tiếp nhận → tóm tắt sự việc → xác định văn bản áp dụng → luật sư nhận định → báo phí → ký hợp đồng dịch vụ."
+    },
+    {
+      "kind": "brand",
+      "title": "Giọng thương hiệu",
+      "body": "- Xưng hô với khách: …\n- Giọng: …\n- Từ nên dùng: …\n- Từ cấm / lời hứa không được nói: …"
+    }
+  ]
+}
