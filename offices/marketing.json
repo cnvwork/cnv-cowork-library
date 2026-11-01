@@ -6,7 +6,7 @@
   "icon": "megaphone",
   "summary": "Nghiên cứu → bài Fanpage → kịch bản TikTok → Kiểm Brand, bạn duyệt rồi mới đăng.",
   "description": "Cho cá nhân / nhóm nhỏ làm marketing: phòng Nghiên cứu lấy ý từ khách, đối thủ, sản phẩm có thật; phòng Nội dung viết bài Fanpage; phòng TikTok chuyển thành kịch bản video; Kiểm Brand soát giọng thương hiệu; phòng Phát hành chỉ làm với bản bạn đã duyệt, mọi việc đăng / gửi qua thẻ chờ duyệt.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "rooms": [
     {
       "name": "Nghiên cứu",
@@ -34,8 +34,8 @@
     },
     {
       "name": "Phát hành",
-      "role": "Sau khi bạn duyệt: lên lịch đăng, soạn tin / thư gửi khách.",
-      "instructions": "Chỉ làm với bản bạn đã duyệt. Mọi việc đăng, gửi tin, gửi thư đều tạo thẻ chờ bạn bấm xác nhận, không tự gửi.",
+      "role": "Sau khi bạn duyệt: đưa bài vào Lịch đăng bài, trả lời bình luận, soạn tin / thư gửi khách.",
+      "instructions": "Chỉ làm với bản bạn đã duyệt. Bài Fanpage / Instagram: xem Lịch đăng bài (social_list_posts) để khỏi trùng chủ đề, rải đều giờ đăng, rồi đưa bài vào lịch bằng social_schedule_post — bài hiện «Chờ duyệt», chỉ tự đăng khi bạn bấm duyệt. Bình luận dưới bài: đọc bằng social_list_comments, trả lời câu hỏi có căn cứ (giá, còn hàng, giao hàng từ CRM / Kho tri thức) bằng social_reply_comment; không có căn cứ thì để bạn trả lời, không bịa. Gửi tin, gửi thư cũng tạo thẻ chờ bạn bấm xác nhận, không tự gửi.",
       "color": "blue"
     }
   ],
@@ -55,10 +55,24 @@
     {
       "name": "Ý tưởng nội dung đầu tuần",
       "room": "Điều phối",
-      "prompt": "Lên 5 ý tưởng bài đăng cho tuần này dựa trên sản phẩm, khách và đối thủ trong Bộ não; mỗi ý một dòng kèm lý do. Chuyển qua Chuỗi Marketing để có bản nháp bài hay nhất.",
+      "prompt": "Lên 5 ý tưởng bài đăng cho tuần này dựa trên sản phẩm, khách và đối thủ trong Bộ não; mỗi ý một dòng kèm lý do. Chuyển qua Chuỗi Marketing để có bản nháp bài hay nhất. Đã nối Fanpage / Instagram thì đưa các bài đạt vào Lịch đăng bài bằng social_schedule_post (rải đều các ngày trong tuần) để tôi duyệt.",
       "time": "08:00",
       "days": [
         1
+      ]
+    },
+    {
+      "name": "Trả lời bình luận cuối ngày",
+      "room": "Phát hành",
+      "prompt": "Đọc bình luận chưa trả lời dưới các bài đăng 7 ngày qua (social_list_comments). Câu hỏi có căn cứ trong CRM / Kho tri thức thì soạn câu trả lời ngắn, lịch sự bằng social_reply_comment để tôi duyệt; câu không có căn cứ hoặc khiếu nại thì liệt kê lại cho tôi.",
+      "time": "17:30",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
       ]
     }
   ],
