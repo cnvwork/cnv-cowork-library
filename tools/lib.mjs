@@ -564,3 +564,61 @@ export function buildOfficePack(entries) {
   const offices = entries.map((entry) => entry.office).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   return Buffer.from(JSON.stringify({ format: OFFICE_PACK_FORMAT, version: 1, offices }), 'utf8');
 }
+
+// ── Bộ dựng video ──────────────────────────────────────────────────────────────────────────
+
+/**
+ * `video/engine.json`: bộ dựng video (ffmpeg + ffprobe) của Trình dựng video theo nền tảng, ghim URL + SHA-256 + số byte.
+ * Build đưa vào `content.video_engine` của danh mục; app (cnv-cowork `src/main/services/video/catalog.ts`
+ * `remoteVideoEngine`) dùng thay bảng ghim mang sẵn, bản sai khuôn thì bỏ riêng bản đó. Luật trùng app: host tải trong
+ * `VIDEO_ENGINE_HOSTS`, https, không «latest», zip của tệp chạy phải có trong danh sách tải.
+ */
+export const VIDEO_ENGINE_FILE = path.join(ROOT, 'video', 'engine.json');
+export const VIDEO_ENGINE_HOSTS = ['github.com', 'objects.githubusercontent.com', 'release-assets.githubusercontent.com', 'ffmpeg.martin-riedl.de'];
+const VIDEO_PLATFORMS = ['darwin-arm64', 'darwin-x64', 'win32-x64', 'win32-arm64'];
+const SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$/;
+
+export function loadVideoEngine() {
+  if (!fs.existsSync(VIDEO_ENGINE_FILE)) return { engine: null, problems: [] };
+  let raw;
+  try {
+    raw = JSON.parse(fs.readFileSync(VIDEO_ENGINE_FILE, 'utf8'));
+  } catch (err) {
+    return { engine: null, problems: [`video/engine.json: không đọc được JSON (${err.message}).`] };
+  }
+  const problems = [];
+  const builds = raw?.builds;
+  if (!builds || typeof builds !== 'object') return { engine: null, problems: ['video/engine.json: thiếu «builds».'] };
+  for (const platform of VIDEO_PLATFORMS) if (!builds[platform]) problems.push(`video/engine.json: thiếu bản cho ${platform}.`);
+  for (const [platform, build] of Object.entries(builds)) {
+    const where = `video/engine.json ${platform}`;
+    if (!VIDEO_PLATFORMS.includes(platform)) problems.push(`${where}: nền tảng lạ (${VIDEO_PLATFORMS.join(', ')}).`);
+    if (!SEGMENT.test(build?.id ?? '')) problems.push(`${where}: «id» chỉ gồm chữ, số, . _ - (đổi khi đổi bản dựng).`);
+    if (!build?.id?.includes(build?.version ?? '\u0000')) problems.push(`${where}: «id» nên chứa phiên bản để mỗi bản dựng một thư mục.`);
+    for (const key of ['version', 'license', 'source']) if (typeof build?.[key] !== 'string' || !build[key].trim()) problems.push(`${where}: thiếu «${key}».`);
+    if (!/^https:\/\//.test(build?.source ?? '')) problems.push(`${where}: «source» phải là link https tới nơi phát hành.`);
+    if (!SEGMENT.test(build?.download?.id ?? '')) problems.push(`${where}: thiếu «download.id».`);
+    const files = Array.isArray(build?.download?.files) ? build.download.files : [];
+    if (!files.length || files.length > 4) problems.push(`${where}: «download.files» phải có 1–4 tệp.`);
+    for (const file of files) {
+      if (!SEGMENT.test(file?.name ?? '')) problems.push(`${where}: tên tệp «${file?.name}» không hợp lệ.`);
+      let url = null;
+      try {
+        url = new URL(file?.url);
+      } catch {
+        problems.push(`${where}: link «${file?.url}» không hợp lệ.`);
+      }
+      if (url && (url.protocol !== 'https:' || !VIDEO_ENGINE_HOSTS.includes(url.hostname))) problems.push(`${where}: chỉ tải https từ ${VIDEO_ENGINE_HOSTS.join(', ')} (app chặn host khác).`);
+      if (url && /latest/i.test(url.pathname)) problems.push(`${where}: link phải ghim phiên bản, không dùng «latest».`);
+      if (!/^[a-f0-9]{64}$/.test(file?.sha256 ?? '')) problems.push(`${where}: «sha256» phải là 64 ký tự hex.`);
+      if (!Number.isInteger(file?.bytes) || file.bytes <= 0 || file.bytes > 600 * 1024 * 1024) problems.push(`${where}: «bytes» không hợp lệ (tối đa 600 MB).`);
+    }
+    const names = new Set(files.map((file) => file?.name));
+    for (const tool of ['ffmpeg', 'ffprobe']) {
+      const bin = build?.binaries?.[tool];
+      if (!bin || !names.has(bin.zip)) problems.push(`${where}: «binaries.${tool}.zip» phải là một tệp trong download.files.`);
+      if (!/^[A-Za-z0-9._/-]{1,200}$/.test(bin?.entry ?? '') || String(bin?.entry).split('/').includes('..')) problems.push(`${where}: «binaries.${tool}.entry» không hợp lệ.`);
+    }
+  }
+  return { engine: problems.length ? null : { builds }, problems };
+}

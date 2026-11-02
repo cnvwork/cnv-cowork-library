@@ -19,8 +19,9 @@ scenarios/<id>/
 skills/<nhóm>/<tên>.md  kỹ năng CÓ SẴN của trợ lý (nhóm: chung hoặc mã ngành) — nơi DUY NHẤT sửa kỹ năng có sẵn
 offices/<id>.json       mẫu Thư viện văn phòng (văn phòng AI theo ngành) — nơi DUY NHẤT sửa mẫu văn phòng
 changelog.json       sửa câu chữ nhật ký «Có gì mới» của app không cần ra bản mới (rỗng = không đè gì)
+video/engine.json    bộ dựng video (ffmpeg + ffprobe) của Trình dựng video theo nền tảng: link + sha256 + số byte
 library.config.json  khoá công khai (app ghim cùng khoá này), github.owner / repo, danh sách nhóm, chuỗi được phép khi quét
-tools/               check.mjs, build.mjs, verify.mjs, keygen.mjs (Node ≥ 22.2, không cần cài gì)
+tools/               check.mjs, build.mjs, verify.mjs, keygen.mjs, video-verify.mjs (Node ≥ 22.2, không cần cài gì)
 dist/                (không commit) gói .zip + skills-<sha>.json + catalog.json đã ký + RELEASE.md: thứ gắn vào GitHub Release
 ```
 
@@ -89,6 +90,30 @@ bản trong app; app chỉ hiện các bản không mới hơn bản đang chạ
 Mới nhất trước, `type` là `new` («Mới») hoặc `fix` («Sửa»), câu ≤ 180 ký tự, không thuật ngữ / không nhắc commit.
 `npm run check` kiểm khuôn; sai khuôn thì app bỏ cả nhật ký trên mạng và dùng bản đóng gói. `build` đưa nhật ký vào thẳng
 `catalog.json` (`content.changelog`, không thêm tệp), phát hành như dưới; mọi máy thấy ở lần làm mới danh mục kế tiếp.
+
+## Bộ dựng video
+
+Trình dựng video của Cowork (Marketing › Video) cần ffmpeg + ffprobe. Bộ này KHÔNG nằm trong bộ cài app: người dùng bấm
+«Cài trình dựng» (màn đầu của Marketing › Video, hoặc thẻ «Trình dựng video» ở Thư viện) thì app mới tải về máy họ, kiểm
+sha256 + số byte, giải nén, gỡ được.
+
+`video/engine.json` ghim bản dựng cho từng nền tảng (`darwin-arm64`, `darwin-x64`, `win32-x64`, `win32-arm64`). `build` đưa
+bảng này vào thẳng `catalog.json` (`content.video_engine`, không thêm tệp đính kèm). App ưu tiên bảng trong danh mục, không
+có thì dùng bảng mang sẵn (`src/main/services/video/catalog.ts` của cnv-cowork). Đổi bản dựng (vd lên ffmpeg mới):
+
+1. Sửa `video/engine.json`: link ghim phiên bản (không «latest»), `sha256`, `bytes`, `id` MỚI có chứa phiên bản.
+2. `npm run video:verify` (tải thử từng tệp, khớp sha256; ~400 MB đủ 4 nền tảng) và `npm run check`.
+3. `npm run build`, phát hành như dưới. Máy đã cài thấy «Có bản mới · Cập nhật» ở thẻ Trình dựng video; bản cũ vẫn dùng được
+   tới khi người dùng bấm cập nhật, cài xong bản mới thì app gỡ bản cũ.
+
+App chỉ tải bộ dựng từ `github.com` (và kho tệp `*.githubusercontent.com`) và `ffmpeg.martin-riedl.de`; link host khác thì
+app bỏ bản đó.
+
+**Vì sao tệp ffmpeg tải thẳng từ nơi phát hành, chưa đăng lại trong release của repo này** (02/11/2026): repo này công
+khai; đăng lại tệp chạy là CNV tự phát tán ffmpeg. Bản macOS đang dùng (Martin Riedl) là bản dựng GPL-3.0 (gồm x264…):
+phát tán lại thì CNV phải kèm hoặc giữ sẵn TOÀN BỘ mã nguồn tương ứng (ffmpeg + mọi thư viện trong bản dựng) ít nhất 3
+năm. Bản Windows (BtbN, LGPL) vốn đã nằm trên GitHub Releases, đăng lại không thêm gì. Muốn tự giữ hết trên GitHub: dựng
+bản ffmpeg LGPL cho macOS (không x264, mã hoá bằng VideoToolbox) rồi đăng kèm mã nguồn — việc riêng, cần sếp duyệt.
 
 ## Phát hành (GitHub Releases)
 

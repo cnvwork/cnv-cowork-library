@@ -7,7 +7,8 @@
     "check": "node tools/check.mjs",
     "build": "node tools/build.mjs",
     "verify": "node tools/verify.mjs",
-    "keygen": "node tools/keygen.mjs"
+    "keygen": "node tools/keygen.mjs",
+    "video:verify": "node tools/video-verify.mjs"
   },
   "engines": { "node": ">=22.2" }
 }

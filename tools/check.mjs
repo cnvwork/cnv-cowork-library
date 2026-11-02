@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Kiểm mọi kịch bản, bộ kỹ năng, mẫu Thư viện văn phòng và nhật ký «Có gì mới» trước khi đóng gói: manifest, luật tên tệp (giống app), trần dung lượng, quét bí mật.
+// Kiểm mọi kịch bản, bộ kỹ năng, mẫu Thư viện văn phòng, nhật ký «Có gì mới» và bộ dựng video trước khi đóng gói: manifest, luật tên tệp (giống app), trần dung lượng, quét bí mật.
 //   node tools/check.mjs            (in lỗi, thoát mã 1 nếu có)
-import { imageMetadataProblems, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, scanSecrets, scenarioIds } from './lib.mjs';
+import { imageMetadataProblems, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, scanSecrets, scenarioIds } from './lib.mjs';
 
 const config = loadConfig({ needKey: false });
 let failed = false;
@@ -41,5 +41,13 @@ if (changelog.problems.length) {
   for (const line of changelog.problems) console.error(`   ${line}`);
 } else {
   console.log(`✔ changelog: ${changelog.entries.length} bản đè nhật ký của app`);
+}
+const video = loadVideoEngine();
+if (video.problems.length) {
+  failed = true;
+  console.error('✖ video/engine.json');
+  for (const line of video.problems) console.error(`   ${line}`);
+} else if (video.engine) {
+  console.log(`✔ video: bộ dựng cho ${Object.keys(video.engine.builds).join(', ')}`);
 }
 process.exit(failed ? 1 : 0);

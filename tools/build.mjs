@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Đóng gói mọi kịch bản thành dist/<id>-<phiên bản>.zip, bộ kỹ năng thành dist/skills-<sha256 12 ký tự>.json, mẫu Thư viện
-// văn phòng thành dist/offices-<sha256 12 ký tự>.json, rồi dựng
+// văn phòng thành dist/offices-<sha256 12 ký tự>.json, bảng ghim bộ dựng video (video/engine.json, nằm luôn trong danh mục), rồi dựng
 // dist/catalog.json đã ký Ed25519 (ghim sha256 của từng tệp), sẵn để gắn vào một GitHub Release (dist/RELEASE.md ghi từng
 // bước). Không đăng gì lên mạng.
 //   node tools/build.mjs                     (khoá bí mật từ Keychain macOS, mục "CNV Cowork library signing key")
@@ -9,7 +9,7 @@
 // Không bao giờ commit khoá bí mật.
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildOfficePack, buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
+import { buildOfficePack, buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
 
 function arg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -82,15 +82,24 @@ const changelog = loadChangelog();
 problems.push(...changelog.problems);
 if (changelog.entries.length) console.log(`✔ changelog: ${changelog.entries.length} bản đè nhật ký «Có gì mới» của app`);
 
+const video = loadVideoEngine();
+problems.push(...video.problems);
+if (video.engine) console.log(`✔ video: bộ dựng cho ${Object.keys(video.engine.builds).join(', ')} (tải thẳng từ nơi phát hành)`);
+
 if (problems.length) {
   console.error('Chưa đóng gói được:');
   for (const line of problems) console.error(`   ${line}`);
   process.exit(1);
 }
 
-// `content`: nội dung app tự cập nhật không cần bản app mới (bộ kỹ năng có sẵn, mẫu Thư viện văn phòng; nhật ký «Có gì mới» nằm luôn trong danh mục
-// vì nhỏ). App cũ không biết trường nào thì bỏ qua.
-const content = { skills: skillPack, offices: officePack, ...(changelog.entries.length ? { changelog: changelog.entries } : {}) };
+// `content`: nội dung app tự cập nhật không cần bản app mới (bộ kỹ năng có sẵn, mẫu Thư viện văn phòng; nhật ký «Có gì mới» và
+// bảng ghim bộ dựng video nằm luôn trong danh mục vì nhỏ). App cũ không biết trường nào thì bỏ qua.
+const content = {
+  skills: skillPack,
+  offices: officePack,
+  ...(changelog.entries.length ? { changelog: changelog.entries } : {}),
+  ...(video.engine ? { video_engine: video.engine } : {}),
+};
 const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios, content };
 const envelope = signCatalog(payload, await signingKey(arg('key-file')));
 openCatalog(envelope, config.public_key); // khoá bí mật phải khớp khoá công khai app ghim
@@ -117,6 +126,8 @@ ${files.map((file) => `   - ${file}`).join('\n')}
 4. Để trống «Set as a pre-release», chọn **Set as the latest release**, bấm Publish.
 5. Kiểm: mở ${owner ? `https://github.com/${owner}/${repo}/releases/latest/download/catalog.json` : '<repo>/releases/latest/download/catalog.json'}
    phải tải về đúng tệp này; \`npm run verify\` ở máy vẫn xanh.
+
+Bộ dựng video: chỉ là bảng ghim nằm trong catalog.json (video/engine.json), không có tệp đính kèm.
 
 App chỉ tải qua link tải thẳng github.com/…/releases/…/download/… (chuyển hướng sang *.githubusercontent.com),
 không gọi api.github.com. Xoá / sửa release cũ thì danh mục cũ trong máy người dùng vẫn trỏ gói theo tag cũ: giữ lại.
