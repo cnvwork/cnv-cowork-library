@@ -291,6 +291,8 @@ export function loadSkills(config = {}) {
       if (names.has(name)) problems.push(`skills/${rel}: trùng tên với ${names.get(name)}`);
       names.set(name, rel);
       if (command) {
+        // Cùng khuôn SKILL_COMMAND_PATTERN của app (src/shared/skills.ts): lệnh sai khuôn thì app bỏ cả kỹ năng.
+        if (!/^\/[a-z0-9_]{2,32}$/.test(command)) problems.push(`skills/${rel}: lệnh ${command} sai khuôn (app chỉ nhận /a-z, 0-9, _; 2–32 ký tự)`);
         if (commands.has(command)) problems.push(`skills/${rel}: trùng lệnh ${command} với ${commands.get(command)}`);
         commands.set(command, rel);
       }

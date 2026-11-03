@@ -116,7 +116,7 @@ làm nhiều thao tác liên quan (tóm tắt ngắn cho lịch sử). Dự án 
 
 ## Ảnh chụp màn hình (tin nhắn khách, đánh giá, bảng giá, bài báo)
 Không dán ảnh chụp mờ lên video. Dựng lại bằng chữ chuyển động: phong cách «Bằng chứng» (con số + trích dẫn tô dạ quang
-+ nhãn nguồn) hoặc trang HTML / SVG tự viết theo kỹ năng «Đạo diễn chữ chuyển động» (lệnh /chu-chuyen-dong). Giữ nguyên
++ nhãn nguồn) hoặc trang HTML / SVG tự viết theo kỹ năng «Đạo diễn chữ chuyển động» (lệnh /chuchuyendong). Giữ nguyên
 lời khách, ghi nguồn, che tên / số điện thoại.
 
 ## Duyệt 2
@@ -130,7 +130,7 @@ Mặc định **cắt thẳng theo nhịp**. Chuyển cảnh chỉ ở chỗ đ�
 không quá một chuyển cảnh mỗi 3 chỗ cắt. Tiếng hai bên chỗ chuyển cảnh tự vuốt chồng (≥ 0,3 giây).
 
 ## Chữ chuyển động
-Móc, giá, bằng chứng, kết: `video_project_motion` theo kỹ năng «Đạo diễn chữ chuyển động» (lệnh /chu-chuyen-dong). Trong
+Móc, giá, bằng chứng, kết: `video_project_motion` theo kỹ năng «Đạo diễn chữ chuyển động» (lệnh /chuchuyendong). Trong
 video từ clip điện thoại, chữ chuyển động là điểm nhấn: 1–3 đoạn 2–5 giây, đặt ở móc, giá và kêu gọi; còn lại là footage.
 
 ## Phụ đề

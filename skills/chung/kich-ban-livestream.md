@@ -61,7 +61,7 @@ Viết thành bảng: giây · hình ảnh · lời nói · chữ trên màn hì
   khoá.
 - Hình hoặc chữ đổi mỗi 1,5–3 giây.
 Có clip quay sẵn thì dựng luôn trong Cowork bằng kỹ năng «Dựng video từ clip điện thoại» (lệnh /video); video toàn chữ / ảnh
-thì kỹ năng «Đạo diễn chữ chuyển động» (lệnh /chu-chuyen-dong).
+thì kỹ năng «Đạo diễn chữ chuyển động» (lệnh /chuchuyendong).
 
 # Lưu ý
 Không nói "số lượng có hạn" khi không có hạn. Sản phẩm sức khoẻ, làm đẹp: không hứa tác dụng chữa bệnh, không dùng hình trước / sau trên cơ thể khi chưa được phép.

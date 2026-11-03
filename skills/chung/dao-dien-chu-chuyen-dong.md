@@ -2,7 +2,7 @@
 name: dao-dien-chu-chuyen-dong
 title: Đạo diễn chữ chuyển động
 description: Dùng khi người dùng muốn video bán hàng làm từ chữ, con số, ảnh sản phẩm (không cần quay), hoặc cần đoạn chữ chuyển động cho video clip điện thoại — câu móc, giá sốc, bằng chứng có nguồn, so sánh trước – sau, đếm ngược, lời kêu gọi — trong Trình dựng video của Cowork; kịch bản theo giây, chọn phong cách có số đo, tự viết trang HTML khi cần, tự kiểm rồi dựng lại.
-command: /chu-chuyen-dong
+command: /chuchuyendong
 category: noi-dung
 starters:
   - Video 15 giây flash sale chỉ có ảnh sản phẩm và giá
