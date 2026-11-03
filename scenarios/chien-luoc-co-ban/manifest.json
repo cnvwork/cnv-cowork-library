@@ -1,0 +1,17 @@
+{
+  "id": "chien-luoc-co-ban",
+  "name": "Chiến lược cơ bản cho doanh nghiệp nhỏ",
+  "summary": "Trợ lý cùng chủ doanh nghiệp đi từng bước: môi trường (PESTEL), đối thủ, SWOT, chọn nhóm khách và định vị (STP), kế hoạch 12 tháng có mục tiêu đo được.",
+  "description": "Kỹ năng /chienluoc cho trợ lý CNV Cowork, dành cho chủ shop, chủ doanh nghiệp nhỏ muốn nghĩ cho rõ hướng đi năm tới. Trợ lý hỏi một lần về doanh nghiệp, đọc dữ liệu có sẵn trong Cowork (hồ sơ kinh doanh, sản phẩm, đơn bán hàng, Bộ não), rồi đi 6 bước: hiểu doanh nghiệp, môi trường bên ngoài (PESTEL), đối thủ, SWOT và hướng đi, chọn nhóm khách và định vị (STP), kế hoạch 12 tháng. Mỗi bước xong bạn xem và sửa rồi mới sang bước sau.\n\nSố của doanh nghiệp lấy từ bạn hoặc dữ liệu thật; số trên mạng phải có nguồn và ngày; điều phải đoán được ghi rõ là giả định. Xong bước cuối, trợ lý gom thành một tệp Word để bạn giữ và chia sẻ.",
+  "category": "marketing",
+  "version": "1.0.0",
+  "requirements": [
+    "CNV Cowork đã nối một mô hình AI cho trợ lý",
+    "Gắn thư mục tải về làm Thư mục làm việc (cho phép đề xuất ghi) để trợ lý lưu tệp chiến lược",
+    "Nên điền Hồ sơ kinh doanh và sản phẩm trong Cowork trước để trợ lý hỏi ít hơn"
+  ],
+  "license": "Nội dung của CNV, được dùng và sửa cho công việc kinh doanh của bạn.",
+  "tags": ["chiến lược", "SWOT", "PESTEL", "STP", "kế hoạch kinh doanh"],
+  "readme": "README.md",
+  "skill": "cowork/SKILL.md"
+}

@@ -175,3 +175,10 @@ Zip dựng cố định (giờ 1980-01-01, thứ tự tệp cố định, không
 | id | Tên | Nhóm |
 |---|---|---|
 | `nobita-tv` | Nobita TV: màn hình chính cho TV Samsung (Tizen) | tv |
+| `bo-google-ads` | Bộ Google Ads cho shop nhỏ (`/googleads`): đo chuyển đổi, viết RSA, kế hoạch + theo dõi, từ khoá phủ định | marketing |
+| `brief-landing-page` | Brief trang đích (`/brieflanding`): brief cho người làm web, rà trang đang chạy | marketing |
+| `chien-luoc-co-ban` | Chiến lược cơ bản cho doanh nghiệp nhỏ (`/chienluoc`): PESTEL → SWOT → STP → kế hoạch 12 tháng | marketing |
+| `soi-doi-thu-quang-cao` | Soi quảng cáo của đối thủ (`/soidoithu`): Thư viện quảng cáo Meta, Trung tâm minh bạch quảng cáo Google | marketing |
+
+Bốn kịch bản nhóm `marketing` chỉ có chữ (README + `cowork/SKILL.md`, bộ Google Ads thêm thư mục `bao-cao/` để người dùng bỏ
+báo cáo tải từ Google Ads): «Sử dụng» là cài kỹ năng Thư viện, thư mục tải về làm chỗ trợ lý đọc báo cáo và lưu tệp kết quả.

@@ -19,6 +19,11 @@
       "id": "automation",
       "label": "Tự động hoá",
       "description": "Script và mẫu tự động hoá việc lặp lại."
+    },
+    {
+      "id": "marketing",
+      "label": "Marketing – kinh doanh",
+      "description": "Kỹ năng cho trợ lý kèm hướng dẫn: quảng cáo, trang đích, đối thủ, chiến lược. Tải về là trợ lý dùng được ngay, không cần code."
     }
   ],
   "scan_allow": [

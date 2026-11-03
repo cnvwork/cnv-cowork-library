@@ -1,0 +1,17 @@
+{
+  "id": "soi-doi-thu-quang-cao",
+  "name": "Soi quảng cáo của đối thủ",
+  "summary": "Trợ lý mở Thư viện quảng cáo của Meta và Trung tâm minh bạch quảng cáo của Google, đọc mẫu đối thủ đang chạy, tách lớp từng mẫu, tìm khoảng trống và góc khác biệt cho shop.",
+  "description": "Kỹ năng /soidoithu cho trợ lý CNV Cowork. Bạn đưa tên trang Facebook, thương hiệu hoặc website đối thủ (chưa biết thì tìm theo ngành và khu vực); trợ lý mở Thư viện quảng cáo của Meta và Trung tâm minh bạch quảng cáo của Google trong trình duyệt của trợ lý, đọc các mẫu đang chạy: chạy từ ngày nào, bao nhiêu phiên bản, câu mở, nói với ai, ưu đãi, bằng chứng, lời kêu gọi.\n\nKết quả là bảng tách lớp từng mẫu, những điều cả thị trường đều nói (đã nhàm), điều khách lo mà chưa ai trả lời, và 3–5 góc khác biệt dựa trên điều shop bạn làm thật. Trợ lý không chép chữ, hình của đối thủ, không nêu tên hay chê đối thủ trong quảng cáo. Tóm tắt từng đối thủ lưu được vào Bộ não để lần sau chỉ cần soi phần mới.",
+  "category": "marketing",
+  "version": "1.0.0",
+  "requirements": [
+    "CNV Cowork đã nối một mô hình AI cho trợ lý",
+    "Mạng Internet để trợ lý mở Thư viện quảng cáo của Meta và Trung tâm minh bạch quảng cáo của Google",
+    "Trang đòi đăng nhập thì cần Chrome của bạn đã nối với Cowork (trợ lý không đăng nhập hộ)"
+  ],
+  "license": "Nội dung của CNV, được dùng và sửa cho công việc kinh doanh của bạn.",
+  "tags": ["đối thủ", "quảng cáo", "thư viện quảng cáo", "Facebook", "Google"],
+  "readme": "README.md",
+  "skill": "cowork/SKILL.md"
+}

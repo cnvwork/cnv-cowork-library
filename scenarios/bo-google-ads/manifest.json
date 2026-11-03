@@ -1,0 +1,17 @@
+{
+  "id": "bo-google-ads",
+  "name": "Bộ Google Ads cho shop nhỏ",
+  "summary": "Trợ lý làm bốn việc Google Ads: kế hoạch đo chuyển đổi (gọi điện, Zalo, Messenger, form, VNPay / MoMo), viết quảng cáo RSA, kế hoạch + theo dõi hằng ngày, lọc từ khoá phủ định từ báo cáo.",
+  "description": "Kỹ năng /googleads cho trợ lý CNV Cowork, dành cho shop, doanh nghiệp nhỏ tự chạy quảng cáo tìm kiếm Google.\n\n1. Đo chuyển đổi: trợ lý xem web của bạn rồi soạn kế hoạch Google Tag Manager — đo bấm gọi, bấm Zalo, bấm Messenger, gửi form thành công, thanh toán VNPay / MoMo thành công — kèm cách kiểm và lỗi hay gặp.\n2. Viết quảng cáo tìm kiếm thích ứng (RSA): 15 tiêu đề, 4 mô tả, đường liên kết trang web, chú thích, đếm đúng giới hạn ký tự của Google, xuất bảng Excel để dán vào Google Ads.\n3. Kế hoạch chiến dịch và theo dõi hằng ngày: cấu trúc, từ khoá, giá thầu đi từng bậc, ngân sách, dự báo có ghi nguồn; mỗi ngày đọc số thật từ tài khoản đã nối và báo bất thường.\n4. Từ khoá phủ định: bạn tải báo cáo cụm từ tìm kiếm bỏ vào thư mục `bao-cao/`, trợ lý lọc cụm tốn tiền vô ích, rút từ phủ định ngắn, thử ngược để không chặn nhầm khách thật, xuất danh sách dán thẳng vào Google Ads.\n\nTrợ lý không tạo chiến dịch, không sửa tài khoản Google Ads hay Tag Manager hộ bạn; đổi ngân sách / tạm dừng chiến dịch chỉ qua thẻ bạn bấm duyệt.",
+  "category": "marketing",
+  "version": "1.0.0",
+  "requirements": [
+    "CNV Cowork đã nối một mô hình AI cho trợ lý",
+    "Đọc số tự động: nối tài khoản Google có quyền Google Ads ở Kết nối (không bắt buộc với việc viết quảng cáo, lọc từ khoá)",
+    "Gắn thư mục tải về làm Thư mục làm việc (cho phép đề xuất ghi) để trợ lý đọc báo cáo bạn tải và lưu bảng kết quả"
+  ],
+  "license": "Nội dung của CNV, được dùng và sửa cho công việc kinh doanh của bạn.",
+  "tags": ["Google Ads", "quảng cáo tìm kiếm", "Tag Manager", "từ khoá phủ định", "RSA"],
+  "readme": "README.md",
+  "skill": "cowork/SKILL.md"
+}

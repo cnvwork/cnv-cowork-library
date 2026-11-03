@@ -1,0 +1,17 @@
+{
+  "id": "brief-landing-page",
+  "name": "Brief trang đích (landing page)",
+  "summary": "Trợ lý viết brief trang đích cho người làm web: mục tiêu, từng khối nội dung, ưu đãi, hỏi đáp, đo chuyển đổi, checklist trước khi chạy quảng cáo. Rà được trang đang chạy.",
+  "description": "Kỹ năng /brieflanding cho trợ lý CNV Cowork. Bạn nói trang để làm gì (thu số điện thoại, nhắn tin, đặt lịch, bán hàng) và khách đến từ quảng cáo nào; trợ lý hỏi phần còn thiếu, đóng gói ưu đãi, dựng brief từng khối nội dung bằng thông tin thật của bạn (không bịa đánh giá, số liệu), kèm yêu cầu đo chuyển đổi, yêu cầu kỹ thuật và checklist trước khi bật quảng cáo, rồi lưu thành tệp Word để gửi người làm web.\n\nĐưa đường dẫn một trang đang chạy thì trợ lý mở trang, đọc như người vừa bấm quảng cáo, xem trang đã trả lời đủ sáu câu khách tự hỏi khi cuộn trang chưa, đối chiếu với lời quảng cáo, đếm chỗ làm khách rời đi, đo tốc độ trên điện thoại, rồi trả bảng việc cần sửa theo thứ tự ảnh hưởng.",
+  "category": "marketing",
+  "version": "1.0.0",
+  "requirements": [
+    "CNV Cowork đã nối một mô hình AI cho trợ lý",
+    "Gắn thư mục tải về làm Thư mục làm việc (cho phép đề xuất ghi) để trợ lý lưu brief dạng Word",
+    "Rà trang đang chạy: trang mở công khai được, không cần đăng nhập"
+  ],
+  "license": "Nội dung của CNV, được dùng và sửa cho công việc kinh doanh của bạn.",
+  "tags": ["landing page", "trang đích", "brief", "quảng cáo", "chuyển đổi"],
+  "readme": "README.md",
+  "skill": "cowork/SKILL.md"
+}
