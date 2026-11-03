@@ -50,6 +50,8 @@ if (parts) {
   if (count && !(count.target > 0)) count = null;
   if (count) { count.prefix = parts[1]; count.suffix = parts[3]; }
 }
+/** Đếm từ 60% con số (khung đầu đã có số to, không trống), số nhỏ hơn 10 thì từ 0. */
+const countFrom = (target) => (target >= 10 ? target * 0.6 : 0);
 function formatCount(value) {
   const fixed = value.toFixed(count.decimals);
   const [int, dec] = fixed.split('.');
@@ -228,9 +230,9 @@ function layout(scale) {
 }
 
 const f = Math.min(1, Math.max(0.55, (S - 0.8) / 4.4));
-const T_NUM = 0.15;
+const T_NUM = 0;
 const T_LAND = T_NUM + 0.9 * f;
-const T_UNIT = 0.55 * f;
+const T_UNIT = 0.3 * f;
 const T_CLAIM = 1.2 * f;
 const T_CARD = 2.4 * f;
 const T_MARK = 3.0 * f;
@@ -250,10 +252,12 @@ window.cwFrame = (t) => {
   const fade = 1 - k.ease.inCubic(k.clamp((t - (S - 0.35)) / 0.35));
   const num = $('num');
   const pn = k.clamp((t - T_NUM) / (0.9 * f));
-  num.textContent = count ? formatCount(count.target * k.ease.outCubic(pn)) : rawNum;
-  const land = k.ease.outBack(k.clamp((t - T_NUM) / 0.4));
-  num.style.opacity = String(k.clamp((t - T_NUM) / 0.15) * fade);
-  num.style.transform = 'translateY(' + (1 - land) * k.vmin * 4 + 'px) scale(' + (1 + 0.06 * Math.sin(Math.PI * k.clamp((t - T_LAND) / 0.22))) + ')';
+  const from = count ? countFrom(count.target) : 0;
+  num.textContent = count ? formatCount(from + (count.target - from) * k.ease.outCubic(pn)) : rawNum;
+  // Khung 0 đã có số (ảnh xem trước của nền tảng lấy khung đầu): chỉ nhích từ to hơn 6% về đúng cỡ, rồi nhấn khi số chốt.
+  const settle = k.ease.outCubic(k.clamp(t / 0.4));
+  num.style.opacity = String(fade);
+  num.style.transform = 'scale(' + (1.06 - 0.06 * settle + 0.06 * Math.sin(Math.PI * k.clamp((t - T_LAND) / 0.22))) + ')';
   num.style.transformOrigin = 'left bottom';
   const pu = k.ease.outCubic(k.clamp((t - T_UNIT) / 0.45));
   $('unit').style.opacity = String(0.86 * pu * fade);
