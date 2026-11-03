@@ -140,8 +140,10 @@ video từ clip điện thoại, chữ chuyển động là điểm nhấn: 1–
 - Trang phụ đề: khung dọc ≤ 8 từ, khung ngang ≤ 11 từ; ngắt trang ở dấu câu, chỗ nghỉ > 0,5 giây, hoặc khi trang dài quá
   3,5 giây; ≤ 2 dòng, ≤ 20 ký tự / giây; mỗi trang một từ khoá. App tự tính và tự dời phụ đề lên trên / giữa khi trùng chữ
   của clip chữ chuyển động; vẫn đọc mục `caption_over_motion` khi xem lại.
-- Kiểu phụ đề («set_project» caption_style): **highlight** cho video nói / bán hàng; **pop** cho đoạn dồn dập 1–3 từ;
-  **box** khi nền rối; **brand** khi shop có màu riêng; **classic** khi cần kín đáo.
+- Kiểu phụ đề («set_project» caption_style): **highlight** cho video nói / bán hàng; **keyword** (Từ khoá nổi) cho video
+  bán hàng nói nhanh — mỗi trang một từ khoá (giá, con số, lợi ích) trên khối màu thương hiệu đúng lúc được nói; từ tự chọn
+  chưa đắt (vd cần tên shop) thì «update» câu đó với `key` = đúng chữ trong câu; **pop** cho đoạn dồn dập 1–3 từ; **box** khi
+  nền rối; **brand** khi shop có màu riêng; **classic** khi cần kín đáo.
 - Không đặt chữ ở vùng nút của TikTok / Reels (mép phải ~14%, mép dưới ~22%, mép trên ~10% khung dọc).
 
 ## Chữ chèn («add_text»)
