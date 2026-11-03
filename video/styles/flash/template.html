@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #FFE600; --bg2: #FFD000; --accent: #111111; --ink: #FFE600; --text: #111111; --font-display: "Anton", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; --font-number: "Barlow Condensed", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+/* Sọc chéo tĩnh (không chạy, không nhấp nháy). */
+.stripes { position: absolute; inset: -10%; background: repeating-linear-gradient(-32deg, var(--bg) 0 6vmin, var(--bg2) 6vmin 12vmin); }
+.wrap { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.bolt { display: block; }
+.head { font-family: var(--font-display); line-height: 0.9; text-transform: uppercase; white-space: nowrap; transform-origin: 50% 60%; }
+.pricebox { display: inline-flex; flex-direction: column; align-items: center; padding: 0.12em 0.5em 0.16em; background: var(--accent); color: var(--ink); }
+.old { font-family: var(--font-number); font-weight: 600; text-decoration: line-through; text-decoration-thickness: 0.08em; opacity: 0.75; white-space: nowrap; }
+.price { font-family: var(--font-number); font-weight: 800; line-height: 1; white-space: nowrap; }
+.deadline { display: inline-flex; align-items: center; gap: 0.5em; padding: 0.4em 0.9em; border: 0.14em solid var(--accent); border-radius: 99px; font-weight: 800; white-space: nowrap; background: var(--bg); }
+.clock { display: block; }
+.cta { display: inline-block; padding: 0.5em 1.4em; border-radius: 0.35em; background: var(--accent); color: var(--ink); font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="stripes"></div>
+<div class="wrap" id="wrap">
+  <svg class="bolt" id="bolt" viewBox="0 0 64 100" aria-hidden="true"><path d="M38 0 L6 56 H30 L22 100 L58 40 H34 Z" fill="var(--accent)"/></svg>
+  <div class="head" id="head"></div>
+  <div class="pricebox" id="pricebox"><span class="old" id="old"></span><span class="price" id="price"></span></div>
+  <div class="deadline" id="deadline"><svg class="clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><line id="hand" x1="12" y1="12" x2="12" y2="5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span id="deadlinetext"></span></div>
+  <div class="cta" id="cta"></div>
+</div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+$('head').textContent = k.field('headline', 'FLASH SALE');
+$('price').textContent = k.field('price', '99.000đ');
+k.text('#old', 'old_price');
+const deadline = k.field('deadline');
+$('deadlinetext').textContent = deadline;
+if (!deadline) $('deadline').style.display = 'none';
+k.text('#cta', 'cta');
+let laid = false;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const width = W - safe.left - safe.right;
+  const wrap = $('wrap');
+  wrap.style.left = safe.left + 'px';
+  wrap.style.width = width + 'px';
+  const bolt = $('bolt');
+  bolt.style.width = k.vmin * 11 + 'px';
+  bolt.style.height = k.vmin * 17 + 'px';
+  k.fit($('head'), { max: k.vmin * 30, min: k.vmin * 12, maxWidth: width * 0.98 });
+  $('head').style.marginTop = k.vmin * 2 + 'px';
+  $('pricebox').style.marginTop = k.vmin * 5 + 'px';
+  $('old').style.fontSize = k.vmin * 6 + 'px';
+  k.fit($('price'), { max: k.vmin * 22, min: k.vmin * 10, maxWidth: width * 0.8 });
+  const dl = $('deadline');
+  dl.style.fontSize = k.vmin * 4.8 + 'px';
+  dl.style.marginTop = k.vmin * 6 + 'px';
+  dl.querySelector('svg').style.width = '1.1em';
+  dl.querySelector('svg').style.height = '1.1em';
+  const cta = $('cta');
+  cta.style.fontSize = k.vmin * 5.4 + 'px';
+  cta.style.marginTop = k.vmin * 5 + 'px';
+  const h = wrap.getBoundingClientRect().height;
+  wrap.style.top = safe.top + Math.max(0, (H - safe.top - safe.bottom - h) * 0.45) + 'px';
+}
+cwSfx('boom', 0.12, 0.8);
+cwSfx('cash', 0.9);
+if (deadline) cwSfx('tick', 1.45, 0.7);
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const out = k.clamp((t - (S - 0.3)) / 0.3);
+  const fade = 1 - k.ease.inCubic(out);
+  const pb = k.clamp((t - 0.05) / 0.3);
+  $('bolt').style.opacity = String((pb > 0 ? 1 : 0) * fade);
+  $('bolt').style.transform = 'translateY(' + (1 - k.ease.outCubic(pb)) * -k.vmin * 14 + 'px) rotate(' + k.lerp(-18, 8, k.ease.outCubic(pb)) + 'deg)';
+  // Chữ lớn đập xuống: 1,6 → 0,96 → 1, nghiêng -6° giữ nguyên.
+  const ph = k.clamp((t - 0.12) / 0.34);
+  $('head').style.opacity = String((ph > 0 ? 1 : 0) * fade);
+  $('head').style.transform = 'skewX(-6deg) scale(' + k.keys(ph, [[0, 1.6], [0.7, 0.96, k.ease.outQuart], [1, 1, k.ease.inOutQuad]]) + ')';
+  const pp = k.clamp((t - 0.7) / 0.28);
+  $('pricebox').style.opacity = String((pp > 0 ? 1 : 0) * fade);
+  $('pricebox').style.transform = 'scale(' + k.keys(pp, [[0, 0.5], [0.7, 1.05, k.ease.outCubic], [1, 1]]) + ')';
+  const pd = k.ease.outCubic(k.clamp((t - 1.35) / 0.4));
+  $('deadline').style.opacity = String(pd * fade);
+  $('deadline').style.transform = 'translateY(' + (1 - pd) * k.vmin * 3 + 'px)';
+  $('hand').setAttribute('transform', 'rotate(' + Math.floor(Math.max(0, t - 1.35) * 2) * 30 + ' 12 12)');
+  const pc = k.ease.outCubic(k.clamp((t - 1.7) / 0.4));
+  // Nút mời mua phập phồng rất nhẹ (±3%), 1 nhịp mỗi 0,9 giây.
+  const pulse = 1 + 0.03 * Math.sin(Math.max(0, t - 2.1) * (Math.PI * 2) / 0.9);
+  $('cta').style.opacity = String(pc * fade);
+  $('cta').style.transform = 'scale(' + k.lerp(0.85, 1, pc) * pulse + ')';
+};
+</script>
+</body>
+</html>

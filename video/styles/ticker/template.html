@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #0047FF; --bg2: #0033B8; --accent: #FFE14D; --ink: #0B1B4D; --text: #FFFFFF; --font-display: "Be Vietnam Pro", sans-serif; --font-body: "Barlow Condensed", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-display); }
+.band { position: absolute; left: 0; right: 0; display: flex; align-items: center; overflow: hidden; }
+.b1 { background: var(--accent); color: var(--ink); }
+.b2 { background: var(--text); color: var(--bg); }
+.track { display: flex; white-space: nowrap; font-family: var(--font-body); font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; will-change: transform; }
+.track > * { flex: none; }
+.track span { padding: 0 0.55em; }
+.track i { font-style: normal; opacity: 0.55; }
+.title { position: absolute; text-wrap: balance; font-weight: 900; line-height: 1.02; letter-spacing: -0.02em; text-align: center; }
+</style>
+</head>
+<body>
+<div class="band b1" id="b1"><div class="track" id="t1"></div></div>
+<div class="title" id="title"></div>
+<div class="band b2" id="b2"><div class="track" id="t2"></div></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+const items = k.field('text', 'FREESHIP TOÀN QUỐC • ĐỔI TRẢ 7 NGÀY').split(/\s*[•·|]\s*/).filter(Boolean);
+function fill(track) {
+  for (let r = 0; r < 8; r += 1) {
+    for (const item of items) {
+      const span = document.createElement('span');
+      span.textContent = item;
+      track.appendChild(span);
+      const dot = document.createElement('i');
+      dot.textContent = '✦';
+      track.appendChild(dot);
+    }
+  }
+}
+fill($('t1'));
+fill($('t2'));
+const titleText = k.field('title', 'Ưu đãi tuần này');
+let lines = [];
+let laid = false;
+let speed = 0;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const bandH = k.vmin * 14;
+  for (const id of ['b1', 'b2']) {
+    $(id).style.height = bandH + 'px';
+    $(id === 'b1' ? 't1' : 't2').style.fontSize = bandH * 0.52 + 'px';
+  }
+  $('b1').style.top = safe.top + k.vmin * 4 + 'px';
+  $('b2').style.top = H - safe.bottom - bandH - k.vmin * 4 + 'px';
+  const title = $('title');
+  const width = W - safe.left - safe.right;
+  title.style.left = safe.left + 'px';
+  title.style.width = width + 'px';
+  title.textContent = titleText;
+  k.fit(title, { max: k.vmin * 19, min: k.vmin * 8, maxWidth: width, maxHeight: k.vmin * 19 * 3.1 });
+  lines = k.lines(title, titleText);
+  const h = title.getBoundingClientRect().height;
+  title.style.top = (H - h) / 2 - k.vmin * 2 + 'px';
+  speed = k.vmin * 22;
+}
+cwSfx('swipe', 0.05, 0.6);
+cwSfx('pop', 0.5, 0.7);
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const out = k.clamp((t - (S - 0.35)) / 0.35);
+  const exit = k.ease.snap(out);
+  const enter = k.ease.snap(k.clamp(t / 0.5));
+  $('b1').style.transform = 'translateX(' + ((1 - enter) * -100 + exit * 100) + '%)';
+  $('b2').style.transform = 'translateX(' + ((1 - enter) * 100 - exit * 100) + '%)';
+  $('t1').style.transform = 'translateX(' + -(t * speed) + 'px)';
+  $('t2').style.transform = 'translateX(' + (t * speed - k.W * 3) + 'px)';
+  lines.forEach((line, i) => {
+    const p = k.ease.snap(k.clamp((t - 0.35 - i * 0.12) / 0.55));
+    line.style.transform = 'translateY(' + ((1 - p) * 105 - exit * 105) + '%)';
+  });
+};
+</script>
+</body>
+</html>

@@ -323,7 +323,8 @@ export function buildZip(files) {
   const centrals = [];
   let offset = 0;
   for (const file of files) {
-    const data = fs.readFileSync(file.abs);
+    // Tệp sinh lúc đóng gói (vd styles.json của bộ làm video) đưa thẳng `data`, không có trên đĩa.
+    const data = file.data ?? fs.readFileSync(file.abs);
     const name = Buffer.from(file.rel, 'utf8');
     const deflated = zlib.deflateRawSync(data, { level: 9 });
     const stored = deflated.length >= data.length;

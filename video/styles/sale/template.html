@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #FF3B30; --bg2: #C81D16; --accent: #FFE14D; --ink: #1A1A1A; --text: #FFFFFF; --font-display: "Anton", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; --font-number: "Barlow Condensed", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+/* Dải chéo tĩnh sau khối giá: tạo nhịp hai mảng màu, không tia, không hạt. */
+.band { position: absolute; left: -20%; right: -20%; background: var(--bg2); transform-origin: left; }
+.wrap { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.head { font-family: var(--font-display); line-height: 0.92; letter-spacing: 0.01em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.product { font-weight: 700; line-height: 1.2; text-wrap: balance; }
+.old { position: relative; display: inline-block; font-family: var(--font-number); font-weight: 600; opacity: 0.85; white-space: nowrap; }
+.old .strike { position: absolute; left: -4%; right: -4%; top: 52%; height: 0.08em; background: var(--text); transform-origin: left; border-radius: 99px; }
+.pricebox { position: relative; display: inline-flex; align-items: center; padding: 0.06em 0.28em 0.1em; background: var(--accent); color: var(--ink); border-radius: 0.08em; }
+.price { font-family: var(--font-number); font-weight: 800; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.badge { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--text); color: var(--bg); font-family: var(--font-number); font-weight: 800; }
+.note { position: absolute; left: 0; right: 0; display: flex; justify-content: center; }
+.note span { display: inline-block; padding: 0.45em 1em; background: var(--bg2); color: var(--accent); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="band" id="band"></div>
+<div class="wrap" id="wrap">
+  <div class="head" id="head"></div>
+  <div class="product" id="product"></div>
+  <div class="old" id="old"><span id="oldtext"></span><i class="strike" id="strike"></i></div>
+  <div class="pricebox" id="pricebox"><span class="price" id="price"></span></div>
+</div>
+<div class="badge" id="badge"></div>
+<div class="note" id="note"><span id="notetext"></span></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+
+/** «199.000đ», «199k», «1,2tr» → đồng; không đọc được thì null. */
+function money(value) {
+  const text = String(value || '').toLowerCase().replace(/\s/g, '');
+  const m = /(\d+(?:[.,]\d+)*)(k|ng|nghìn|ngàn|tr|triệu|m)?/.exec(text);
+  if (!m) return null;
+  const unit = m[2];
+  const amount = unit ? Number(m[1].replace(',', '.')) * (unit === 'tr' || unit === 'triệu' || unit === 'm' ? 1e6 : 1e3) : Number(m[1].replace(/[.,]/g, ''));
+  return Number.isFinite(amount) && amount > 0 ? amount : null;
+}
+
+const head = k.field('headline', 'SALE');
+const product = k.field('product');
+const oldPrice = k.field('old_price');
+const newPrice = k.field('new_price', '199.000đ');
+const note = k.field('note');
+$('head').textContent = head;
+$('product').textContent = product;
+if (!product) $('product').style.display = 'none';
+$('oldtext').textContent = oldPrice;
+if (!oldPrice) $('old').style.display = 'none';
+$('notetext').textContent = note;
+if (!note) $('note').style.display = 'none';
+
+const before = money(oldPrice);
+const after = money(newPrice);
+// Giá tụt dần từ giá cũ về giá mới (chỉ khi đọc được cả hai số và định dạng giá mới là số đầy đủ, vd 199.000đ).
+const plain = /^\d{1,3}(\.\d{3})+\s*(đ|₫|vnđ|vnd)?$/i.test(newPrice.trim());
+const roll = before && after && after < before && plain;
+const suffix = (/(đ|₫|vnđ|vnd)$/i.exec(newPrice.trim()) || [''])[0];
+const format = (n) => Math.round(n / 1000) * 1000 >= 1000 ? (Math.round(n / 1000) * 1000).toLocaleString('vi-VN') + suffix : newPrice;
+const percent = before && after && after < before ? Math.round((1 - after / before) * 100) : 0;
+$('badge').textContent = percent >= 1 && percent <= 99 ? '-' + percent + '%' : '';
+if (!$('badge').textContent) $('badge').style.display = 'none';
+$('price').textContent = newPrice;
+
+let laid = false;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const width = W - safe.left - safe.right;
+  const wrap = $('wrap');
+  wrap.style.left = safe.left + 'px';
+  wrap.style.width = width + 'px';
+  const headSize = k.fit($('head'), { max: k.vmin * 34, min: k.vmin * 12, maxWidth: width * 0.96 });
+  $('product').style.fontSize = k.vmin * 5.6 + 'px';
+  $('product').style.marginTop = k.vmin * 3 + 'px';
+  k.fit($('product'), { max: k.vmin * 5.6, min: k.vmin * 4, maxWidth: width });
+  $('old').style.fontSize = k.vmin * 8.5 + 'px';
+  $('old').style.marginTop = k.vmin * 6 + 'px';
+  $('pricebox').style.marginTop = k.vmin * 2 + 'px';
+  // Giá rộng nhất có thể (lấy cỡ theo chuỗi dài nhất sẽ hiện).
+  $('price').textContent = roll ? format(before) : newPrice;
+  k.fit($('price'), { max: k.vmin * 26, min: k.vmin * 10, maxWidth: width * 0.84 });
+  $('price').textContent = newPrice;
+  const box = wrap.getBoundingClientRect();
+  const top = safe.top + Math.max(0, (H - safe.top - safe.bottom - box.height) * 0.46);
+  wrap.style.top = top + 'px';
+  const priceBox = $('pricebox').getBoundingClientRect();
+  const band = $('band');
+  band.style.top = priceBox.top - priceBox.height * 0.55 + 'px';
+  band.style.height = priceBox.height * 2.1 + 'px';
+  band.style.transform = 'rotate(-6deg)';
+  const badge = $('badge');
+  const d = Math.max(k.vmin * 17, priceBox.height * 0.95);
+  badge.style.width = d + 'px';
+  badge.style.height = d + 'px';
+  badge.style.fontSize = d * 0.34 + 'px';
+  badge.style.left = Math.min(W - safe.right - d * 0.85, priceBox.right - d * 0.45) + 'px';
+  badge.style.top = priceBox.top - d * 0.62 + 'px';
+  const noteEl = $('note');
+  noteEl.style.fontSize = k.vmin * 4.6 + 'px';
+  noteEl.style.top = Math.min(H - safe.bottom - k.vmin * 10, priceBox.bottom + k.vmin * 9) + 'px';
+  headSize;
+}
+
+const TH = 0;
+const TP = 0.75;
+const TO = 1.0;
+const TS = 1.35;
+const TR = oldPrice ? 1.55 : 1.05;
+const RD = roll ? 0.8 : 0;
+const TB = TR + RD + 0.15;
+const TN = TB + 0.35;
+cwSfx('whoosh', TH, 0.7);
+cwSfx('cash', TR + RD);
+if ($('badge').textContent) cwSfx('pop', TB);
+
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const out = k.clamp((t - (S - 0.3)) / 0.3);
+  const exit = k.ease.inCubic(out);
+  // Chữ lớn: phóng 1,35 → 1 (một nhịp vượt nhẹ 3%), không lắc, không mờ nhoè.
+  const ph = k.clamp((t - TH) / 0.38);
+  const head = $('head');
+  head.style.opacity = String(Math.min(1, ph * 3) * (1 - out));
+  head.style.transform = 'scale(' + k.keys(ph, [[0, 1.35], [0.7, 0.97, k.ease.outCubic], [1, 1, k.ease.inOutQuad]]) + ')';
+  const product = $('product');
+  const pp = k.ease.outCubic(k.clamp((t - TP) / 0.45));
+  product.style.opacity = String(pp * (1 - out));
+  product.style.transform = 'translateY(' + (1 - pp) * k.vmin * 3 + 'px)';
+  const old = $('old');
+  const po = k.ease.outCubic(k.clamp((t - TO) / 0.35));
+  old.style.opacity = String(po * 0.85 * (1 - out));
+  $('strike').style.transform = 'rotate(-7deg) scaleX(' + k.ease.inOutCubic(k.clamp((t - TS) / 0.25)) + ')';
+  const band = $('band');
+  band.style.transform = 'rotate(-6deg) scaleX(' + k.ease.snap(k.clamp((t - TR + 0.2) / 0.45)) * (1 - exit) + ')';
+  const box = $('pricebox');
+  const pb = k.clamp((t - TR) / 0.3);
+  box.style.opacity = String((pb > 0 ? 1 : 0) * (1 - out));
+  box.style.transform = 'scale(' + k.keys(pb, [[0, 0.6], [0.65, 1.04, k.ease.outCubic], [1, 1]]) * (1 - 0.1 * exit) + ')';
+  if (roll) {
+    const pr = k.ease.outQuart(k.clamp((t - TR) / RD));
+    $('price').textContent = pr >= 1 ? newPrice : format(k.lerp(before, after, pr));
+  }
+  const badge = $('badge');
+  const pg = k.clamp((t - TB) / 0.28);
+  badge.style.opacity = String((pg > 0 ? 1 : 0) * (1 - out));
+  badge.style.transform = 'rotate(' + k.lerp(-35, 12, k.ease.outCubic(pg)) + 'deg) scale(' + k.keys(pg, [[0, 1.8], [0.7, 0.95, k.ease.outCubic], [1, 1]]) + ')';
+  const noteEl = $('note');
+  const pn = k.ease.snap(k.clamp((t - TN) / 0.45));
+  noteEl.style.transform = 'translateX(' + ((1 - pn) * -110 + exit * 110) + '%)';
+};
+</script>
+</body>
+</html>

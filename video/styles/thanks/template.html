@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #141E30; --bg2: #243B55; --accent: #F7C948; --ink: #141E30; --text: #FFFFFF; --font-display: "Pacifico", cursive; --font-body: "Be Vietnam Pro", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+.wrap { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.mark { position: relative; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--text); overflow: hidden; }
+.mark img { width: 76%; height: 76%; object-fit: contain; }
+.mark b { font-weight: 800; color: var(--bg); letter-spacing: 0.02em; }
+.ring { position: absolute; inset: -0.5vmin; }
+.msg { font-family: var(--font-display); line-height: 1.25; text-wrap: balance; }
+.msg .cw-w { display: inline-block; }
+.shop { font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.contact { display: inline-block; padding: 0.55em 1.2em; border-radius: 99px; background: var(--accent); color: var(--ink); font-weight: 800; white-space: nowrap; }
+.cta { font-weight: 500; opacity: 0.8; }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="mark" id="mark"><img id="logo" alt=""><b id="mono"></b><svg class="ring" id="ringsvg" viewBox="0 0 100 100" aria-hidden="true"><circle id="ring" cx="50" cy="50" r="48.5" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" transform="rotate(-90 50 50)" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg></div>
+  <div class="msg" id="msg"></div>
+  <div class="shop" id="shop"></div>
+  <div class="contact" id="contact"></div>
+  <div class="cta" id="cta"></div>
+</div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const brand = (window.CW_DATA && window.CW_DATA.brand) || {};
+const $ = (id) => document.getElementById(id);
+const shop = k.field('shop', brand.name || '');
+const logo = $('logo');
+if (brand.logo) {
+  logo.src = brand.logo;
+  $('mono').remove();
+} else {
+  logo.remove();
+  // Không có logo: chữ cái đầu của tên shop (tối đa 2), không có tên thì trái tim vẽ bằng nét.
+  const initials = shop.split(/\s+/).filter(Boolean).slice(-2).map((w) => w[0]).join('').toUpperCase();
+  $('mono').textContent = initials || '♥';
+}
+$('msg').textContent = k.field('message', 'Cảm ơn bạn đã ủng hộ!');
+k.text('#shop', 'shop', brand.name || '');
+k.text('#contact', 'contact');
+k.text('#cta', 'cta');
+let words = [];
+let laid = false;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const width = W - safe.left - safe.right;
+  const wrap = $('wrap');
+  wrap.style.left = safe.left + 'px';
+  wrap.style.width = width + 'px';
+  const d = k.vmin * 30;
+  const mark = $('mark');
+  mark.style.width = d + 'px';
+  mark.style.height = d + 'px';
+  $('mono').style.fontSize = d * 0.34 + 'px';
+  const msg = $('msg');
+  msg.style.marginTop = k.vmin * 7 + 'px';
+  k.fit(msg, { max: k.vmin * 12, min: k.vmin * 6, maxWidth: width * 0.94, maxHeight: k.vmin * 12 * 2.6 });
+  words = k.split(msg, 'word');
+  $('shop').style.fontSize = k.vmin * 4.2 + 'px';
+  $('shop').style.marginTop = k.vmin * 4 + 'px';
+  $('contact').style.fontSize = k.vmin * 5 + 'px';
+  $('contact').style.marginTop = k.vmin * 7 + 'px';
+  $('cta').style.fontSize = k.vmin * 4 + 'px';
+  $('cta').style.marginTop = k.vmin * 3.5 + 'px';
+  const h = wrap.getBoundingClientRect().height;
+  wrap.style.top = safe.top + Math.max(0, (H - safe.top - safe.bottom - h) * 0.45) + 'px';
+}
+cwSfx('ding', 0.35, 0.8);
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const out = k.clamp((t - (S - 0.45)) / 0.45);
+  const fade = 1 - k.ease.inQuad(out);
+  const pm = k.ease.outCubic(k.clamp(t / 0.6));
+  const mark = $('mark');
+  mark.style.opacity = String(pm * fade);
+  mark.style.transform = 'scale(' + k.lerp(0.86, 1, pm) + ')';
+  $('ring').setAttribute('stroke-dashoffset', String(100 - 100 * k.ease.inOutCubic(k.clamp((t - 0.2) / 0.9))));
+  words.forEach((word, i) => {
+    const p = k.ease.outQuint(k.clamp((t - 0.55 - i * 0.09) / 0.6));
+    word.style.opacity = String(p * fade);
+    word.style.transform = 'translateY(' + (1 - p) * 0.35 + 'em)';
+  });
+  const base = 0.55 + words.length * 0.09 + 0.25;
+  [['shop', 0], ['contact', 0.3], ['cta', 0.55]].forEach(([id, delay]) => {
+    const p = k.ease.outCubic(k.clamp((t - base - delay) / 0.45));
+    $(id).style.opacity = String(p * fade);
+    $(id).style.transform = 'translateY(' + (1 - p) * k.vmin * 2.5 + 'px)';
+  });
+};
+</script>
+</body>
+</html>

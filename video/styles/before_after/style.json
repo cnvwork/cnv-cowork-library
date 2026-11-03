@@ -1,0 +1,86 @@
+{
+  "id": "before_after",
+  "version": 1,
+  "label": "Trước – sau",
+  "hint": "So sánh: nửa «trước» xám nhạt, đường chia quét qua lộ nửa «sau» màu tươi, mũi tên, kết luận.",
+  "group": "compare",
+  "tags": [
+    "so sánh",
+    "trước sau",
+    "hiệu quả"
+  ],
+  "seconds": 5,
+  "fields": [
+    {
+      "key": "before_label",
+      "label": "Nhãn trước",
+      "placeholder": "TRƯỚC",
+      "max": 12,
+      "optional": true
+    },
+    {
+      "key": "before_text",
+      "label": "Trước",
+      "placeholder": "Áo cũ: bí, dính mồ hôi",
+      "max": 60
+    },
+    {
+      "key": "after_label",
+      "label": "Nhãn sau",
+      "placeholder": "SAU",
+      "max": 12,
+      "optional": true
+    },
+    {
+      "key": "after_text",
+      "label": "Sau",
+      "placeholder": "Áo cotton: mát, khô thoáng",
+      "max": 60
+    },
+    {
+      "key": "verdict",
+      "label": "Kết luận",
+      "placeholder": "Đổi áo, đổi cả ngày làm việc",
+      "max": 50,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "fresh",
+      "label": "Xanh tươi",
+      "bg": "#E9F7EF",
+      "bg2": "#E4E2DD",
+      "accent": "#12A150",
+      "ink": "#FFFFFF",
+      "text": "#13261B"
+    },
+    {
+      "id": "sky",
+      "label": "Trời xanh",
+      "bg": "#E8F1FF",
+      "bg2": "#E5E5E5",
+      "accent": "#1D63FF",
+      "ink": "#FFFFFF",
+      "text": "#0B1E3F"
+    },
+    {
+      "id": "sun",
+      "label": "Nắng",
+      "bg": "#FFF4D6",
+      "bg2": "#E6E3DE",
+      "accent": "#F08A00",
+      "ink": "#FFFFFF",
+      "text": "#2B1D00"
+    }
+  ],
+  "fonts": {
+    "display": "Anton",
+    "body": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "swipe",
+    "ding"
+  ],
+  "rules": "Khung dọc: trên «trước» (nền phụ xám, chữ mờ 62%, nhãn xám), dưới «sau» (nền chính tươi, nhãn màu nhấn); khung ngang: trái / phải. Đường chia đậm 0,9vmin quét lộ nửa «sau» trong 0,6 giây (snap) bắt đầu ở 1,0 giây, mũi tên tròn bật 0,4 → 1,08 → 1 trên đường chia. Chữ hai bên cỡ 5–9,5vmin, ≤ 3 dòng, chữ «sau» rõ hơn «trước». Kết luận trên viên màu nhấn sau 1,3 giây. Tiếng: swipe khi quét, ding khi kết luận."
+}

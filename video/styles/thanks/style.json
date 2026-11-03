@@ -1,0 +1,79 @@
+{
+  "id": "thanks",
+  "version": 2,
+  "label": "Cảm ơn khách",
+  "hint": "Kết video: logo (hoặc chữ cái đầu tên shop) vẽ vòng, lời cảm ơn chữ mềm, cách liên hệ, lời mời theo dõi.",
+  "group": "ending",
+  "tags": [
+    "kết thúc",
+    "cảm ơn",
+    "liên hệ"
+  ],
+  "seconds": 5,
+  "fields": [
+    {
+      "key": "message",
+      "label": "Lời cảm ơn",
+      "placeholder": "Cảm ơn bạn đã ủng hộ!",
+      "max": 60
+    },
+    {
+      "key": "shop",
+      "label": "Tên shop",
+      "placeholder": "Shop Mây Tre",
+      "max": 40,
+      "optional": true
+    },
+    {
+      "key": "contact",
+      "label": "Liên hệ",
+      "placeholder": "Zalo 0901 234 567",
+      "max": 40,
+      "optional": true
+    },
+    {
+      "key": "cta",
+      "label": "Lời mời",
+      "placeholder": "Theo dõi để nhận ưu đãi mỗi tuần",
+      "max": 60,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "night",
+      "label": "Đêm vàng",
+      "bg": "#141E30",
+      "bg2": "#243B55",
+      "accent": "#F7C948",
+      "ink": "#141E30",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "cream",
+      "label": "Kem ấm",
+      "bg": "#FBF6EE",
+      "bg2": "#F1E6D6",
+      "accent": "#C2410C",
+      "ink": "#FFFFFF",
+      "text": "#2B1D12"
+    },
+    {
+      "id": "rose",
+      "label": "Hồng phấn",
+      "bg": "#FFE4EC",
+      "bg2": "#FFC9DA",
+      "accent": "#E11D74",
+      "ink": "#FFFFFF",
+      "text": "#3B0A23"
+    }
+  ],
+  "fonts": {
+    "display": "Pacifico",
+    "body": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "ding"
+  ],
+  "rules": "Kết video êm: logo thương hiệu trong vòng tròn trắng (không có logo thì chữ cái đầu tên shop), vòng màu nhấn vẽ quanh trong 0,9 giây. Lời cảm ơn chữ viết tay mềm (Pacifico) hiện từng từ, mỗi từ trễ 0,09 giây, đi lên 0,35em; tên shop in hoa giãn 0,22em màu nhấn; liên hệ trong viên thuốc màu nhấn; lời mời mờ 80%. Không tim bay, không hạt. 0,45 giây cuối mờ dần (cuối video được phép mờ). Tiếng: ding khi logo hiện."
+}

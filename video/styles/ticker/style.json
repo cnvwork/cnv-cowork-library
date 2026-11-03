@@ -1,0 +1,64 @@
+{
+  "id": "ticker",
+  "version": 2,
+  "label": "Chữ chạy",
+  "hint": "Hai dải chữ chạy ngược chiều (freeship, đổi trả…), tiêu đề lớn ở giữa lộ từng dòng.",
+  "group": "info",
+  "tags": [
+    "chữ chạy",
+    "ưu đãi"
+  ],
+  "seconds": 5,
+  "fields": [
+    {
+      "key": "title",
+      "label": "Tiêu đề",
+      "placeholder": "Ưu đãi tuần này",
+      "max": 40
+    },
+    {
+      "key": "text",
+      "label": "Chữ chạy (cách nhau bằng •)",
+      "placeholder": "FREESHIP TOÀN QUỐC • ĐỔI TRẢ 7 NGÀY • TẶNG QUÀ",
+      "max": 120
+    }
+  ],
+  "palettes": [
+    {
+      "id": "ocean",
+      "label": "Xanh biển",
+      "bg": "#0047FF",
+      "bg2": "#0033B8",
+      "accent": "#FFE14D",
+      "ink": "#0B1B4D",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "mono",
+      "label": "Đen trắng",
+      "bg": "#F4F4F0",
+      "bg2": "#E6E6E0",
+      "accent": "#111111",
+      "ink": "#FFFFFF",
+      "text": "#111111"
+    },
+    {
+      "id": "lime",
+      "label": "Chanh đêm",
+      "bg": "#161616",
+      "bg2": "#262626",
+      "accent": "#C6FF3D",
+      "ink": "#161616",
+      "text": "#FFFFFF"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Barlow Condensed"
+  },
+  "sfx": [
+    "swipe",
+    "pop"
+  ],
+  "rules": "Hai dải phẳng cao 14vmin trong vùng an toàn: dải trên màu nhấn chữ đậm chạy sang trái, dải dưới màu chữ chạy sang phải, cùng tốc độ 22vmin/giây (không đổi tốc, không nhấp nháy), mục cách nhau ✦. Dải trượt vào 0,5 giây (snap). Tiêu đề 900, giãn chữ -2%, tối đa 3 dòng, lộ từng dòng qua mặt nạ từ 0,35 giây, dòng sau trễ 0,12 giây. 0,35 giây cuối dải trượt ra, chữ trượt lên. Tiếng: swipe khi dải vào, pop khi tiêu đề."
+}

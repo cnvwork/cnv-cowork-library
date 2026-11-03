@@ -1,0 +1,23 @@
+{
+  "id": "intro",
+  "version": 2,
+  "label": "Giới thiệu sản phẩm",
+  "hint": "Mở đầu gọn kiểu tạp chí: logo / tên shop, tên sản phẩm lớn lộ từng dòng, câu mô tả, khối giá.",
+  "group": "opening",
+  "tags": ["mở đầu", "tối giản", "sang"],
+  "seconds": 5,
+  "fields": [
+    { "key": "shop", "label": "Tên shop", "placeholder": "Shop Mây Tre", "optional": true, "max": 40 },
+    { "key": "product", "label": "Tên sản phẩm", "placeholder": "Áo thun cotton", "max": 60 },
+    { "key": "tagline", "label": "Câu mô tả ngắn", "placeholder": "Mát lạnh, thấm hút, không nhăn", "optional": true, "max": 80 },
+    { "key": "price", "label": "Giá", "placeholder": "199.000đ", "optional": true, "max": 24 }
+  ],
+  "palettes": [
+    { "id": "paper", "label": "Giấy trắng", "bg": "#EFEDE6", "bg2": "#E2DFD5", "accent": "#E30613", "ink": "#FFFFFF", "text": "#111111" },
+    { "id": "ink", "label": "Mực đen", "bg": "#121212", "bg2": "#1C1C1C", "accent": "#FFD400", "ink": "#121212", "text": "#F4F2EC" },
+    { "id": "forest", "label": "Rừng xanh", "bg": "#E8EFE9", "bg2": "#D5E3D8", "accent": "#0F6B4F", "ink": "#FFFFFF", "text": "#0E1A14" }
+  ],
+  "fonts": { "display": "Be Vietnam Pro", "body": "Be Vietnam Pro", "number": "Barlow Condensed" },
+  "sfx": ["swipe", "click"],
+  "rules": "Lưới kiểu Thuỵ Sĩ: nền phẳng, MỘT màu nhấn (thanh dọc mép trái 3,5% bề ngang + khối giá), chữ căn trái, không chuyển màu, không bóng, không hạt. Đường cong duy nhất cubic-bezier(.7,0,.2,1) (cwKit.ease.snap). Tên sản phẩm chữ 900, giãn chữ -2,5%, dòng cao 0,98, tối đa 3 dòng; mỗi dòng lộ từ dưới lên qua mặt nạ, dòng sau trễ 0,12 giây, bắt đầu ở 0,35 giây. Câu mô tả vào sau tên 0,75 giây; khối giá quét màu nhấn từ trái sang 0,4 giây rồi số giá trượt vào. Logo thương hiệu (nếu có) và tên shop chữ in hoa giãn 0,18em ở mép trên vùng an toàn. 0,32 giây cuối mọi dòng trượt lên khỏi mặt nạ. Tiếng: swipe khi tên vào, click khi giá vào."
+}

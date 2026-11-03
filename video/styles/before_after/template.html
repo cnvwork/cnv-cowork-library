@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #E9F7EF; --bg2: #E4E2DD; --accent: #12A150; --ink: #FFFFFF; --text: #13261B; --font-display: "Anton", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg2); color: var(--text); font-family: var(--font-body); }
+/* Nửa «trước» xám nhạt (nền phụ), nửa «sau» màu tươi (nền chính) lộ ra theo đường chia quét qua. */
+.half { position: absolute; display: flex; flex-direction: column; justify-content: center; }
+.before { background: var(--bg2); }
+.before .txt { opacity: 0.62; }
+.after { background: var(--bg); overflow: hidden; }
+.after-inner { position: absolute; display: flex; flex-direction: column; justify-content: center; }
+.label { align-self: flex-start; padding: 0.3em 0.75em 0.36em; border-radius: 0.35em; font-family: var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+.before .label { background: #6B6B6B; color: #FFFFFF; }
+.after .label { background: var(--accent); color: var(--ink); }
+.txt { font-weight: 700; line-height: 1.22; text-wrap: balance; }
+.divider { position: absolute; background: var(--text); }
+.arrow { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--text); color: var(--bg); }
+.verdict { position: absolute; left: 0; right: 0; display: flex; justify-content: center; }
+.verdict span { display: inline-block; padding: 0.5em 1em; border-radius: 0.4em; background: var(--accent); color: var(--ink); font-weight: 800; text-align: center; }
+</style>
+</head>
+<body>
+<div class="half before" id="before"><span class="label" id="blabel"></span><div class="txt" id="btext"></div></div>
+<div class="half after" id="after"><div class="after-inner" id="afterInner"><span class="label" id="alabel"></span><div class="txt" id="atext"></div></div></div>
+<div class="divider" id="divider"></div>
+<div class="arrow" id="arrow"><svg viewBox="0 0 24 24" width="55%" height="55%" aria-hidden="true"><path id="arrowpath" d="M12 4 V20 M5 13 L12 20 L19 13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div class="verdict" id="verdict"><span id="verdicttext"></span></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+$('blabel').textContent = k.field('before_label', 'TRƯỚC');
+$('alabel').textContent = k.field('after_label', 'SAU');
+$('btext').textContent = k.field('before_text', 'Áo cũ: bí, dính mồ hôi');
+$('atext').textContent = k.field('after_text', 'Áo cotton: mát, khô thoáng');
+const verdict = k.field('verdict');
+$('verdicttext').textContent = verdict;
+if (!verdict) $('verdict').style.display = 'none';
+// Khung dọc: trên = trước, dưới = sau, đường chia quét từ trên xuống. Khung ngang: trái / phải, quét từ trái sang.
+let vertical = true;
+let laid = false;
+let split = 0;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  // Chỉ khung dọc hẳn (9:16) mới xếp trên–dưới; vuông / 4:5 / ngang xếp trái–phải.
+  vertical = H / W > 1.4;
+  const pad = k.vmin * 6;
+  const before = $('before');
+  const after = $('after');
+  const inner = $('afterInner');
+  if (vertical) {
+    split = H * 0.42;
+    before.style.cssText += `;left:0;top:0;width:${W}px;height:${split}px;padding:${safe.top}px ${Math.max(safe.right, pad)}px ${pad}px ${Math.max(safe.left, pad)}px`;
+    after.style.cssText += `;left:0;top:${split}px;width:${W}px;height:${H - split}px`;
+    // Khung dọc: chữ «sau» ngay dưới đường chia (chừa chỗ cho kết luận phía dưới, trên vùng nút của TikTok).
+    inner.style.cssText += `;left:0;top:0;width:${W}px;height:${H - split}px;padding:${pad * 1.6}px ${Math.max(safe.right, pad)}px ${safe.bottom}px ${Math.max(safe.left, pad)}px;justify-content:flex-start`;
+  } else {
+    split = W / 2;
+    before.style.cssText += `;left:0;top:0;width:${split}px;height:${H}px;padding:${pad}px`;
+    after.style.cssText += `;left:${split}px;top:0;width:${W - split}px;height:${H}px`;
+    // Chừa chỗ cho mũi tên tròn trên đường chia.
+    inner.style.cssText += `;left:0;top:0;width:${W - split}px;height:${H}px;padding:${pad}px ${pad}px ${pad}px ${pad + k.vmin * 7}px`;
+  }
+  for (const id of ['blabel', 'alabel']) $(id).style.fontSize = k.vmin * 6.4 + 'px';
+  const boxW = vertical ? W - 2 * Math.max(safe.left, pad) - (safe.right - safe.left) : W / 2 - 2 * pad - k.vmin * 7;
+  for (const id of ['btext', 'atext']) {
+    $(id).style.marginTop = k.vmin * 3 + 'px';
+    const max = vertical ? k.vmin * 8.5 : k.vmin * 9.5;
+    k.fit($(id), { max, min: k.vmin * 5, maxWidth: boxW, maxHeight: max * 3.4 });
+  }
+  const divider = $('divider');
+  const arrow = $('arrow');
+  const a = k.vmin * 14;
+  arrow.style.width = a + 'px';
+  arrow.style.height = a + 'px';
+  if (vertical) {
+    divider.style.cssText += `;left:0;width:${W}px;height:${k.vmin * 0.9}px;top:${split - k.vmin * 0.45}px`;
+    arrow.style.left = W / 2 - a / 2 + 'px';
+    arrow.style.top = split - a / 2 + 'px';
+  } else {
+    divider.style.cssText += `;top:0;height:${H}px;width:${k.vmin * 0.9}px;left:${split - k.vmin * 0.45}px`;
+    arrow.style.left = split - a / 2 + 'px';
+    arrow.style.top = H / 2 - a / 2 + 'px';
+    $('arrowpath').setAttribute('d', 'M4 12 H20 M13 5 L20 12 L13 19');
+  }
+  // Kết luận ngay dưới chữ «sau» (không đè chữ), nhưng không xuống quá vùng an toàn.
+  const v = $('verdict');
+  v.style.fontSize = k.vmin * 5 + 'px';
+  const textBottom = $('atext').getBoundingClientRect().bottom;
+  const pill = v.getBoundingClientRect().height || k.vmin * 10;
+  v.style.top = Math.min(H - safe.bottom - pill, textBottom + k.vmin * 5) + 'px';
+}
+const TW = 1.0;
+cwSfx('swipe', TW, 0.8);
+if (verdict) cwSfx('ding', TW + 1.3, 0.8);
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const snap = k.ease.snap;
+  const out = k.clamp((t - (S - 0.3)) / 0.3);
+  const fade = 1 - k.ease.inCubic(out);
+  const pb = k.ease.outCubic(k.clamp((t - 0.1) / 0.5));
+  $('before').style.opacity = String(fade);
+  $('blabel').style.transform = 'translateY(' + (1 - pb) * k.vmin * 4 + 'px)';
+  $('blabel').style.opacity = String(pb);
+  $('btext').style.opacity = String(k.ease.outCubic(k.clamp((t - 0.3) / 0.5)) * 0.62);
+  // Nửa «sau» lộ ra theo đường chia quét (0,6 giây, đường cong snap).
+  const pw = snap(k.clamp((t - TW) / 0.6));
+  const after = $('after');
+  if (vertical) after.style.clipPath = 'inset(0 0 ' + (1 - pw) * 100 + '% 0)';
+  else after.style.clipPath = 'inset(0 ' + (1 - pw) * 100 + '% 0 0)';
+  after.style.opacity = String(fade);
+  $('divider').style.opacity = String(Math.min(1, pw * 4) * fade);
+  const pa = k.clamp((t - TW - 0.35) / 0.3);
+  $('arrow').style.opacity = String((pa > 0 ? 1 : 0) * fade);
+  $('arrow').style.transform = 'scale(' + k.keys(pa, [[0, 0.4], [0.7, 1.08, k.ease.outCubic], [1, 1]]) + ')';
+  const pl = k.ease.outCubic(k.clamp((t - TW - 0.45) / 0.45));
+  $('alabel').style.opacity = String(pl);
+  $('alabel').style.transform = 'translateY(' + (1 - pl) * k.vmin * 4 + 'px)';
+  $('atext').style.opacity = String(k.ease.outCubic(k.clamp((t - TW - 0.6) / 0.5)));
+  const pv = k.ease.outCubic(k.clamp((t - TW - 1.3) / 0.45));
+  $('verdict').style.opacity = String(pv * fade);
+  $('verdict').style.transform = 'translateY(' + (1 - pv) * k.vmin * 4 + 'px)';
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "fonts": {
+    "label": "Phông chữ tiếng Việt",
+    "description": "12 họ phông có đủ dấu tiếng Việt cho chữ, giá, phụ đề.",
+    "license": "SIL Open Font License 1.1 (mỗi họ phông kèm OFL.txt)"
+  },
+  "styles": {
+    "version": "2026.11.03",
+    "label": "Phong cách video",
+    "description": "Mẫu chữ chuyển động có ảnh xem trước: chữ trang trí TikTok, tối giản, keynote tối, flash sale, đếm ngược, trước–sau, review…",
+    "license": "MIT (CNV tự viết)"
+  },
+  "sfx": {
+    "label": "Tiếng hiệu ứng",
+    "description": "Bụp, vút, ting, tiền về, đếm ngược… CNV tự tổng hợp.",
+    "license": "CC0 1.0 (CNV tự tổng hợp, video/sfx/LICENSE.txt)"
+  },
+  "asr": {
+    "version": "whisper-small-ts-65caa70",
+    "label": "Chép lời trên máy (mốc từng từ)",
+    "description": "Nghe lời nói trong video / lời lồng tiếng để phụ đề sáng đúng từng từ. Chạy ngay trên máy, không gửi tiếng lên mạng, không tốn phí.",
+    "license": "Whisper small của OpenAI (Apache-2.0, mã và trọng số gốc MIT); bản ONNX «timestamped» của onnx-community",
+    "source": "https://huggingface.co/onnx-community/whisper-small_timestamped",
+    "files": [
+      {
+        "name": "encoder.onnx",
+        "url": "https://huggingface.co/onnx-community/whisper-small_timestamped/resolve/65caa70f294b46e1c33ff820aae6b16d048ab818/onnx/encoder_model_int8.onnx",
+        "sha256": "496dac83b9392d70cc6f5d54a0abf0d6965e3fbf429910377e8c30dfecb2e1a7",
+        "bytes": 92240465
+      },
+      {
+        "name": "decoder.onnx",
+        "url": "https://huggingface.co/onnx-community/whisper-small_timestamped/resolve/65caa70f294b46e1c33ff820aae6b16d048ab818/onnx/decoder_model_merged_int8.onnx",
+        "sha256": "c831996a6d5a535cf17447b0d7ecc36da6b72696e6fb906852ba6136b9199abb",
+        "bytes": 156795750
+      },
+      {
+        "name": "config.json",
+        "url": "https://huggingface.co/onnx-community/whisper-small_timestamped/resolve/65caa70f294b46e1c33ff820aae6b16d048ab818/config.json",
+        "sha256": "457854d452f17661e197d74aee12b8e74fb75ba30ebfaa7426d0d61ea1e08a18",
+        "bytes": 2227
+      },
+      {
+        "name": "generation_config.json",
+        "url": "https://huggingface.co/onnx-community/whisper-small_timestamped/resolve/65caa70f294b46e1c33ff820aae6b16d048ab818/generation_config.json",
+        "sha256": "f538b28220c6a6d6f1af1458d4141cacb4ef4963df3de98a19490440c412ddf0",
+        "bytes": 3893
+      },
+      {
+        "name": "vocab.json",
+        "url": "https://huggingface.co/onnx-community/whisper-small_timestamped/resolve/65caa70f294b46e1c33ff820aae6b16d048ab818/vocab.json",
+        "sha256": "50d6a919f0a0601d56a04eb583c780d18553aa388254ba3158eb6a00f13e2c1a",
+        "bytes": 1036584
+      },
+      {
+        "name": "merges.txt",
+        "url": "https://huggingface.co/onnx-community/whisper-small_timestamped/resolve/65caa70f294b46e1c33ff820aae6b16d048ab818/merges.txt",
+        "sha256": "2df2990a395e35e8dfbc7511e08c12d56018d8d04691e0133e5d63b21e154dc6",
+        "bytes": 493869
+      },
+      {
+        "name": "added_tokens.json",
+        "url": "https://huggingface.co/onnx-community/whisper-small_timestamped/resolve/65caa70f294b46e1c33ff820aae6b16d048ab818/added_tokens.json",
+        "sha256": "9715fd2243b6f06a5858b5e32950d2853f73dd5bc201aafcf76f5082a2d8acd1",
+        "bytes": 34604
+      }
+    ]
+  }
+}

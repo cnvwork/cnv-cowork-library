@@ -1,0 +1,22 @@
+{
+  "id": "hanazi",
+  "version": 1,
+  "label": "Chữ trang trí TikTok",
+  "hint": "Câu móc 3 giây đầu: chữ to ba lớp viền bật lên từng chữ, nhãn dán đóng dấu.",
+  "group": "hook",
+  "tags": ["video ngắn", "câu móc", "vui nhộn", "gameshow"],
+  "seconds": 3,
+  "fields": [
+    { "key": "line1", "label": "Dòng to", "placeholder": "SIÊU HOT", "max": 18 },
+    { "key": "line2", "label": "Dòng phụ", "placeholder": "Áo thun mát lạnh", "optional": true, "max": 26 },
+    { "key": "sticker", "label": "Nhãn dán", "placeholder": "chỉ 99K", "optional": true, "max": 14 }
+  ],
+  "palettes": [
+    { "id": "lemon", "label": "Vàng chanh", "bg": "#FFE45C", "bg2": "#FFC21A", "accent": "#FF2E7E", "ink": "#24103F", "text": "#FFFFFF" },
+    { "id": "candy", "label": "Kẹo hồng", "bg": "#FF8FC4", "bg2": "#FF5FA8", "accent": "#2B6BFF", "ink": "#1A0B2E", "text": "#FFFFFF" },
+    { "id": "mint", "label": "Bạc hà", "bg": "#7BF1C8", "bg2": "#3FD8A6", "accent": "#FF5A1F", "ink": "#0E2A24", "text": "#FFFFFF" }
+  ],
+  "fonts": { "display": "Coiny", "body": "Be Vietnam Pro" },
+  "sfx": ["pop", "ding"],
+  "rules": "Chữ trang trí kiểu gameshow cho câu móc 0–3 giây. Ba lớp: ruột trắng (nửa dưới ngả màu nền), viền giữa màu nhấn dày 0,17em, viền ngoài màu đậm 0,3em + bóng cứng lệch (0,05em; 0,09em). Mỗi chữ bật 0 → 1,15 → 1 trong 8 khung (30 khung/giây), chữ sau trễ 2 khung, nghiêng ±9° về 0; giữ thì lắc ±1,6° chậm. Dòng phụ vào ở 0,55 giây; nhãn dán đóng dấu (1,7 → 1, xoay 10° → -5°) sau dòng cuối 0,5 giây. Tia tốc độ chỉ một lần 0,4 giây đầu. Nền chấm bán sắc tĩnh, không nhấp nháy. Dòng to ≤ 18 ký tự (2–4 từ, VIẾT HOA), dòng phụ ≤ 26, nhãn ≤ 14. Mọi chữ nằm trong vùng an toàn 9:16 (trên 10%, dưới 22%, phải 14%). Tiếng: pop khi mỗi dòng vào, ding khi nhãn dán."
+}

@@ -1,0 +1,93 @@
+{
+  "id": "review3",
+  "version": 1,
+  "label": "Review 3 điểm",
+  "hint": "Đánh giá nhanh: tiêu đề, ba điểm đánh số hiện lần lượt kèm dấu tích, sao chấm điểm, kết luận.",
+  "group": "info",
+  "tags": [
+    "review",
+    "đánh giá",
+    "3 điểm"
+  ],
+  "seconds": 6,
+  "fields": [
+    {
+      "key": "title",
+      "label": "Tiêu đề",
+      "placeholder": "Review thật sau 1 tuần",
+      "max": 50
+    },
+    {
+      "key": "p1",
+      "label": "Điểm 1",
+      "placeholder": "Vải mát, thấm hút tốt",
+      "max": 50
+    },
+    {
+      "key": "p2",
+      "label": "Điểm 2",
+      "placeholder": "Form chuẩn, không nhăn",
+      "max": 50
+    },
+    {
+      "key": "p3",
+      "label": "Điểm 3",
+      "placeholder": "Giá hợp lý cho chất lượng",
+      "max": 50
+    },
+    {
+      "key": "rating",
+      "label": "Điểm (trên 5)",
+      "placeholder": "4.9",
+      "max": 8,
+      "optional": true
+    },
+    {
+      "key": "verdict",
+      "label": "Kết luận",
+      "placeholder": "Đáng mua cho mùa hè",
+      "max": 50,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "light",
+      "label": "Sáng",
+      "bg": "#FFFFFF",
+      "bg2": "#F3F4F6",
+      "accent": "#F59E0B",
+      "ink": "#FFFFFF",
+      "text": "#111827"
+    },
+    {
+      "id": "dark",
+      "label": "Tối",
+      "bg": "#111318",
+      "bg2": "#1D2027",
+      "accent": "#FBBF24",
+      "ink": "#111318",
+      "text": "#F3F4F6"
+    },
+    {
+      "id": "mint",
+      "label": "Bạc hà",
+      "bg": "#ECFDF5",
+      "bg2": "#D1FAE5",
+      "accent": "#059669",
+      "ink": "#FFFFFF",
+      "text": "#064E3B"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Barlow Condensed"
+  },
+  "sfx": [
+    "pop",
+    "sparkle",
+    "success"
+  ],
+  "rules": "Tiêu đề 800 lộ từng dòng (snap). Ba thẻ nền phụ bo 2,2vmin, mỗi thẻ: ô số màu nhấn 10vmin, chữ 600 cỡ 4–5,6vmin ≤ 2 dòng, dấu tích vẽ nét 0,35 giây; thẻ trượt từ trái 8vmin, cách nhau 0,5–0,85 giây bắt đầu ở 0,9 giây. Điểm sao: 5 sao viền mảnh, phần tô màu nhấn chạy tới đúng điểm (vd 4,9/5) trong 0,6 giây. Kết luận 700 hiện sau sao 0,7 giây. Chỉ dùng điểm người dùng đưa (không bịa số đánh giá). Tiếng: pop mỗi điểm, sparkle khi sao, success khi kết luận."
+}

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #FFE45C; --bg2: #FFC21A; --accent: #FF2E7E; --ink: #24103F; --text: #FFFFFF; --font-display: "Coiny", "Paytone One", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); font-family: var(--font-body); }
+/* Nền chấm bán sắc tĩnh (không nhấp nháy), sáng dần về giữa. */
+.dots { position: absolute; inset: 0; background-image: radial-gradient(circle, color-mix(in srgb, var(--bg2) 70%, transparent) 22%, transparent 23%); background-size: 6vmin 6vmin; }
+.glow { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 45% at 50% 46%, var(--bg) 35%, transparent 72%); }
+.burst { position: absolute; left: 50%; top: 0; width: 0; height: 0; }
+.burst svg { position: absolute; left: -75vmax; top: -75vmax; width: 150vmax; height: 150vmax; }
+.stage { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.line { position: relative; display: block; font-family: var(--font-display); line-height: 1.08; white-space: nowrap; }
+.ch { position: relative; display: inline-block; isolation: isolate; color: var(--text); transform-origin: 50% 80%; }
+.ch.sp { width: 0.32em; }
+/* Lớp 2: viền dày màu nhấn; lớp 3: viền ngoài màu đậm + bóng cứng (đúng kiểu chữ trang trí gameshow). */
+.ch::before, .ch::after { content: attr(data-c); position: absolute; left: 0; top: 0; color: transparent; }
+.ch::before { z-index: -2; -webkit-text-stroke: 0.3em var(--ink); text-shadow: 0.05em 0.09em 0 var(--ink); }
+.ch::after { z-index: -1; -webkit-text-stroke: 0.17em var(--accent); }
+.l2 { font-family: "Paytone One", var(--font-display); }
+.l2 .ch { color: var(--accent); }
+.l2 .ch::after { -webkit-text-stroke: 0.2em var(--text); }
+.sticker { position: absolute; padding: 0.35em 0.7em 0.42em; font-family: var(--font-display); color: var(--ink); background: var(--text); border: 0.12em solid var(--ink); border-radius: 0.6em; box-shadow: 0.1em 0.14em 0 var(--ink); white-space: nowrap; }
+.sticker b { font-weight: inherit; color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="dots"></div>
+<div class="glow"></div>
+<div class="burst" id="burst"><svg viewBox="-100 -100 200 200" aria-hidden="true"><g id="rays"></g></svg></div>
+<div class="stage" id="stage">
+  <span class="line l1" id="l1"></span>
+  <span class="line l2" id="l2"></span>
+</div>
+<div class="sticker" id="sticker"><b id="sticker-text"></b></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const F = 1 / 30;
+const stage = document.getElementById('stage');
+const sticker = document.getElementById('sticker');
+const burst = document.getElementById('burst');
+const rays = document.getElementById('rays');
+
+function chars(el, text) {
+  const out = [];
+  for (const c of Array.from(text)) {
+    const span = document.createElement('span');
+    span.className = c === ' ' ? 'ch sp' : 'ch';
+    span.textContent = c === ' ' ? ' ' : c;
+    span.dataset.c = c === ' ' ? ' ' : c;
+    el.appendChild(span);
+    out.push(span);
+  }
+  return out;
+}
+
+const l1 = document.getElementById('l1');
+const l2 = document.getElementById('l2');
+const c1 = chars(l1, k.field('line1', 'SIÊU HOT'));
+const line2 = k.field('line2');
+const c2 = line2 ? chars(l2, line2) : [];
+if (!line2) l2.style.display = 'none';
+const tag = k.field('sticker');
+document.getElementById('sticker-text').textContent = tag;
+if (!tag) sticker.style.display = 'none';
+
+// Tia tốc độ một lần khi dòng chính bật lên (không lặp, không nhấp nháy).
+for (let i = 0; i < 28; i += 1) {
+  const a = (i / 28) * Math.PI * 2;
+  const r1 = 34 + (i % 3) * 6;
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', String(Math.cos(a) * r1));
+  line.setAttribute('y1', String(Math.sin(a) * r1));
+  line.setAttribute('x2', String(Math.cos(a) * 96));
+  line.setAttribute('y2', String(Math.sin(a) * 96));
+  line.setAttribute('stroke', 'var(--text)');
+  line.setAttribute('stroke-opacity', '0.7');
+  line.setAttribute('stroke-width', i % 2 ? '1.6' : '3.2');
+  line.setAttribute('stroke-linecap', 'round');
+  rays.appendChild(line);
+}
+
+let laid = false;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const width = W - safe.left - safe.right;
+  stage.style.left = safe.left + 'px';
+  stage.style.width = width + 'px';
+  stage.style.top = safe.top + 'px';
+  stage.style.height = H - safe.top - safe.bottom + 'px';
+  const big = k.fit(l1, { max: k.vmin * 26, min: k.vmin * 9, maxWidth: width * 0.94 });
+  if (line2) k.fit(l2, { max: Math.min(big * 0.78, k.vmin * 17), min: k.vmin * 7, maxWidth: width * 0.96 });
+  l2.style.marginTop = big * 0.08 + 'px';
+  sticker.style.fontSize = k.vmin * 7.2 + 'px';
+  const box = stage.getBoundingClientRect();
+  const lineBox = (line2 ? l2 : l1).getBoundingClientRect();
+  sticker.style.left = Math.min(W - safe.right - sticker.offsetWidth, box.left + box.width * 0.5) + 'px';
+  sticker.style.top = Math.min(H - safe.bottom - sticker.offsetHeight, lineBox.bottom + big * 0.12) + 'px';
+  burst.style.top = l1.getBoundingClientRect().top + l1.getBoundingClientRect().height / 2 + 'px';
+}
+
+/** Bật từng chữ: 0 → 1,15 → 1 trong 8 khung, chữ sau trễ 2 khung, nghiêng nhẹ rồi đứng, lắc nhẹ khi giữ. */
+function pop(list, t0, t) {
+  list.forEach((el, i) => {
+    const start = t0 + i * 2 * F;
+    const p = (t - start) / (8 * F);
+    if (p <= 0) {
+      el.style.transform = 'scale(0)';
+      return;
+    }
+    const s = p < 0.6 ? k.lerp(0, 1.15, k.ease.outCubic(p / 0.6)) : p < 1 ? k.lerp(1.15, 1, k.ease.inOutQuad((p - 0.6) / 0.4)) : 1;
+    const settle = k.clamp(p);
+    const hold = Math.max(0, t - start - 8 * F);
+    const wiggle = Math.sin(hold * Math.PI * 2 * 1.1 + i * 0.9) * 1.6 * k.clamp(hold * 2);
+    const rot = k.lerp(-9 + (i % 2) * 18, 0, k.ease.outCubic(settle)) + wiggle;
+    const y = k.lerp(0.35, 0, k.ease.outCubic(settle));
+    el.style.transform = 'translateY(' + y + 'em) rotate(' + rot + 'deg) scale(' + s + ')';
+  });
+}
+
+const T2 = 0.55;
+const TS = line2 ? 1.05 : 0.8;
+cwSfx('pop', 0);
+if (line2) cwSfx('pop', T2);
+if (tag) cwSfx('ding', TS + 0.05, 0.8);
+
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  pop(c1, 0, t);
+  pop(c2, T2, t);
+  // Tia tốc độ: hiện 0,1 giây đầu rồi bay ra, tắt sau 0,4 giây.
+  const b = k.clamp(t / 0.32);
+  burst.style.opacity = String(t < 0.04 ? 0 : (1 - b) * 0.6);
+  burst.style.transform = 'scale(' + k.lerp(0.55, 1.25, k.ease.outQuart(b)) + ')';
+  // Nhãn dán đóng dấu: phóng 1,7 → 1, xoay 10° → -5°.
+  if (tag) {
+    const p = (t - TS) / 0.22;
+    sticker.style.opacity = p <= 0 ? '0' : '1';
+    const s = p <= 0 ? 1.7 : k.lerp(1.7, 1, k.ease.outBack(k.clamp(p)));
+    const hold = Math.max(0, t - TS - 0.22);
+    sticker.style.transform = 'rotate(' + (k.lerp(10, -5, k.ease.outCubic(k.clamp(p))) + Math.sin(hold * 5) * 1.2) + 'deg) scale(' + s + ')';
+  }
+  // Ra: 0,22 giây cuối chữ thu nhỏ + mờ, nền giữ nguyên (không cắt cụt, không ra màn đen).
+  const out = k.clamp((t - (S - 0.22)) / 0.22);
+  stage.style.opacity = String(1 - out);
+  stage.style.transform = 'scale(' + (1 - 0.08 * k.ease.inCubic(out)) + ')';
+  if (tag) sticker.style.opacity = String(Math.min(Number(sticker.style.opacity), 1 - out));
+};
+</script>
+</body>
+</html>

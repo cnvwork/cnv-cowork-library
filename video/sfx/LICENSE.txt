@@ -1,0 +1,13 @@
+Bộ tiếng hiệu ứng của CNV Cowork (video/sfx/*.wav)
+
+CNV tự tổng hợp toàn bộ các tiếng này bằng công thức toán (sóng sin, tiếng ồn giả ngẫu nhiên có hạt giống, bộ lọc một cực)
+qua ffmpeg, theo đúng công thức trong tools/sfx-make.mjs của repo cnv-cowork-library. Không dùng bản ghi âm, mẫu âm thanh
+hay thư viện tiếng của bên nào.
+
+CNV từ bỏ mọi quyền với các tệp này theo CC0 1.0 Universal (Public Domain Dedication):
+https://creativecommons.org/publicdomain/zero/1.0/
+Ai cũng được dùng, sửa, phát tán, kể cả cho mục đích thương mại, không cần xin phép hay ghi công.
+
+CNV's Cowork sound-effect pack: every file was synthesized from mathematical formulas (sine waves, seeded pseudo-random
+noise, one-pole filters) with ffmpeg, as written in tools/sfx-make.mjs. No recordings or third-party samples are used.
+Dedicated to the public domain under CC0 1.0 Universal.

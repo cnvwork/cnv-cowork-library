@@ -10,6 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { buildOfficePack, buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
+import { buildVideoKit, loadVideoKit } from './videokit.mjs';
 
 function arg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -86,6 +87,16 @@ const video = loadVideoEngine();
 problems.push(...video.problems);
 if (video.engine) console.log(`✔ video: bộ dựng cho ${Object.keys(video.engine.builds).join(', ')} (tải thẳng từ nơi phát hành)`);
 
+const kit = loadVideoKit();
+problems.push(...kit.problems);
+
+// Bộ làm video: phông / phong cách / tiếng hiệu ứng thành 3 zip đính kèm release; model chép lời ghim thẳng Hugging Face.
+let videoKit = null;
+if (kit.kit && !kit.problems.length) {
+  videoKit = buildVideoKit(kit, DIST, archiveUrl);
+  for (const pkg of videoKit.content.packages) console.log(`✔ video kit ${pkg.id} ${pkg.version}: ${(pkg.files.reduce((sum, file) => sum + file.bytes, 0) / 1024 / 1024).toFixed(1)} MB${pkg.format === 'zip' ? '' : ' (tải thẳng nơi phát hành)'}`);
+}
+
 if (problems.length) {
   console.error('Chưa đóng gói được:');
   for (const line of problems) console.error(`   ${line}`);
@@ -99,6 +110,7 @@ const content = {
   offices: officePack,
   ...(changelog.entries.length ? { changelog: changelog.entries } : {}),
   ...(video.engine ? { video_engine: video.engine } : {}),
+  ...(videoKit ? { video_kit: videoKit.content } : {}),
 };
 const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios, content };
 const envelope = signCatalog(payload, await signingKey(arg('key-file')));
@@ -109,6 +121,7 @@ const files = [
   ...scenarios.map((scenario) => scenario.archive.url.split('/').pop()),
   ...(skillPack ? [skillPack.url.split('/').pop()] : []),
   ...(officePack ? [officePack.url.split('/').pop()] : []),
+  ...(videoKit ? videoKit.attachments : []),
 ];
 const where = owner ? `https://github.com/${owner}/${repo}` : '(chưa điền github.owner trong library.config.json)';
 fs.writeFileSync(
@@ -128,6 +141,8 @@ ${files.map((file) => `   - ${file}`).join('\n')}
    phải tải về đúng tệp này; \`npm run verify\` ở máy vẫn xanh.
 
 Bộ dựng video: chỉ là bảng ghim nằm trong catalog.json (video/engine.json), không có tệp đính kèm.
+Bộ làm video: 3 tệp video-fonts / video-styles / video-sfx-*.zip ở trên PHẢI đính kèm (danh mục ghim chúng theo tag này);
+model chép lời ghim thẳng Hugging Face (không đính kèm).
 
 App chỉ tải qua link tải thẳng github.com/…/releases/…/download/… (chuyển hướng sang *.githubusercontent.com),
 không gọi api.github.com. Xoá / sửa release cũ thì danh mục cũ trong máy người dùng vẫn trỏ gói theo tag cũ: giữ lại.

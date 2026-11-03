@@ -2,6 +2,7 @@
 // Kiểm mọi kịch bản, bộ kỹ năng, mẫu Thư viện văn phòng, nhật ký «Có gì mới» và bộ dựng video trước khi đóng gói: manifest, luật tên tệp (giống app), trần dung lượng, quét bí mật.
 //   node tools/check.mjs            (in lỗi, thoát mã 1 nếu có)
 import { imageMetadataProblems, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, scanSecrets, scenarioIds } from './lib.mjs';
+import { loadVideoKit } from './videokit.mjs';
 
 const config = loadConfig({ needKey: false });
 let failed = false;
@@ -49,5 +50,14 @@ if (video.problems.length) {
   for (const line of video.problems) console.error(`   ${line}`);
 } else if (video.engine) {
   console.log(`✔ video: bộ dựng cho ${Object.keys(video.engine.builds).join(', ')}`);
+}
+const kit = loadVideoKit();
+if (kit.problems.length) {
+  failed = true;
+  console.error('✖ video (bộ làm video)');
+  for (const line of kit.problems) console.error(`   ${line}`);
+} else if (kit.kit) {
+  const fonts = kit.fonts.manifest.families.reduce((sum, family) => sum + family.files.length, 0);
+  console.log(`✔ video: ${kit.fonts.manifest.families.length} họ phông (${fonts} tệp), ${kit.styles.length} phong cách, ${kit.sfx.manifest.sounds.length} tiếng hiệu ứng, model chép lời ${kit.kit.asr?.version ?? '—'}`);
 }
 process.exit(failed ? 1 : 0);

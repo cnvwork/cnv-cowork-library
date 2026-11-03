@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #FFFFFF; --bg2: #F2F2F0; --accent: #111111; --ink: #FFFFFF; --text: #111111; --font-display: "Be Vietnam Pro", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+.kicker { position: absolute; display: flex; align-items: center; gap: 1.6vmin; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap; }
+.kicker i { display: block; width: 1.8vmin; height: 1.8vmin; border-radius: 50%; background: var(--accent); }
+.title { position: absolute; text-wrap: balance; font-family: var(--font-display); font-weight: 800; line-height: 1.04; letter-spacing: -0.03em; }
+.body { position: absolute; text-wrap: pretty; font-weight: 400; line-height: 1.45; opacity: 0.78; }
+.rule { position: absolute; height: 0.3vmin; background: var(--text); opacity: 0.85; transform-origin: left; }
+.footer { position: absolute; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="kicker" id="kicker"><i></i><span class="mask" style="display:block;overflow:hidden"><span id="kickertext" style="display:block"></span></span></div>
+<div class="title" id="title"></div>
+<div class="body" id="body"></div>
+<div class="rule" id="rule"></div>
+<div class="footer" id="footer"><span style="display:block;overflow:hidden"><span id="footertext" style="display:block"></span></span></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+const kicker = k.field('kicker');
+$('kickertext').textContent = kicker;
+if (!kicker) $('kicker').style.display = 'none';
+const body = k.field('body');
+const footer = k.field('footer');
+$('footertext').textContent = footer;
+if (!footer) {
+  $('footer').style.display = 'none';
+  $('rule').style.display = 'none';
+}
+let titleLines = [];
+let bodyLines = [];
+let laid = false;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const left = Math.max(safe.left, W * 0.1);
+  const width = W - left - Math.max(safe.right, W * 0.1);
+  const title = $('title');
+  title.style.left = left + 'px';
+  title.style.width = width + 'px';
+  title.textContent = k.field('title', 'Ít mà chất');
+  k.fit(title, { max: k.vmin * 15, min: k.vmin * 7, maxWidth: width, maxHeight: k.vmin * 15 * 3.2 });
+  titleLines = k.lines(title);
+  const bodyEl = $('body');
+  bodyEl.style.left = left + 'px';
+  bodyEl.style.width = Math.min(width, k.vmin * 72) + 'px';
+  bodyEl.style.fontSize = k.vmin * 4.6 + 'px';
+  bodyLines = body ? k.lines(bodyEl, body) : [];
+  const kick = $('kicker');
+  kick.style.left = left + 'px';
+  kick.style.fontSize = k.vmin * 3.4 + 'px';
+  const titleH = title.getBoundingClientRect().height;
+  const bodyH = body ? bodyEl.getBoundingClientRect().height : 0;
+  const kickH = kicker ? kick.getBoundingClientRect().height + k.vmin * 5 : 0;
+  const block = kickH + titleH + (body ? k.vmin * 5 + bodyH : 0);
+  const top = safe.top + Math.max(0, (H - safe.top - safe.bottom - block) * 0.46);
+  kick.style.top = top + 'px';
+  title.style.top = top + kickH + 'px';
+  bodyEl.style.top = top + kickH + titleH + k.vmin * 5 + 'px';
+  const rule = $('rule');
+  rule.style.left = left + 'px';
+  rule.style.width = width + 'px';
+  rule.style.top = H - safe.bottom - k.vmin * 12 + 'px';
+  const foot = $('footer');
+  foot.style.left = left + 'px';
+  foot.style.fontSize = k.vmin * 4.2 + 'px';
+  foot.style.top = H - safe.bottom - k.vmin * 9 + 'px';
+}
+cwSfx('click', 0.3, 0.6);
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const snap = k.ease.snap;
+  const exit = snap(k.clamp((t - (S - 0.35)) / 0.35));
+  const reveal = (el, start) => {
+    const p = snap(k.clamp((t - start) / 0.6));
+    el.style.transform = 'translateY(' + ((1 - p) * 105 - exit * 105) + '%)';
+  };
+  reveal($('kickertext'), 0.1);
+  titleLines.forEach((line, i) => reveal(line, 0.3 + i * 0.1));
+  const after = 0.3 + titleLines.length * 0.1 + 0.35;
+  bodyLines.forEach((line, i) => reveal(line, after + i * 0.08));
+  const footAt = after + bodyLines.length * 0.08 + 0.3;
+  $('rule').style.transform = 'scaleX(' + snap(k.clamp((t - footAt) / 0.6)) * (1 - exit) + ')';
+  reveal($('footertext'), footAt + 0.15);
+};
+</script>
+</body>
+</html>

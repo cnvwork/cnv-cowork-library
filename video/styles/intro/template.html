@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #EFEDE6; --bg2: #E2DFD5; --accent: #E30613; --ink: #FFFFFF; --text: #111111; --font-display: "Be Vietnam Pro", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; --font-number: "Barlow Condensed", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+/* Lưới kiểu Thuỵ Sĩ: một màu nhấn duy nhất, không chuyển màu, không bóng. */
+.bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); transform-origin: top; }
+.rule { position: absolute; height: 0.42vmin; background: var(--text); transform-origin: left; }
+.label { position: absolute; display: flex; align-items: center; gap: 2.2vmin; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; white-space: nowrap; }
+.label img { height: 9vmin; width: auto; max-width: 30vmin; object-fit: contain; }
+.label i { width: 2.4vmin; height: 2.4vmin; background: var(--accent); display: block; }
+.mask { overflow: hidden; display: block; padding-bottom: 0.06em; }
+.mask > span { display: block; }
+.name { position: absolute; text-wrap: balance; font-family: var(--font-display); font-weight: 900; line-height: 0.98; letter-spacing: -0.025em; }
+.tag { position: absolute; text-wrap: pretty; font-weight: 400; line-height: 1.3; opacity: 0.86; }
+.price { position: absolute; overflow: hidden; }
+.price .fill { position: absolute; inset: 0; background: var(--accent); transform-origin: left; }
+.price span { position: relative; display: block; font-family: var(--font-number); font-weight: 800; color: var(--ink); letter-spacing: 0.01em; line-height: 1; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="label" id="label"><i></i><img id="logo" alt=""><span class="mask"><span id="shop"></span></span></div>
+<div class="rule" id="rule"></div>
+<div class="name" id="name"></div>
+<div class="tag mask" id="tagbox"><span id="tag"></span></div>
+<div class="price" id="price"><div class="fill" id="fill"></div><span id="pricetext"></span></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const brand = (window.CW_DATA && window.CW_DATA.brand) || {};
+const $ = (id) => document.getElementById(id);
+const shop = k.field('shop', brand.name || '');
+$('shop').textContent = shop;
+const logo = $('logo');
+if (brand.logo) logo.src = brand.logo;
+else logo.remove();
+if (!shop && !brand.logo) $('label').style.display = 'none';
+const tagline = k.field('tagline');
+$('tag').textContent = tagline;
+if (!tagline) $('tagbox').style.display = 'none';
+const priceText = k.field('price');
+$('pricetext').textContent = priceText;
+if (!priceText) $('price').style.display = 'none';
+
+// Tên sản phẩm: chia dòng theo bề ngang thật rồi mỗi dòng một mặt nạ (lộ từ dưới lên).
+const product = k.field('product', 'Sản phẩm mới');
+let lines = [];
+let laid = false;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const left = Math.max(safe.left, W * 0.09);
+  const width = W - left - safe.right;
+  $('bar').style.width = Math.round(W * 0.035) + 'px';
+  const label = $('label');
+  label.style.left = left + 'px';
+  label.style.top = safe.top + 'px';
+  label.style.fontSize = k.vmin * 3.4 + 'px';
+  // Đo tên trong một khối tạm: cỡ chữ lớn nhất mà dài nhất 3 dòng.
+  const name = $('name');
+  name.style.left = left + 'px';
+  name.style.width = width + 'px';
+  name.textContent = product;
+  k.fit(name, { max: k.vmin * 21, min: k.vmin * 7, maxWidth: width, maxHeight: k.vmin * 19 * 3.05 });
+  lines = k.lines(name, product);
+  const nameHeight = name.getBoundingClientRect().height;
+  const tag = $('tagbox');
+  tag.style.fontSize = k.vmin * 5.2 + 'px';
+  tag.style.left = left + 'px';
+  tag.style.width = width + 'px';
+  const tagHeight = tagline ? tag.getBoundingClientRect().height + k.vmin * 4 : 0;
+  const price = $('price');
+  $('pricetext').style.fontSize = k.vmin * 12 + 'px';
+  price.style.left = left + 'px';
+  $('pricetext').style.padding = k.vmin * 2.2 + 'px ' + k.vmin * 4 + 'px';
+  const priceHeight = priceText ? $('pricetext').getBoundingClientRect().height + k.vmin * 6 : 0;
+  // Khối nội dung đặt giữa vùng an toàn, lệch lên một chút (đường mắt).
+  const blockHeight = nameHeight + tagHeight + priceHeight;
+  const areaTop = safe.top + k.vmin * 12;
+  const areaBottom = H - safe.bottom;
+  const startY = Math.max(areaTop, areaTop + (areaBottom - areaTop - blockHeight) * 0.5);
+  const rule = $('rule');
+  rule.style.left = left + 'px';
+  rule.style.width = Math.min(width, k.vmin * 22) + 'px';
+  rule.style.top = startY - k.vmin * 4.5 + 'px';
+  name.style.top = startY + 'px';
+  tag.style.top = startY + nameHeight + k.vmin * 3.5 + 'px';
+  price.style.top = startY + nameHeight + tagHeight + k.vmin * 4 + 'px';
+  price.style.width = $('pricetext').getBoundingClientRect().width + 'px';
+  price.style.height = $('pricetext').getBoundingClientRect().height + 'px';
+}
+
+const snap = k.ease.snap;
+const TN = 0.35;
+const TT = TN + 0.75;
+const TP = TT + (tagline ? 0.45 : 0.1);
+cwSfx('swipe', TN, 0.7);
+if (priceText) cwSfx('click', TP + 0.18);
+
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const out = k.clamp((t - (S - 0.32)) / 0.32);
+  const exit = snap(out);
+  $('bar').style.transform = 'scaleY(' + snap(k.clamp(t / 0.45)) + ')';
+  $('rule').style.transform = 'scaleX(' + snap(k.clamp((t - 0.1) / 0.5)) * (1 - exit) + ')';
+  const label = $('label');
+  label.style.opacity = String(k.clamp((t - 0.15) / 0.2));
+  label.style.transform = 'translateX(' + (1 - snap(k.clamp((t - 0.15) / 0.45))) * -k.vmin * 6 + 'px)';
+  lines.forEach((line, i) => {
+    const p = snap(k.clamp((t - TN - i * 0.12) / 0.55));
+    line.style.transform = 'translateY(' + ((1 - p) * 105 - exit * 105) + '%)';
+  });
+  const tag = $('tag');
+  tag.style.transform = 'translateY(' + ((1 - snap(k.clamp((t - TT) / 0.5))) * 105 - exit * 105) + '%)';
+  const fill = $('fill');
+  const pf = snap(k.clamp((t - TP) / 0.4));
+  fill.style.transform = 'scaleX(' + pf * (1 - exit) + ')';
+  const text = $('pricetext');
+  const pt = snap(k.clamp((t - TP - 0.16) / 0.4));
+  text.style.transform = 'translateX(' + (1 - pt) * -40 + '%)';
+  text.style.opacity = String(pt * (1 - exit));
+  label.style.opacity = String(Math.min(Number(label.style.opacity), 1 - exit));
+};
+</script>
+</body>
+</html>

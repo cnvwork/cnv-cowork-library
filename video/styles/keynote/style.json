@@ -1,0 +1,85 @@
+{
+  "id": "keynote",
+  "version": 1,
+  "label": "Keynote tối",
+  "hint": "Nền tối kiểu sân khấu ra mắt: tiêu đề lớn, vạch màu nhấn, 2–3 điểm nổi bật hiện lần lượt.",
+  "group": "info",
+  "tags": [
+    "keynote",
+    "công nghệ",
+    "tính năng"
+  ],
+  "seconds": 6,
+  "fields": [
+    {
+      "key": "title",
+      "label": "Tiêu đề",
+      "placeholder": "Mặc cả ngày vẫn mát",
+      "max": 50
+    },
+    {
+      "key": "point1",
+      "label": "Điểm 1",
+      "placeholder": "Vải cotton 100%",
+      "max": 60
+    },
+    {
+      "key": "point2",
+      "label": "Điểm 2",
+      "placeholder": "Giặt máy không nhăn",
+      "max": 60
+    },
+    {
+      "key": "point3",
+      "label": "Điểm 3",
+      "placeholder": "Ba màu dễ phối",
+      "max": 60,
+      "optional": true
+    },
+    {
+      "key": "footer",
+      "label": "Chân trang",
+      "placeholder": "Giao hàng 2 giờ nội thành",
+      "max": 50,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "dark",
+      "label": "Đen xanh",
+      "bg": "#0A0A0C",
+      "bg2": "#16161A",
+      "accent": "#2F80FF",
+      "ink": "#FFFFFF",
+      "text": "#F5F5F7"
+    },
+    {
+      "id": "graphite",
+      "label": "Than chì",
+      "bg": "#1C1C1E",
+      "bg2": "#2C2C2E",
+      "accent": "#FF9F0A",
+      "ink": "#1C1C1E",
+      "text": "#F2F2F7"
+    },
+    {
+      "id": "deep",
+      "label": "Xanh thẳm",
+      "bg": "#0B1020",
+      "bg2": "#16203A",
+      "accent": "#5EE6C7",
+      "ink": "#0B1020",
+      "text": "#EEF2FF"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Barlow Condensed"
+  },
+  "sfx": [
+    "click"
+  ],
+  "rules": "Nền tối gần đen + quầng sáng tĩnh rất nhẹ; chữ trắng ngà, MỘT màu nhấn cho vạch và số thứ tự 01/02/03. Tiêu đề 800, giãn chữ -3%, lộ từng dòng từ 0,15 giây (outQuint 0,7 giây). Vạch nhấn 16vmin chạy ra ở 0,6 giây. Mỗi điểm hiện lần lượt cách 0,55–0,9 giây (tuỳ độ dài clip), đi lên 4vmin + rõ dần, chữ 500 cỡ 4,2–6vmin. Nhiều khoảng trống, không hiệu ứng thừa. 0,4 giây cuối mờ dần. Tiếng: click nhẹ mỗi điểm."
+}

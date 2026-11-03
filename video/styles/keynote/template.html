@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #0A0A0C; --bg2: #16161A; --accent: #2F80FF; --ink: #FFFFFF; --text: #F5F5F7; --font-display: "Be Vietnam Pro", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; --font-number: "Barlow Condensed", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+/* Quầng sáng rất nhẹ, tĩnh: chiều sâu kiểu sân khấu, không chuyển động. */
+.halo { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 55% at 50% 38%, var(--bg2) 0%, transparent 70%); }
+.title { position: absolute; text-wrap: balance; font-family: var(--font-display); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; }
+.points { position: absolute; display: flex; flex-direction: column; }
+.point { display: flex; align-items: baseline; gap: 0.6em; }
+.point b { font-family: var(--font-number); font-weight: 700; color: var(--accent); min-width: 1.6em; font-variant-numeric: tabular-nums; }
+.point span { text-wrap: pretty; font-weight: 500; line-height: 1.25; }
+.bar { position: absolute; height: 0.5vmin; background: var(--accent); transform-origin: left; border-radius: 99px; }
+.footer { position: absolute; font-weight: 400; opacity: 0.6; letter-spacing: 0.02em; }
+</style>
+</head>
+<body>
+<div class="halo"></div>
+<div class="title" id="title"></div>
+<div class="bar" id="bar"></div>
+<div class="points" id="points"></div>
+<div class="footer" id="footer"></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+const points = ['point1', 'point2', 'point3'].map((key, i) => k.field(key, i < 2 ? ['Vải cotton 100%', 'Giặt máy không nhăn'][i] : '')).filter(Boolean);
+const rows = points.map((text, i) => {
+  const row = document.createElement('div');
+  row.className = 'point';
+  const num = document.createElement('b');
+  num.textContent = String(i + 1).padStart(2, '0');
+  const span = document.createElement('span');
+  span.textContent = text;
+  row.appendChild(num);
+  row.appendChild(span);
+  $('points').appendChild(row);
+  return row;
+});
+k.text('#footer', 'footer');
+let titleLines = [];
+let laid = false;
+function layout() {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const left = Math.max(safe.left, W * 0.1);
+  const width = W - left - Math.max(safe.right, W * 0.08);
+  const title = $('title');
+  title.style.left = left + 'px';
+  title.style.width = width + 'px';
+  title.textContent = k.field('title', 'Mặc cả ngày vẫn mát');
+  k.fit(title, { max: k.vmin * 13, min: k.vmin * 7, maxWidth: width, maxHeight: k.vmin * 13 * 3.2 });
+  titleLines = k.lines(title);
+  const list = $('points');
+  list.style.left = left + 'px';
+  list.style.width = width + 'px';
+  list.style.gap = k.vmin * 4.2 + 'px';
+  list.style.fontSize = k.vmin * 6 + 'px';
+  for (const row of rows) k.fit(row.querySelector('span'), { max: k.vmin * 6, min: k.vmin * 4.2, maxWidth: width - k.vmin * 11, maxHeight: k.vmin * 6 * 2.6 });
+  const titleH = title.getBoundingClientRect().height;
+  const listH = list.getBoundingClientRect().height;
+  const block = titleH + k.vmin * 11 + listH;
+  const top = safe.top + Math.max(0, (H - safe.top - safe.bottom - block) * 0.45);
+  title.style.top = top + 'px';
+  const bar = $('bar');
+  bar.style.left = left + 'px';
+  bar.style.width = k.vmin * 16 + 'px';
+  bar.style.top = top + titleH + k.vmin * 5 + 'px';
+  list.style.top = top + titleH + k.vmin * 11 + 'px';
+  const footer = $('footer');
+  footer.style.left = left + 'px';
+  footer.style.fontSize = k.vmin * 3.8 + 'px';
+  footer.style.top = H - safe.bottom - k.vmin * 8 + 'px';
+}
+const TP = 1.0;
+const GAP = Math.min(0.9, Math.max(0.55, (S - 1.8) / Math.max(1, rows.length + 0.5)));
+rows.forEach((_, i) => cwSfx('click', TP + i * GAP, 0.55));
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  const out = k.clamp((t - (S - 0.4)) / 0.4);
+  const fade = 1 - k.ease.inQuad(out);
+  titleLines.forEach((line, i) => {
+    const p = k.ease.outQuint(k.clamp((t - 0.15 - i * 0.1) / 0.7));
+    line.style.transform = 'translateY(' + (1 - p) * 100 + '%)';
+    line.style.opacity = String(fade);
+  });
+  $('bar').style.transform = 'scaleX(' + k.ease.outQuint(k.clamp((t - 0.6) / 0.6)) + ')';
+  $('bar').style.opacity = String(fade);
+  rows.forEach((row, i) => {
+    const p = k.ease.outQuint(k.clamp((t - TP - i * GAP) / 0.6));
+    row.style.opacity = String(p * fade);
+    row.style.transform = 'translateY(' + (1 - p) * k.vmin * 4 + 'px)';
+  });
+  const pf = k.ease.outCubic(k.clamp((t - TP - rows.length * GAP) / 0.5));
+  $('footer').style.opacity = String(pf * 0.6 * fade);
+};
+</script>
+</body>
+</html>

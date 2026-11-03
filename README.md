@@ -20,8 +20,12 @@ skills/<nhóm>/<tên>.md  kỹ năng CÓ SẴN của trợ lý (nhóm: chung ho�
 offices/<id>.json       mẫu Thư viện văn phòng (văn phòng AI theo ngành) — nơi DUY NHẤT sửa mẫu văn phòng
 changelog.json       sửa câu chữ nhật ký «Có gì mới» của app không cần ra bản mới (rỗng = không đè gì)
 video/engine.json    bộ dựng video (ffmpeg + ffprobe) của Trình dựng video theo nền tảng: link + sha256 + số byte
+video/kit.json       bộ làm video: nhãn các gói + model chép lời trên máy (Hugging Face, ghim commit + sha256)
+video/fonts/         phông tiếng Việt SIL OFL (mỗi họ kèm OFL.txt) + fonts.json (họ, độ đậm, vai trò)
+video/styles/<id>/   phong cách chữ chuyển động: style.json (ô chữ, bộ màu, luật) + template.html + preview.jpg
+video/sfx/           tiếng hiệu ứng CNV tự tổng hợp (tools/sfx-make.mjs, CC0) + sfx.json + LICENSE.txt
 library.config.json  khoá công khai (app ghim cùng khoá này), github.owner / repo, danh sách nhóm, chuỗi được phép khi quét
-tools/               check.mjs, build.mjs, verify.mjs, keygen.mjs, video-verify.mjs (Node ≥ 22.2, không cần cài gì)
+tools/               check.mjs, build.mjs, verify.mjs, keygen.mjs, video-verify.mjs, sfx-make.mjs, videokit.mjs, font.mjs (Node ≥ 22.2, không cần cài gì)
 dist/                (không commit) gói .zip + skills-<sha>.json + catalog.json đã ký + RELEASE.md: thứ gắn vào GitHub Release
 ```
 
@@ -114,6 +118,28 @@ khai; đăng lại tệp chạy là CNV tự phát tán ffmpeg. Bản macOS đan
 phát tán lại thì CNV phải kèm hoặc giữ sẵn TOÀN BỘ mã nguồn tương ứng (ffmpeg + mọi thư viện trong bản dựng) ít nhất 3
 năm. Bản Windows (BtbN, LGPL) vốn đã nằm trên GitHub Releases, đăng lại không thêm gì. Muốn tự giữ hết trên GitHub: dựng
 bản ffmpeg LGPL cho macOS (không x264, mã hoá bằng VideoToolbox) rồi đăng kèm mã nguồn — việc riêng, cần sếp duyệt.
+
+## Bộ làm video
+
+Màn «Chuẩn bị bộ làm video» của Cowork (Marketing › Video) tải về máy người dùng, khi họ bấm, mọi thứ để làm video đẹp:
+bộ dựng (mục trên), phông, phong cách, tiếng hiệu ứng, model chép lời có mốc từng từ, giọng đọc. `build` đóng phông /
+phong cách / tiếng hiệu ứng thành 3 tệp `video-fonts|styles|sfx-<sha>.zip` (PHẢI đính kèm release) và ghim chúng cùng model
+chép lời vào `content.video_kit` của danh mục. App kiểm sha256 + số byte từng tệp, giải nén theo luật an toàn, báo «Có
+bản mới» khi phiên bản gói đổi (bản cũ vẫn dùng tới khi người dùng bấm cập nhật).
+
+- **Phông** (`video/fonts/`): chỉ phông TĨNH giấy phép SIL OFL 1.1, lấy nguyên tệp từ kho Google Fonts (commit ghi trong
+  fonts.json), mỗi họ kèm OFL.txt của chính nó. `check` đọc bảng ký tự từng tệp: thiếu chữ tiếng Việt có dấu là lỗi
+  (riêng «₫» được thiếu). Thêm phông: chép tệp + OFL.txt, khai vào fonts.json (đúng họ, độ đậm thật).
+- **Phong cách** (`video/styles/<id>/`): `style.json` (mã = tên thư mục, nhóm, ô chữ ≤ 8, bộ màu #RRGGBB, phông có trong
+  video/fonts, luật kiểm được cho trợ lý), `template.html` đọc chữ / màu / phông từ `window.CW_DATA` và dùng khung sườn
+  `window.cwKit` + `window.cwFrame(t)` của app (không gọi mạng, không giờ thật), `preview.jpg` 270×480 ≤ 80 KB. Sửa mẫu
+  thì tăng `version` của phong cách và `styles.version` trong kit.json. Ảnh xem trước dựng bằng chính bộ dựng chữ chuyển
+  động của app, lấy khung lúc mọi chữ đã hiện.
+- **Tiếng hiệu ứng** (`video/sfx/`): `node tools/sfx-make.mjs` (cần ffmpeg) tổng hợp lại từ công thức, ra đúng byte như cũ;
+  không dùng bản ghi âm của ai. CC0, ghi rõ trong LICENSE.txt.
+- **Model chép lời** (`video/kit.json` › `asr`): Whisper small bản ONNX «timestamped» (xuất cross-attention để căn mốc từng
+  từ) của onnx-community, ghim commit Hugging Face + sha256 + số byte; app chạy bằng ONNX Runtime WebAssembly có sẵn (không
+  thêm tệp chạy native). Đổi model: tải thử khớp sha256 rồi sửa kit.json (`version` mới).
 
 ## Phát hành (GitHub Releases)
 

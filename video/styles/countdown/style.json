@@ -1,0 +1,75 @@
+{
+  "id": "countdown",
+  "version": 1,
+  "label": "Đếm ngược",
+  "hint": "Đếm 3–2–1 với vòng tiến độ rồi lộ dòng lớn (MỞ BÁN, RA MẮT…): mở đầu livestream, mở bán.",
+  "group": "hook",
+  "tags": [
+    "đếm ngược",
+    "mở bán",
+    "livestream"
+  ],
+  "seconds": 4,
+  "fields": [
+    {
+      "key": "from",
+      "label": "Đếm từ (2–9)",
+      "placeholder": "3",
+      "max": 1,
+      "optional": true
+    },
+    {
+      "key": "reveal",
+      "label": "Dòng lộ diện",
+      "placeholder": "MỞ BÁN",
+      "max": 18
+    },
+    {
+      "key": "sub",
+      "label": "Dòng phụ",
+      "placeholder": "Thứ 6 · 20:00 · Live trên TikTok",
+      "max": 50,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "night",
+      "label": "Đêm đỏ",
+      "bg": "#0D0D12",
+      "bg2": "#1F1F2A",
+      "accent": "#FF3B5C",
+      "ink": "#FFFFFF",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "paper",
+      "label": "Giấy trắng",
+      "bg": "#F7F7F2",
+      "bg2": "#E3E3DC",
+      "accent": "#111111",
+      "ink": "#FFFFFF",
+      "text": "#111111"
+    },
+    {
+      "id": "orange",
+      "label": "Cam",
+      "bg": "#FF6A00",
+      "bg2": "#E25B00",
+      "accent": "#FFFFFF",
+      "ink": "#FF6A00",
+      "text": "#FFFFFF"
+    }
+  ],
+  "fonts": {
+    "display": "Chakra Petch",
+    "body": "Be Vietnam Pro",
+    "number": "Chakra Petch"
+  },
+  "sfx": [
+    "tick",
+    "tock",
+    "boom"
+  ],
+  "rules": "Số đếm Chakra Petch 700 cỡ 52% đường kính vòng, mỗi số 0,45–0,7 giây (chia đều, chừa ≥ 1,2 giây cho dòng lộ diện): phóng 1,25 → 1 trong 0,22 giây, 0,12 giây cuối nhịp mờ xuống; vòng tiến độ màu nhấn chạy liền một mạch. KHÔNG chớp nền (bộ kiểm bắt chớp sáng). Lộ diện: vòng thu về 0 trong 0,15 giây, chữ lớn in hoa đập 1,5 → 0,97 → 1, dòng phụ lên sau 0,35 giây. Tiếng: tick mỗi số, tock số cuối, boom khi lộ diện."
+}

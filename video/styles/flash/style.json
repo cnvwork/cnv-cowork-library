@@ -1,0 +1,88 @@
+{
+  "id": "flash",
+  "version": 1,
+  "label": "Flash sale",
+  "hint": "Năng lượng cao: sọc chéo, tia sét, chữ FLASH SALE đập xuống, khối giá, hạn ưu đãi có đồng hồ, nút mua.",
+  "group": "price",
+  "tags": [
+    "flash sale",
+    "khuyến mãi",
+    "gấp"
+  ],
+  "seconds": 5,
+  "fields": [
+    {
+      "key": "headline",
+      "label": "Dòng lớn",
+      "placeholder": "FLASH SALE",
+      "max": 16
+    },
+    {
+      "key": "price",
+      "label": "Giá",
+      "placeholder": "99.000đ",
+      "max": 20
+    },
+    {
+      "key": "old_price",
+      "label": "Giá cũ",
+      "placeholder": "159.000đ",
+      "max": 20,
+      "optional": true
+    },
+    {
+      "key": "deadline",
+      "label": "Hạn ưu đãi",
+      "placeholder": "Chỉ đến 24h hôm nay",
+      "max": 30,
+      "optional": true
+    },
+    {
+      "key": "cta",
+      "label": "Nút mời mua",
+      "placeholder": "Mua ngay",
+      "max": 20,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "volt",
+      "label": "Vàng điện",
+      "bg": "#FFE600",
+      "bg2": "#FFD000",
+      "accent": "#111111",
+      "ink": "#FFE600",
+      "text": "#111111"
+    },
+    {
+      "id": "red",
+      "label": "Đỏ",
+      "bg": "#E10600",
+      "bg2": "#C00500",
+      "accent": "#FFE600",
+      "ink": "#111111",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "electric",
+      "label": "Xanh điện",
+      "bg": "#2B2BFF",
+      "bg2": "#2222D6",
+      "accent": "#FF3DB0",
+      "ink": "#FFFFFF",
+      "text": "#FFFFFF"
+    }
+  ],
+  "fonts": {
+    "display": "Anton",
+    "body": "Be Vietnam Pro",
+    "number": "Barlow Condensed"
+  },
+  "sfx": [
+    "boom",
+    "cash",
+    "tick"
+  ],
+  "rules": "Sọc chéo -32° tĩnh hai tông nền (không chạy, không nhấp nháy). Tia sét rơi xuống 0,3 giây; chữ lớn Anton in hoa nghiêng -6° đập 1,6 → 0,96 → 1 trong 0,34 giây; khối giá màu nhấn bật 0,5 → 1,05 → 1 ở 0,7 giây (giá cũ gạch ngang phía trên). Hạn ưu đãi là chữ người dùng đưa (KHÔNG tự bịa đồng hồ đếm ngược số), kim đồng hồ nhảy mỗi 0,5 giây. Nút mời mua phập phồng ±3% mỗi 0,9 giây. Tiếng: boom khi chữ lớn, cash khi giá, tick khi hạn ưu đãi."
+}

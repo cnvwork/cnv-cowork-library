@@ -1,0 +1,180 @@
+{
+  "format": 1,
+  "version": "2026.11.03",
+  "license": "CC0-1.0",
+  "sounds": [
+    {
+      "id": "pop",
+      "label": "Bụp (chữ bật lên)",
+      "file": "pop.wav",
+      "seconds": 0.2,
+      "tags": [
+        "text",
+        "ui"
+      ]
+    },
+    {
+      "id": "click",
+      "label": "Tách nhẹ",
+      "file": "click.wav",
+      "seconds": 0.06,
+      "tags": [
+        "ui",
+        "text"
+      ]
+    },
+    {
+      "id": "tick",
+      "label": "Tích tắc (đếm ngược)",
+      "file": "tick.wav",
+      "seconds": 0.09,
+      "tags": [
+        "countdown"
+      ]
+    },
+    {
+      "id": "tock",
+      "label": "Tắc (nhịp trầm)",
+      "file": "tock.wav",
+      "seconds": 0.11,
+      "tags": [
+        "countdown"
+      ]
+    },
+    {
+      "id": "whoosh",
+      "label": "Vút (chuyển cảnh)",
+      "file": "whoosh.wav",
+      "seconds": 0.7,
+      "tags": [
+        "transition"
+      ]
+    },
+    {
+      "id": "swipe",
+      "label": "Lướt nhanh",
+      "file": "swipe.wav",
+      "seconds": 0.3,
+      "tags": [
+        "transition",
+        "ui"
+      ]
+    },
+    {
+      "id": "riser",
+      "label": "Dồn lên (trước khi lộ giá)",
+      "file": "riser.wav",
+      "seconds": 1.6,
+      "tags": [
+        "transition",
+        "impact"
+      ]
+    },
+    {
+      "id": "boom",
+      "label": "Bùm (nhấn mạnh)",
+      "file": "boom.wav",
+      "seconds": 1.2,
+      "tags": [
+        "impact"
+      ]
+    },
+    {
+      "id": "kick",
+      "label": "Trống (nhịp)",
+      "file": "kick.wav",
+      "seconds": 0.45,
+      "tags": [
+        "impact",
+        "beat"
+      ]
+    },
+    {
+      "id": "clap",
+      "label": "Vỗ tay",
+      "file": "clap.wav",
+      "seconds": 0.35,
+      "tags": [
+        "beat",
+        "success"
+      ]
+    },
+    {
+      "id": "ding",
+      "label": "Ting",
+      "file": "ding.wav",
+      "seconds": 1.4,
+      "tags": [
+        "success",
+        "ui"
+      ]
+    },
+    {
+      "id": "success",
+      "label": "Xong rồi (ba nốt)",
+      "file": "success.wav",
+      "seconds": 1,
+      "tags": [
+        "success"
+      ]
+    },
+    {
+      "id": "cash",
+      "label": "Ting ting (tiền về)",
+      "file": "cash.wav",
+      "seconds": 0.9,
+      "tags": [
+        "money",
+        "success"
+      ]
+    },
+    {
+      "id": "coin",
+      "label": "Đồng xu",
+      "file": "coin.wav",
+      "seconds": 0.45,
+      "tags": [
+        "money",
+        "ui"
+      ]
+    },
+    {
+      "id": "sparkle",
+      "label": "Lấp lánh",
+      "file": "sparkle.wav",
+      "seconds": 0.9,
+      "tags": [
+        "ui",
+        "success"
+      ]
+    },
+    {
+      "id": "typing",
+      "label": "Gõ phím",
+      "file": "typing.wav",
+      "seconds": 0.62,
+      "tags": [
+        "text",
+        "ui"
+      ]
+    },
+    {
+      "id": "shutter",
+      "label": "Chụp ảnh",
+      "file": "shutter.wav",
+      "seconds": 0.3,
+      "tags": [
+        "ui"
+      ]
+    },
+    {
+      "id": "notify",
+      "label": "Báo tin",
+      "file": "notify.wav",
+      "seconds": 0.5,
+      "tags": [
+        "ui"
+      ]
+    }
+  ]
+}

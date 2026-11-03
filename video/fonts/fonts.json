@@ -1,0 +1,237 @@
+{
+  "format": 1,
+  "version": "2026.11.03",
+  "source": "https://github.com/google/fonts (ofl/, commit 2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc)",
+  "families": [
+    {
+      "id": "be-vietnam-pro",
+      "family": "Be Vietnam Pro",
+      "category": "sans",
+      "role": "Chữ thường, tiêu đề gọn gàng (thiết kế cho tiếng Việt)",
+      "license": "OFL-1.1",
+      "license_file": "be-vietnam-pro/OFL.txt",
+      "files": [
+        {
+          "file": "be-vietnam-pro/BeVietnamPro-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        },
+        {
+          "file": "be-vietnam-pro/BeVietnamPro-Medium.ttf",
+          "weight": 500,
+          "style": "normal"
+        },
+        {
+          "file": "be-vietnam-pro/BeVietnamPro-SemiBold.ttf",
+          "weight": 600,
+          "style": "normal"
+        },
+        {
+          "file": "be-vietnam-pro/BeVietnamPro-Bold.ttf",
+          "weight": 700,
+          "style": "normal"
+        },
+        {
+          "file": "be-vietnam-pro/BeVietnamPro-ExtraBold.ttf",
+          "weight": 800,
+          "style": "normal"
+        },
+        {
+          "file": "be-vietnam-pro/BeVietnamPro-Black.ttf",
+          "weight": 900,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "barlow-condensed",
+      "family": "Barlow Condensed",
+      "category": "condensed",
+      "role": "Giá, con số, tiêu đề hẹp",
+      "license": "OFL-1.1",
+      "license_file": "barlow-condensed/OFL.txt",
+      "files": [
+        {
+          "file": "barlow-condensed/BarlowCondensed-SemiBold.ttf",
+          "weight": 600,
+          "style": "normal"
+        },
+        {
+          "file": "barlow-condensed/BarlowCondensed-Bold.ttf",
+          "weight": 700,
+          "style": "normal"
+        },
+        {
+          "file": "barlow-condensed/BarlowCondensed-ExtraBold.ttf",
+          "weight": 800,
+          "style": "normal"
+        },
+        {
+          "file": "barlow-condensed/BarlowCondensed-Black.ttf",
+          "weight": 900,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "anton",
+      "family": "Anton",
+      "category": "display",
+      "role": "Tiêu đề đậm, mạnh",
+      "license": "OFL-1.1",
+      "license_file": "anton/OFL.txt",
+      "files": [
+        {
+          "file": "anton/Anton-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "paytone-one",
+      "family": "Paytone One",
+      "category": "rounded",
+      "role": "Chữ tròn đậm kiểu TikTok",
+      "license": "OFL-1.1",
+      "license_file": "paytone-one/OFL.txt",
+      "files": [
+        {
+          "file": "paytone-one/PaytoneOne-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "coiny",
+      "family": "Coiny",
+      "category": "rounded",
+      "role": "Chữ phồng vui nhộn, chữ trang trí",
+      "license": "OFL-1.1",
+      "license_file": "coiny/OFL.txt",
+      "files": [
+        {
+          "file": "coiny/Coiny-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "bangers",
+      "family": "Bangers",
+      "category": "comic",
+      "role": "Chữ truyện tranh, khuyến mãi sôi động",
+      "license": "OFL-1.1",
+      "license_file": "bangers/OFL.txt",
+      "files": [
+        {
+          "file": "bangers/Bangers-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "pacifico",
+      "family": "Pacifico",
+      "category": "script",
+      "role": "Chữ viết tay mềm, lời cảm ơn",
+      "license": "OFL-1.1",
+      "license_file": "pacifico/OFL.txt",
+      "files": [
+        {
+          "file": "pacifico/Pacifico-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "patrick-hand",
+      "family": "Patrick Hand",
+      "category": "hand",
+      "role": "Ghi chú viết tay",
+      "license": "OFL-1.1",
+      "license_file": "patrick-hand/OFL.txt",
+      "files": [
+        {
+          "file": "patrick-hand/PatrickHand-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "mali",
+      "family": "Mali",
+      "category": "rounded",
+      "role": "Chữ tròn dễ thương",
+      "license": "OFL-1.1",
+      "license_file": "mali/OFL.txt",
+      "files": [
+        {
+          "file": "mali/Mali-SemiBold.ttf",
+          "weight": 600,
+          "style": "normal"
+        },
+        {
+          "file": "mali/Mali-Bold.ttf",
+          "weight": 700,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "chakra-petch",
+      "family": "Chakra Petch",
+      "category": "tech",
+      "role": "Đồng hồ, đếm ngược, công nghệ",
+      "license": "OFL-1.1",
+      "license_file": "chakra-petch/OFL.txt",
+      "files": [
+        {
+          "file": "chakra-petch/ChakraPetch-SemiBold.ttf",
+          "weight": 600,
+          "style": "normal"
+        },
+        {
+          "file": "chakra-petch/ChakraPetch-Bold.ttf",
+          "weight": 700,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "itim",
+      "family": "Itim",
+      "category": "casual",
+      "role": "Chữ thân thiện",
+      "license": "OFL-1.1",
+      "license_file": "itim/OFL.txt",
+      "files": [
+        {
+          "file": "itim/Itim-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "id": "sriracha",
+      "family": "Sriracha",
+      "category": "script",
+      "role": "Chữ cọ, thân thiện",
+      "license": "OFL-1.1",
+      "license_file": "sriracha/OFL.txt",
+      "files": [
+        {
+          "file": "sriracha/Sriracha-Regular.ttf",
+          "weight": 400,
+          "style": "normal"
+        }
+      ]
+    }
+  ]
+}

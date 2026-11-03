@@ -1,0 +1,24 @@
+{
+  "id": "sale",
+  "version": 2,
+  "label": "Giá khuyến mãi",
+  "hint": "Chữ lớn đập vào, giá cũ gạch, giá tụt dần về giá mới, nhãn % giảm tự tính.",
+  "group": "price",
+  "tags": ["sale", "giảm giá", "giá"],
+  "seconds": 5,
+  "fields": [
+    { "key": "headline", "label": "Dòng lớn", "placeholder": "SIÊU SALE", "max": 16 },
+    { "key": "product", "label": "Sản phẩm", "placeholder": "Áo thun cotton", "optional": true, "max": 50 },
+    { "key": "old_price", "label": "Giá cũ", "placeholder": "350.000đ", "optional": true, "max": 20 },
+    { "key": "new_price", "label": "Giá mới", "placeholder": "199.000đ", "max": 20 },
+    { "key": "note", "label": "Ghi chú", "placeholder": "Chỉ trong hôm nay", "optional": true, "max": 40 }
+  ],
+  "palettes": [
+    { "id": "hot", "label": "Đỏ nóng", "bg": "#FF3B30", "bg2": "#C81D16", "accent": "#FFE14D", "ink": "#1A1A1A", "text": "#FFFFFF" },
+    { "id": "gold", "label": "Đen vàng", "bg": "#111111", "bg2": "#232323", "accent": "#FFC531", "ink": "#111111", "text": "#FFFFFF" },
+    { "id": "pink", "label": "Hồng", "bg": "#FF4F9A", "bg2": "#D92E78", "accent": "#FFFFFF", "ink": "#D92E78", "text": "#FFFFFF" }
+  ],
+  "fonts": { "display": "Anton", "body": "Be Vietnam Pro", "number": "Barlow Condensed" },
+  "sfx": ["whoosh", "cash", "pop"],
+  "rules": "Hai mảng màu phẳng (nền + dải chéo -6° sau khối giá), chữ lớn Anton in hoa màu nhấn chiếm ≥ 80% bề ngang vùng an toàn. Dòng lớn phóng 1,35 → 0,97 → 1 trong 0,38 giây (một lần vượt nhẹ, không rung). Giá cũ gạch chéo -7° vẽ trong 0,25 giây; giá mới trong khối màu nhấn bật 0,6 → 1,04 → 1 rồi số TỤT dần từ giá cũ về giá mới trong 0,8 giây (outQuart, chữ số đều) khi cả hai giá là số đầy đủ (vd 350.000đ → 199.000đ); nhãn tròn -X% tự tính đóng dấu xoay -35° → 12°. Ghi chú trượt vào từ trái trên nền đậm. Không tia sáng, không hạt, không nhấp nháy. Tiếng: whoosh khi chữ lớn vào, cash khi giá dừng, pop khi nhãn %."
+}

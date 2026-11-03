@@ -1,0 +1,79 @@
+{
+  "id": "minimal",
+  "version": 1,
+  "label": "Tối giản",
+  "hint": "Nền trắng, chữ đen, nhiều khoảng thở: dòng nhỏ, tiêu đề lớn lộ từng dòng, đoạn mô tả, chân trang có vạch kẻ.",
+  "group": "info",
+  "tags": [
+    "tối giản",
+    "sang",
+    "thông tin"
+  ],
+  "seconds": 5,
+  "fields": [
+    {
+      "key": "kicker",
+      "label": "Dòng nhỏ trên cùng",
+      "placeholder": "Bộ sưu tập hè",
+      "max": 30,
+      "optional": true
+    },
+    {
+      "key": "title",
+      "label": "Tiêu đề",
+      "placeholder": "Ít mà chất",
+      "max": 50
+    },
+    {
+      "key": "body",
+      "label": "Mô tả",
+      "placeholder": "Vải cotton dệt kim, mặc cả ngày vẫn mát. Ba màu dễ phối.",
+      "max": 120,
+      "optional": true
+    },
+    {
+      "key": "footer",
+      "label": "Chân trang",
+      "placeholder": "199.000đ · Giao hàng 2 giờ",
+      "max": 40,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "white",
+      "label": "Trắng",
+      "bg": "#FFFFFF",
+      "bg2": "#F2F2F0",
+      "accent": "#111111",
+      "ink": "#FFFFFF",
+      "text": "#111111"
+    },
+    {
+      "id": "sand",
+      "label": "Cát",
+      "bg": "#F5F0E8",
+      "bg2": "#EAE2D4",
+      "accent": "#8A5A2B",
+      "ink": "#FFFFFF",
+      "text": "#2A2118"
+    },
+    {
+      "id": "black",
+      "label": "Đen",
+      "bg": "#0E0E0E",
+      "bg2": "#1A1A1A",
+      "accent": "#FFFFFF",
+      "ink": "#0E0E0E",
+      "text": "#F5F5F5"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "click"
+  ],
+  "rules": "Tối giản: nền phẳng một màu, chữ một màu, lề trái ≥ 10% bề ngang, không bóng, không chuyển màu, không trang trí. Tiêu đề 800, giãn chữ -3%, dòng cao 1,04, tối đa 3 dòng; mô tả 400, mờ 78%, rộng ≤ 72vmin. Mọi dòng lộ từ dưới lên qua mặt nạ với cubic-bezier(.7,0,.2,1), dòng sau trễ 0,1 giây (mô tả 0,08). Chân trang: vạch kẻ 0,3vmin chạy ngang rồi chữ lộ. 0,35 giây cuối mọi dòng trượt lên khỏi mặt nạ. Tiếng: click nhẹ khi tiêu đề vào."
+}

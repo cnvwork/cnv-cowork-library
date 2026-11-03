@@ -31,5 +31,18 @@ if (offices) {
   if (!ok) failed = true;
   console.log(`${ok ? '✔' : '✖'} mẫu văn phòng: ${offices.count} mẫu (${offices.url})`);
 }
+// Bộ làm video: gói zip nằm cạnh catalog.json (đính kèm release); model chép lời ghim nơi phát hành thì chỉ báo link.
+for (const pkg of payload.content?.video_kit?.packages ?? []) {
+  if (pkg.format !== 'zip') {
+    console.log(`• bộ làm video ${pkg.id} ${pkg.version}: ${pkg.files.length} tệp tải thẳng nơi phát hành (npm run video:verify để tải thử)`);
+    continue;
+  }
+  const entry = pkg.files[0];
+  const zipPath = path.join(path.dirname(file), entry.url.split('/').pop());
+  const data = fs.existsSync(zipPath) ? fs.readFileSync(zipPath) : null;
+  const ok = data && data.length === entry.bytes && sha256(data) === entry.sha256;
+  if (!ok) failed = true;
+  console.log(`${ok ? '✔' : '✖'} bộ làm video ${pkg.id} ${pkg.version} (${entry.url})`);
+}
 console.log(`Chữ ký đúng, ký lúc ${payload.issued_at}.`);
 process.exit(failed ? 1 : 0);
