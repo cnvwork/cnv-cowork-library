@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #13121C; --bg2: #232234; --accent: #FF7A45; --ink: #13121C; --text: #F6F5FA; --font-display: "Be Vietnam Pro", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; --font-number: "Barlow Condensed", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+#stage { position: absolute; inset: 0; }
+.num { position: absolute; font-family: var(--font-number); font-weight: 800; line-height: 0.92; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.unit { position: absolute; font-weight: 600; line-height: 1.3; text-wrap: balance; opacity: 0.86; }
+.claim { position: absolute; font-family: var(--font-display); font-weight: 800; line-height: 1.12; letter-spacing: -0.015em; text-wrap: balance; }
+.claim .mask { display: block; overflow: hidden; padding: 0.04em 0 0.08em; }
+.claim .row { display: block; white-space: nowrap; }
+.kw { position: relative; display: inline-block; padding: 0 0.16em; isolation: isolate; }
+.kw i { position: absolute; left: 0; right: 0; top: 0.06em; bottom: 0.02em; z-index: -1; border-radius: 0.12em; background: var(--accent); transform-origin: left center; transform: scaleX(0); }
+.card { position: absolute; background: var(--bg2); border-left: solid var(--accent); }
+.card .mark { position: absolute; font-family: var(--font-display); font-weight: 800; color: var(--accent); line-height: 1; }
+.quote { font-weight: 500; line-height: 1.38; text-wrap: pretty; }
+.hl { background-image: linear-gradient(var(--hlc), var(--hlc)); background-repeat: no-repeat; background-position: 0 92%; background-size: 0% 50%; }
+.src { position: absolute; background: #FFFFFF; color: #15141C; font-weight: 600; line-height: 1.25; text-wrap: balance; box-shadow: 0 0.3vmin 1.4vmin rgba(0, 0, 0, 0.14); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="num" id="num"></div>
+  <div class="unit" id="unit"></div>
+  <div class="claim" id="claim"></div>
+  <div class="card" id="card"><span class="mark" data-cw-check="off">“</span><div class="quote" id="quote"></div></div>
+  <div class="src" id="src"></div>
+</div>
+<script>
+const k = window.cwKit;
+k.vars();
+document.documentElement.style.setProperty('--hlc', 'color-mix(in srgb, var(--accent) 62%, transparent)');
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+const norm = (s) => s.toLocaleLowerCase('vi').replace(/[.,!?…:;"'«»“”()]/g, '');
+
+// Con số: đếm lên giữ đúng cách viết (4.700+ · 92% · 4,9/5 · 1,2 triệu · x3). Viết lạ thì hiện nguyên.
+const rawNum = k.field('number', '4.700+').trim();
+const parts = /^(\D*?)(\d[\d.,]*)(.*)$/.exec(rawNum);
+let count = null;
+if (parts) {
+  const core = parts[2];
+  if (/^\d{1,3}([.,]\d{3})+$/.test(core)) count = { target: Number(core.replace(/[.,]/g, '')), decimals: 0, group: core.match(/[.,]/)[0], sep: '' };
+  else if (/^\d+[.,]\d{1,2}$/.test(core)) count = { target: Number(core.replace(',', '.')), decimals: core.length - core.search(/[.,]/) - 1, group: '', sep: core.match(/[.,]/)[0] };
+  else if (/^\d+$/.test(core)) count = { target: Number(core), decimals: 0, group: '', sep: '' };
+  if (count && !(count.target > 0)) count = null;
+  if (count) { count.prefix = parts[1]; count.suffix = parts[3]; }
+}
+function formatCount(value) {
+  const fixed = value.toFixed(count.decimals);
+  const [int, dec] = fixed.split('.');
+  const grouped = count.group ? int.replace(/\B(?=(\d{3})+(?!\d))/g, count.group) : int;
+  return count.prefix + grouped + (dec ? count.sep + dec : '') + count.suffix;
+}
+
+// Câu khẳng định: đúng MỘT cụm từ khoá trên khối màu nhấn.
+const claimWords = k.field('claim', 'Mặc cả ngày vẫn mát lưng').split(/\s+/).filter(Boolean);
+const kwWords = k.field('keyword').split(/\s+/).filter(Boolean).map(norm);
+let kwStart = -1;
+if (kwWords.length) {
+  for (let i = 0; i + kwWords.length <= claimWords.length && kwStart < 0; i += 1) if (kwWords.every((word, j) => norm(claimWords[i + j]) === word)) kwStart = i;
+}
+const isKw = (i) => kwStart >= 0 && i >= kwStart && i < kwStart + kwWords.length;
+
+// Trích dẫn + cụm tô dạ quang.
+const quoteText = k.field('quote');
+const markText = k.field('mark');
+const quote = $('quote');
+if (quoteText) {
+  const at = markText ? quoteText.toLocaleLowerCase('vi').indexOf(markText.toLocaleLowerCase('vi')) : -1;
+  if (at >= 0) {
+    quote.appendChild(document.createTextNode(quoteText.slice(0, at)));
+    const hl = document.createElement('span');
+    hl.className = 'hl';
+    hl.id = 'hl';
+    hl.textContent = quoteText.slice(at, at + markText.length);
+    quote.appendChild(hl);
+    quote.appendChild(document.createTextNode(quoteText.slice(at + markText.length)));
+  } else quote.textContent = quoteText;
+} else $('card').style.display = 'none';
+const sourceText = k.field('source', 'Đánh giá Shopee của shop, tháng 10/2026');
+$('src').textContent = /^nguồn\b/i.test(sourceText) ? sourceText : 'Nguồn: ' + sourceText;
+k.text('#unit', 'unit', 'khách quay lại mua trong 3 tháng');
+
+let rows = [];
+let kwBlocks = [];
+let laid = false;
+let origin = '50% 50%';
+
+/** Chia câu khẳng định theo dòng thật, giữ khối từ khoá (cụm liền nhau trên cùng dòng gộp một khối). */
+function buildClaim(width) {
+  const claim = $('claim');
+  claim.textContent = '';
+  // Cụm từ khoá đo như một khối không xuống dòng giữa chừng (một khối màu, không vắt hai dòng).
+  const tokens = [];
+  claimWords.forEach((word, i) => {
+    if (isKw(i) && isKw(i - 1)) tokens[tokens.length - 1].words.push(i);
+    else tokens.push({ words: [i] });
+  });
+  const spans = tokens.map((token, n) => {
+    if (n) claim.appendChild(document.createTextNode(' '));
+    const span = document.createElement('span');
+    span.textContent = token.words.map((i) => claimWords[i]).join(' ');
+    if (isKw(token.words[0])) span.style.cssText = 'padding:0 0.16em;white-space:nowrap';
+    claim.appendChild(span);
+    return span;
+  });
+  const size = parseFloat(getComputedStyle(claim).fontSize) || 16;
+  const lines = [];
+  let top = null;
+  spans.forEach((span, n) => {
+    const y = Math.round(span.getBoundingClientRect().top);
+    if (top === null || Math.abs(y - top) > size * 0.3) {
+      lines.push([]);
+      top = y;
+    }
+    lines[lines.length - 1].push(...tokens[n].words);
+  });
+  claim.textContent = '';
+  kwBlocks = [];
+  rows = lines.map((indexes) => {
+    const mask = document.createElement('span');
+    mask.className = 'mask';
+    const row = document.createElement('span');
+    row.className = 'row';
+    let group = null;
+    indexes.forEach((i, n) => {
+      if (n) (group && isKw(i) ? group : row).appendChild(document.createTextNode(' '));
+      if (isKw(i)) {
+        if (!group) {
+          group = document.createElement('span');
+          group.className = 'kw';
+          const bg = document.createElement('i');
+          group.appendChild(bg);
+          row.appendChild(group);
+          kwBlocks.push(group);
+        }
+        group.appendChild(document.createTextNode(claimWords[i]));
+      } else {
+        group = null;
+        row.appendChild(document.createTextNode(claimWords[i]));
+      }
+    });
+    mask.appendChild(row);
+    claim.appendChild(mask);
+    return row;
+  });
+  claim.style.width = width + 'px';
+}
+
+function layout(scale) {
+  laid = true;
+  const W = k.W;
+  const H = k.H;
+  const safe = k.safe;
+  const v = k.vmin * scale;
+  const wide = W > H * 1.2;
+  const left = Math.max(safe.left, W * 0.07);
+  const right = Math.max(safe.right, W * 0.07);
+  const full = W - left - right;
+  // Khung ngang: số + câu bên trái, thẻ trích dẫn + nguồn bên phải.
+  const colA = wide ? full * 0.5 : full;
+  const colB = wide ? full * 0.44 : full;
+  const leftB = wide ? left + full * 0.56 : left;
+  const num = $('num');
+  num.style.left = left + 'px';
+  num.textContent = rawNum;
+  k.fit(num, { max: v * (wide ? 26 : 34), min: v * 14, maxWidth: colA });
+  const unit = $('unit');
+  unit.style.left = left + 'px';
+  unit.style.width = colA + 'px';
+  k.fit(unit, { max: v * 6.2, min: v * 4.6, maxWidth: colA, maxHeight: v * 6.2 * 1.3 * 2.2 });
+  const claim = $('claim');
+  claim.style.left = left + 'px';
+  claim.style.width = colA + 'px';
+  claim.textContent = claimWords.join(' ');
+  k.fit(claim, { max: v * (wide ? 8.5 : 9.5), min: v * 6, maxWidth: colA * 0.96, maxHeight: v * 9.5 * 1.12 * 3.1 });
+  buildClaim(colA);
+  const card = $('card');
+  card.style.left = leftB + 'px';
+  card.style.width = colB + 'px';
+  card.style.borderLeftWidth = v * 1 + 'px';
+  card.style.borderRadius = v * 2 + 'px';
+  card.style.padding = v * 4.2 + 'px ' + v * 4 + 'px ' + v * 3.6 + 'px ' + v * 4.4 + 'px';
+  const mark = card.querySelector('.mark');
+  mark.style.fontSize = v * 9 + 'px';
+  mark.style.left = v * 2.6 + 'px';
+  mark.style.top = -v * 3.2 + 'px';
+  k.fit(quote, { max: v * 5.6, min: v * 4.2, maxWidth: colB - v * 8.4, maxHeight: v * 5.6 * 1.38 * 4.2 });
+  const src = $('src');
+  src.style.left = leftB + 'px';
+  src.style.maxWidth = colB + 'px';
+  src.style.fontSize = v * 3.8 + 'px';
+  src.style.padding = v * 1.2 + 'px ' + v * 2.2 + 'px';
+  src.style.borderRadius = v * 1.2 + 'px';
+  const h = (node) => (node.style.display === 'none' || !node.textContent ? 0 : node.getBoundingClientRect().height);
+  const numH = h(num);
+  const unitH = h(unit);
+  const claimH = h(claim);
+  const cardH = quoteText ? card.getBoundingClientRect().height : 0;
+  const srcH = h(src);
+  const blockA = numH + (unitH ? v * 1.6 + unitH : 0) + v * 6 + claimH + (wide ? 0 : (cardH ? v * 7 + cardH : 0) + v * 5 + srcH);
+  const blockB = wide ? cardH + v * 4 + srcH : 0;
+  const room = H - safe.top - safe.bottom;
+  if (Math.max(blockA, blockB) > room && scale > 0.62) return layout(Math.max(0.6, (scale * room) / Math.max(blockA, blockB)) * 0.98);
+  let y = safe.top + Math.max(0, (room - blockA) * 0.42);
+  num.style.top = y + 'px';
+  y += numH;
+  if (unitH) {
+    unit.style.top = y + v * 1.6 + 'px';
+    y += v * 1.6 + unitH;
+  }
+  y += v * 6;
+  claim.style.top = y + 'px';
+  y += claimH;
+  if (wide) y = safe.top + Math.max(0, (room - blockB) * 0.5) - v * 7;
+  if (cardH) {
+    card.style.top = y + v * 7 + 'px';
+    y += v * 7 + cardH;
+  }
+  src.style.top = y + v * 5 + 'px';
+  const box = (cardH ? card : src).getBoundingClientRect();
+  origin = box.left + box.width / 2 + 'px ' + (box.top + box.height / 2) + 'px';
+}
+
+const f = Math.min(1, Math.max(0.55, (S - 0.8) / 4.4));
+const T_NUM = 0.15;
+const T_LAND = T_NUM + 0.9 * f;
+const T_UNIT = 0.55 * f;
+const T_CLAIM = 1.2 * f;
+const T_CARD = 2.4 * f;
+const T_MARK = 3.0 * f;
+const T_SRC = (quoteText ? 3.6 : 2.4) * f;
+if (count) [0.3, 0.5, 0.7].forEach((p) => cwSfx('tick', T_NUM + 0.9 * f * p, 0.35));
+cwSfx('kick', T_LAND, 0.8);
+if (quoteText) cwSfx('pop', T_CARD, 0.6);
+cwSfx('click', T_SRC, 0.6);
+let kwAt = null;
+
+window.cwFrame = (t) => {
+  if (!laid) {
+    layout(1);
+    kwAt = T_CLAIM + rows.length * 0.1 + 0.3;
+    if (kwBlocks.length) cwSfx('swipe', kwAt, 0.5);
+  }
+  const fade = 1 - k.ease.inCubic(k.clamp((t - (S - 0.35)) / 0.35));
+  const num = $('num');
+  const pn = k.clamp((t - T_NUM) / (0.9 * f));
+  num.textContent = count ? formatCount(count.target * k.ease.outCubic(pn)) : rawNum;
+  const land = k.ease.outBack(k.clamp((t - T_NUM) / 0.4));
+  num.style.opacity = String(k.clamp((t - T_NUM) / 0.15) * fade);
+  num.style.transform = 'translateY(' + (1 - land) * k.vmin * 4 + 'px) scale(' + (1 + 0.06 * Math.sin(Math.PI * k.clamp((t - T_LAND) / 0.22))) + ')';
+  num.style.transformOrigin = 'left bottom';
+  const pu = k.ease.outCubic(k.clamp((t - T_UNIT) / 0.45));
+  $('unit').style.opacity = String(0.86 * pu * fade);
+  $('unit').style.transform = 'translateY(' + (1 - pu) * k.vmin * 2.5 + 'px)';
+  rows.forEach((row, i) => {
+    const p = k.ease.snap(k.clamp((t - T_CLAIM - i * 0.1) / 0.55));
+    row.style.transform = 'translateY(' + (1 - p) * 130 + '%)';
+    row.style.opacity = String(p > 0 ? fade : 0);
+  });
+  const pk = k.ease.outQuint(k.clamp((t - kwAt) / 0.35));
+  kwBlocks.forEach((block) => {
+    block.firstChild.style.transform = 'scaleX(' + pk + ')';
+    block.style.color = pk > 0.45 ? 'var(--ink)' : 'var(--text)';
+  });
+  if (quoteText) {
+    const pc = k.ease.outQuint(k.clamp((t - T_CARD) / 0.5));
+    $('card').style.opacity = String(pc * fade);
+    $('card').style.transform = 'translateY(' + (1 - pc) * k.vmin * 6 + 'px)';
+    const hl = $('hl');
+    if (hl) hl.style.backgroundSize = 100 * k.ease.inOutCubic(k.clamp((t - T_MARK) / 0.5)) + '% 50%';
+  }
+  const pp = k.ease.outCubic(k.clamp((t - T_MARK) / 0.25));
+  const stage = $('stage');
+  stage.style.transformOrigin = origin;
+  stage.style.transform = quoteText ? 'scale(' + (1 + 0.035 * pp) + ')' : 'none';
+  const ps = k.ease.outBack(k.clamp((t - T_SRC) / 0.35));
+  $('src').style.opacity = String(k.clamp((t - T_SRC) / 0.2) * fade);
+  $('src').style.transform = 'translateY(' + (1 - ps) * k.vmin * 2 + 'px)';
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+{
+  "id": "evidence",
+  "version": 1,
+  "label": "Bằng chứng",
+  "hint": "Chứng minh bằng số thật: con số lớn đếm lên, câu khẳng định có khối từ khoá, trích dẫn tô dạ quang và nhãn «Nguồn».",
+  "group": "info",
+  "tags": [
+    "bằng chứng",
+    "số liệu",
+    "nguồn",
+    "đánh giá thật",
+    "trích dẫn",
+    "proof"
+  ],
+  "seconds": 6,
+  "fields": [
+    {
+      "key": "number",
+      "label": "Con số",
+      "placeholder": "4.700+",
+      "max": 12
+    },
+    {
+      "key": "unit",
+      "label": "Con số nói gì",
+      "placeholder": "khách quay lại mua trong 3 tháng",
+      "max": 50
+    },
+    {
+      "key": "claim",
+      "label": "Câu khẳng định",
+      "placeholder": "Mặc cả ngày vẫn mát lưng",
+      "max": 60
+    },
+    {
+      "key": "keyword",
+      "label": "Từ khoá (nằm trong câu khẳng định)",
+      "placeholder": "vẫn mát",
+      "max": 24,
+      "optional": true
+    },
+    {
+      "key": "quote",
+      "label": "Trích đánh giá / tài liệu thật",
+      "placeholder": "Đi làm 9 tiếng không bí lưng, giặt 20 lần vẫn không xù.",
+      "max": 120,
+      "optional": true
+    },
+    {
+      "key": "mark",
+      "label": "Cụm tô dạ quang (nằm trong trích dẫn)",
+      "placeholder": "không bí lưng",
+      "max": 40,
+      "optional": true
+    },
+    {
+      "key": "source",
+      "label": "Nguồn",
+      "placeholder": "Đánh giá Shopee của shop, tháng 10/2026",
+      "max": 60
+    }
+  ],
+  "palettes": [
+    {
+      "id": "night",
+      "label": "Đêm",
+      "bg": "#13121C",
+      "bg2": "#232234",
+      "accent": "#FF7A45",
+      "ink": "#13121C",
+      "text": "#F6F5FA"
+    },
+    {
+      "id": "paper",
+      "label": "Giấy",
+      "bg": "#F7F4EC",
+      "bg2": "#FFFFFF",
+      "accent": "#E4572E",
+      "ink": "#FFFFFF",
+      "text": "#1D1B24"
+    },
+    {
+      "id": "ocean",
+      "label": "Biển",
+      "bg": "#0B2233",
+      "bg2": "#12344A",
+      "accent": "#38D6C4",
+      "ink": "#0B2233",
+      "text": "#F2FAFB"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Barlow Condensed"
+  },
+  "sfx": [
+    "tick",
+    "kick",
+    "swipe",
+    "pop",
+    "click"
+  ],
+  "rules": "Con số lớn hiện SỚM (0,15 giây), đếm lên 0,9 giây rồi giữ, phông số 800 cỡ 24–34vmin màu nhấn; dòng «con số nói gì» 600 cỡ 4,6–5,6vmin ngay dưới. Câu khẳng định 800 cỡ 7–9,5vmin lộ từng dòng (snap) ở 1,2 giây; đúng MỘT từ khoá nằm trên khối màu nhấn chữ màu nền, khối quét từ trái 0,35 giây. Thẻ trích dẫn nền phụ bo 2vmin, viền trái màu nhấn 1vmin, trượt lên 6vmin ở 2,4 giây; cụm tô dạ quang quét 0,5 giây ở 3,0 giây kèm một nhịp nhấn (cả khung phóng 1 → 1,035 trong 0,25 giây, không chớp). Nhãn «Nguồn: …» nền trắng chữ đen cỡ 3,8vmin hiện ở 3,6 giây, giữ tới hết. Chỉ dùng số / trích dẫn / nguồn người dùng đưa, không bịa; không có nguồn thì không dùng phong cách này. Tiếng: tick lúc đếm, kick khi số chốt, swipe khi khối từ khoá, pop khi thẻ trích dẫn, click khi nhãn nguồn."
+}
