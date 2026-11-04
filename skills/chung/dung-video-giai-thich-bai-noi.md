@@ -60,7 +60,7 @@ Phụ đề sai là hỏng cả video, vì thẻ được dàn từ lời. Làm 
   - Con số: «ba nghìn» thành 3.000, «sáu năm» thành 6 năm, phần trăm viết %. Giữ đúng số người nói đưa ra.
   - Bỏ «à, ừm, thì, là» ở đầu dòng. Câu nói lại thì giữ bản sau. Không viết lại ý của người nói.
   - Câu nghe không ra: đánh dấu và hỏi người dùng ở điểm duyệt 1, đừng đoán.
-- **Kiểu phụ đề**: «Từ khoá nổi» (`set_project` → `caption_style: "keyword"`). Mỗi trang một từ khoá (con số, tên giải pháp,
+- **Kiểu phụ đề**: «Từ khoá nổi» (`video_project_edit` → «set_project», `caption_style: "keyword"`). Mỗi trang một từ khoá (con số, tên giải pháp,
   lợi ích) trên khối màu nhấn đúng lúc được nói. Tự chọn từ khoá cho các câu quan trọng bằng `key`, khớp với chữ trên thẻ đang
   hiện.
 
@@ -108,7 +108,7 @@ Phụ đề sai là hỏng cả video, vì thẻ được dàn từ lời. Làm 
   nên xem lại.
 
 # 6. Hoàn thiện
-- Thanh tiến độ: `set_project` → `progress: true` (video trên 60 giây, giúp người xem biết còn bao lâu).
+- Thanh tiến độ: `video_project_edit` → «set_project», `progress: true` (video trên 60 giây, giúp người xem biết còn bao lâu).
 - Nhạc nền: không bắt buộc. Nếu dùng thì chọn nhạc êm, để âm lượng nhỏ hẳn so với lời (khoảng 0,1–0,15).
 - Tiếng hiệu ứng của phong cách (whoosh, pop, ding) đã tự gắn. Đừng thêm dày hơn.
 - Độ to: app tự chuẩn −14 LUFS khi xuất.
