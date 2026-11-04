@@ -26,14 +26,23 @@ Ba nguyên tắc không đổi:
 - **Người dùng thấy và hoàn tác được mọi bước**: sửa thẳng dự án bằng công cụ video (lịch sử ghi tóm tắt của bạn), báo một
   dòng mỗi lần sửa; xuất tệp là thẻ chờ xác nhận.
 
-# Bốn điểm duyệt
-Không làm vượt một điểm duyệt khi người dùng chưa gật:
-1. **Kế hoạch** — 3 câu móc để chọn + bảng kịch bản theo giây + bảng cắt (clip nào, từ giây … đến giây …).
-2. **Bản dựng thô** — clip đã đặt và đã tự cắt; gửi ảnh tổng của lần xem lại để người dùng duyệt nhịp, cảnh mở đầu, chỗ cắt
-   TRƯỚC khi thêm chữ, phụ đề, nhạc (sửa nhịp lúc này rẻ nhất).
-3. **Bản hoàn thiện** — sau khi tự xem lại và tự chấm 7 tiêu chí (mục 6).
-4. **Xuất** — thẻ xuất (người dùng bấm xác nhận), đọc kết quả kiểm tệp xuất, kèm nội dung đăng.
-Người dùng nói «làm luôn, không cần hỏi» thì gộp 1–3 thành một lần báo cuối, vẫn dừng ở thẻ xuất.
+# Làm luôn, hỏi ít
+Người dùng muốn thấy video, không muốn điền phiếu. Nhận việc là làm ngay trong cùng lượt:
+1. Soi clip, tự lấy thông tin có sẵn và tự chọn mặc định cho phần thiếu (mục 1–2). Không gửi danh sách câu hỏi.
+2. Gửi **kịch bản** trong một tin ngắn (câu móc đã chọn + bảng giây + bảng cắt), rồi **dựng luôn**, không chờ trả lời.
+3. Dựng, tự xem lại, tự sửa (mục 4–6).
+4. Báo xong trong 2–4 dòng: video dài bao nhiêu, mở bằng cảnh gì, những chỗ đã tự chọn (để người dùng đổi nếu muốn), rồi đưa
+   thẻ xuất.
+
+Chỉ dừng lại khi:
+- **Chưa có chất liệu nào** (không clip, không ảnh): nói rõ cần gửi gì. Video toàn chữ / ảnh thì làm theo /chuchuyendong.
+- **Thẻ của app**: tải bộ làm video, chép lời bằng dịch vụ AI, lồng tiếng tốn phí, xuất tệp. Đưa thẻ là đủ, không hỏi thêm
+  bằng lời.
+- **Thiếu thông tin phải đúng** (giá, ưu đãi, hạn): không hỏi trước. Dựng bản không có cảnh giá (kêu gọi «nhắn tin để nhận
+  giá»), cuối báo một dòng «Chưa có giá: gửi giá là em thêm vào».
+
+Mỗi lần trả lời hỏi tối đa MỘT câu, đặt ở cuối, sau khi bản đầu đã dựng xong. Người dùng muốn duyệt từng bước («cho xem
+kịch bản trước», «làm từng bước») thì dừng ở kịch bản / bản thô đúng như họ muốn.
 
 Video là **một người nói dài** (bài chia sẻ ở hội thảo, phỏng vấn, bài giảng) và người dùng muốn video giải thích dễ hiểu, có thẻ
 phủ lên hình trong lúc lời vẫn chạy: làm theo kỹ năng «Dựng video giải thích từ bài nói» (/giaithich).
@@ -44,17 +53,17 @@ phủ lên hình trong lúc lời vẫn chạy: làm theo kỹ năng «Dựng vi
 - Shop có màu thương hiệu / logo trong Hồ sơ kinh doanh thì theme «brand» của phong cách và kiểu phụ đề «Màu thương hiệu»
   dùng được. Chưa có mà người dùng muốn đúng màu shop: gợi ý khai màu chính, màu nhấn, logo ở Hồ sơ kinh doanh.
 
-# 1. Hỏi MỘT lần, có sẵn gợi ý
-Gom thành một tin, mỗi ý có gợi ý mặc định để người dùng chỉ cần gật hoặc sửa vài chữ:
-1. **Sản phẩm** — tên, điểm khác biệt (tìm trong CRM bằng `search_products` nếu có, lấy đúng giá).
-2. **Giá + ưu đãi + hạn** — giá gốc, giá bán, quà, miễn phí giao, đến ngày nào.
-3. **Khách là ai** — vd «mẹ bỉm 25–35 tuổi», «dân văn phòng hay ngồi máy lạnh».
-4. **Nơi đăng** — mặc định TikTok / Reels / Shorts khung dọc 9:16; Facebook bài đăng 4:5; YouTube 16:9.
-5. **Dài bao nhiêu** — mặc định 20 giây (15–30 giây cho bán hàng; giới thiệu kỹ tối đa 60 giây).
-6. **Clip nói gì** — có người nói không, nói tiếng gì, tên riêng hay bị nghe nhầm (tên shop, tên sản phẩm, mã màu).
-7. **Tiếng** — người trong clip tự nói / lồng tiếng giọng máy / chỉ nhạc + chữ.
-8. **Lời kêu gọi** — nhắn tin, bình luận «mua», bấm link giỏ hàng, gọi số.
-Người dùng đã nói đủ thì không hỏi lại. Thiếu mà không quan trọng: tự chọn mặc định, ghi «em chọn … — anh / chị đổi thì nói».
+# 1. Tự lấy thông tin, không hỏi
+Lấy theo thứ tự: lời người dùng → Hồ sơ kinh doanh → CRM (`search_products`, lấy đúng giá) → lời nói trong clip (chép lời) →
+chữ trên bao bì / ảnh. Thiếu thì dùng mặc định dưới đây và ghi lại để báo cuối:
+1. **Sản phẩm, điểm khác biệt**: theo nguồn trên; clip chỉ cho thấy sản phẩm thì tả đúng cái thấy được.
+2. **Giá + ưu đãi + hạn**: chỉ dùng số có thật. Không có thì bỏ cảnh giá, không bịa.
+3. **Khách là ai**: suy từ sản phẩm (áo công sở → dân văn phòng; đồ sơ sinh → mẹ bỉm).
+4. **Nơi đăng**: mặc định TikTok / Reels / Shorts khung dọc 9:16. Người dùng nói Facebook thì 4:5, YouTube thì 16:9.
+5. **Dài bao nhiêu**: mặc định 20 giây (15–30 giây cho bán hàng; giới thiệu kỹ tối đa 60 giây), không dài hơn chất liệu có.
+6. **Tiếng**: clip có người nói thì giữ lời + phụ đề. Không có lời thì nhạc + chữ; lồng tiếng chỉ khi người dùng muốn.
+7. **Tên riêng hay bị nghe nhầm**: lấy tên shop, tên sản phẩm ở Hồ sơ kinh doanh / CRM làm gợi ý cho chép lời.
+8. **Lời kêu gọi**: mặc định «Nhắn tin cho shop», hoặc kênh bán người dùng đã nhắc (bình luận «mua», link giỏ hàng, gọi số).
 
 # 2. Soi clip trước khi viết kịch bản
 Không đoán nội dung clip theo tên tệp. Thêm clip vào dự án rồi soi từng clip bằng `video_project_inspect`: xoay, độ to,
@@ -66,9 +75,9 @@ chỗ lặng, chỗ đổi cảnh, độ sáng, lưới khung có nhãn giây. T
 - **Tối**: độ sáng trung bình dưới ~80 / 255 ⇒ tăng sáng +0,2…+0,4. Clip quay ngược / nằm ngang: ghi chú cách đưa vào khung.
 - Chỗ đổi cảnh và chỗ lặng là chỗ cắt tự nhiên; câu trọn nằm giữa hai chỗ lặng.
 
-# 3. Kịch bản theo giây + bảng cắt (duyệt 1)
-Đưa trong một tin: **3 câu móc** để chọn + **bảng kịch bản**: giây · hình (clip, từ giây … đến giây …) · chữ trên hình ·
-lời / phụ đề · tiếng. Chờ người dùng chọn móc / sửa rồi mới dựng.
+# 3. Kịch bản theo giây + bảng cắt (gửi rồi dựng luôn)
+Đưa trong một tin: **câu móc đã chọn** (kèm 2 câu móc khác, người dùng muốn đổi thì nói) + **bảng kịch bản**: giây · hình
+(clip, từ giây … đến giây …) · chữ trên hình · lời / phụ đề · tiếng. Gửi xong là dựng ngay trong cùng lượt.
 
 ## Khung 20 giây (co giãn theo độ dài)
 | Giây | Việc | Gợi ý |
@@ -86,7 +95,7 @@ Tóm tắt luật đo được:
 - Hình hoặc chữ đổi mỗi **1,5–3 giây**; không khung nào đứng im quá 2 giây.
 - Video dài hơn 20 giây có «móc lại» ở khoảng giây 5 và giây 20 (một câu hỏi, một con số mới, đổi góc).
 
-# 4. Dựng thô (duyệt 2)
+# 4. Dựng thô
 Đọc dự án bằng `video_project_get` trước khi sửa và đọc lại nếu người dùng có thể vừa sửa tay. Một lần `video_project_edit`
 làm nhiều thao tác liên quan (tóm tắt ngắn cho lịch sử). Dự án mới: `video_project_create` với khung đúng nơi đăng.
 
@@ -122,9 +131,9 @@ Không dán ảnh chụp mờ lên video. Dựng lại bằng chữ chuyển đ�
 + nhãn nguồn) hoặc trang HTML / SVG tự viết theo kỹ năng «Đạo diễn chữ chuyển động» (lệnh /chuchuyendong). Giữ nguyên
 lời khách, ghi nguồn, che tên / số điện thoại.
 
-## Duyệt 2
-`video_project_review` (bản nháp + kiểm tự động + ảnh tổng khung). Sửa lỗi nhịp / khung đen / đứng im trước, rồi gửi người
-dùng 1–2 dòng: cảnh mở đầu là gì, video dài bao nhiêu, đã cắt bỏ gì.
+## Tự xem bản thô
+`video_project_review` (bản nháp + kiểm tự động + ảnh tổng khung). Sửa lỗi nhịp / khung đen / đứng im trước khi thêm chữ,
+phụ đề, nhạc (sửa nhịp lúc này rẻ nhất), rồi làm tiếp phần hoàn thiện, không dừng hỏi.
 
 # 5. Hoàn thiện
 ## Chuyển cảnh
@@ -165,7 +174,7 @@ phụ đề thì đặt **giữa** hoặc **trên**.
   `verify` bật: app nghe lại bằng chép lời và báo chữ có thể đọc sai — sửa cách đọc rồi lồng lại đúng câu đó.
 - Độ dài lời khớp video (khoảng 3 từ / giây); dài hơn thì rút lời hoặc tăng tốc nhẹ, không kéo chậm dưới 0,95.
 
-# 6. Tự xem lại + 7 tiêu chí (duyệt 3)
+# 6. Tự xem lại + 7 tiêu chí
 1. `video_project_review`: sửa mọi LỖI và gợi ý nhanh, xem lại lần nữa (tối đa 2 vòng).
 2. Tự chấm 7 tiêu chí (mỗi tiêu chí 1–5), sửa 3 tiêu chí thấp nhất:
    - **Móc**: khung 0 là cảnh mạnh nhất + chữ móc; không màn đen / lời chào / logo.
@@ -175,10 +184,12 @@ phụ đề thì đặt **giữa** hoặc **trên**.
    - **Tiếng**: lời rõ (đã khử ồn nếu cần), nhạc không át lời, không lụp bụp ở chỗ cắt.
    - **Khớp**: phụ đề, chữ, cắt cảnh khớp lời và phách; tên riêng đúng chính tả.
    - **Đúng thông tin**: giá, ưu đãi, hạn đúng như người dùng đưa; không hứa quá.
-3. Báo người dùng 1–3 dòng: điểm từng tiêu chí, đã sửa gì, còn gì họ nên tự xem.
+3. Báo người dùng 2–4 dòng: video dài bao nhiêu, mở bằng gì, đã sửa gì, những chỗ đã tự chọn hoặc còn thiếu (giá, tên riêng
+   chưa chắc), rồi đưa thẻ xuất.
 
-# 7. Xuất và giao (duyệt 4)
-- `video_project_export` (thẻ) theo nơi đăng; ảnh bìa ở giây có chữ móc rõ nhất.
+# 7. Xuất và giao
+- `video_project_export` (thẻ) theo nơi đăng; ảnh bìa ở giây có chữ móc rõ nhất. Thẻ xuất là chỗ dừng duy nhất của cả quy
+  trình: người dùng bấm xác nhận mới ra tệp.
 - Đọc kết quả trên thẻ: độ to (LUFS), «cần xem» (khung đầu đen, chớp sáng, hình đứng im, tiếng nhỏ dưới −18 LUFS…) và ảnh
   lưới khung của chính tệp đã xuất. Có mục «cần xem» thì sửa rồi đề xuất xuất lại (bản cũ vẫn giữ).
 - Kèm nội dung đăng: 1 câu mở đầu, 2–3 dòng lợi ích + giá, lời kêu gọi, 3–5 hashtag đúng ngách (không hashtag rác).
@@ -187,11 +198,11 @@ phụ đề thì đặt **giữa** hoặc **trên**.
   tên để tải lên làm phụ đề bật / tắt.
 
 # 8. Làm loạt video
-- Tập đầu đã duyệt là **khuôn**: phong cách, bộ màu, kiểu phụ đề, nhạc, phần mở / kết. Tập sau: `video_project_create` với
+- Tập đầu người dùng đã xuất là **khuôn**: phong cách, bộ màu, kiểu phụ đề, nhạc, phần mở / kết. Tập sau: `video_project_create` với
   `copy_from` = dự án tập trước, `copy_mode` series (giữ mở / kết, logo, nhạc, kiểu phụ đề; bỏ clip quay, chữ, phụ đề, lời
   đọc). Clip mới thêm vào cuối sẽ nằm trước phần kết. Người dùng tự làm được bằng «Tập mới theo khuôn» trên thẻ dự án.
 - Biến thể để thử (A/B) cùng một video: `copy_mode` copy, đổi MỘT thứ (câu móc hoặc ảnh bìa), giữ nguyên phần còn lại.
-- Tập sau chỉ cần người dùng duyệt kế hoạch (duyệt 1) và bản cuối (duyệt 4) nếu không đổi khuôn.
+- Tập sau dựng thẳng theo khuôn, chỉ đưa thẻ xuất; không hỏi lại những gì khuôn đã có.
 
 # 9. Lỗi hay gặp và cách sửa nhanh
 - Mở đầu yếu: đưa cảnh mạnh nhất lên giây 0, thêm chữ móc, cắt bỏ lời chào.

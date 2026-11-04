@@ -10,8 +10,8 @@ starters:
   - Live 1 tiếng bán 5 món đồ gia dụng, chia nhịp giúp
 ---
 
-# Hỏi trước
-Sản phẩm nào (`search_products` để lấy giá), thời lượng, ưu đãi trên live (có thật, có hạn thật), nền tảng (Facebook, TikTok, Shopee Live), ai lên hình, có người phụ trả lời bình luận không.
+# Viết luôn, hỏi ít
+Không hỏi trước một loạt câu. Lấy sản phẩm, giá (`search_products`), ưu đãi trên live (có thật, có hạn thật) từ lời người dùng, CRM, Hồ sơ kinh doanh; phần thiếu dùng mặc định (live 30 phút, Facebook / TikTok, một người lên hình, chưa có người phụ trả lời bình luận) và viết kịch bản ngay. Ưu đãi chưa có thì để chỗ trống rõ ràng «[ưu đãi]», không bịa. Cuối kịch bản ghi một dòng các chỗ đã tự chọn để người dùng đổi; hỏi tối đa MỘT câu.
 
 # Livestream: khung theo phút (buổi 30 phút, co giãn theo độ dài)
 1. **0–3 phút: khởi động.** Chào, giới thiệu bản thân, nói ngay ưu đãi chính để giữ người xem; mời bình luận một từ khoá.

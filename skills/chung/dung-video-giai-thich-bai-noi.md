@@ -22,21 +22,27 @@ lúc tiếng vẫn chạy, người nói thu vào **ô góc** để vẫn thấy
 Ba nguyên tắc không đổi:
 - **Đúng lời người nói.** Chữ trên thẻ là ý của người nói, rút gọn lại. Con số giữ đúng như họ nói, kèm nguồn «chia sẻ của …
   tại …». Không thêm số liệu, lời hứa hay so sánh mà người nói không nói. Tên riêng (diễn giả, thương hiệu, sản phẩm, sự
-  kiện, thuật ngữ) phải đúng chính tả; không chắc thì hỏi.
+  kiện, thuật ngữ) phải đúng chính tả; không chắc thì giữ cách nghe được và ghi vào danh sách «chưa chắc» ở báo cáo cuối.
 - **Chất liệu có quyền.** Dùng video, logo, website, hotline của người dùng; phông, phong cách, tiếng hiệu ứng của bộ làm
   video Cowork. Logo hoặc tên sự kiện của bên tổ chức chỉ ghi khi người dùng có quyền dùng.
 - **Người dùng thấy và hoàn tác được mọi bước.** Sửa thẳng dự án bằng công cụ video, báo một dòng mỗi lần sửa. Xuất tệp là
   thẻ chờ xác nhận.
 
-# Bốn điểm duyệt
-Không làm vượt một điểm duyệt khi người dùng chưa gật đầu:
-1. **Bản lời và dàn ý.** Phụ đề đã sửa chính tả, kèm bảng dàn ý: ý → giây bắt đầu nói → loại thẻ → chữ trên thẻ. Liệt kê
-   riêng các tên riêng và con số để người dùng soát một lượt.
-2. **Bản dựng thô** (khi cần cắt ngắn). Đã cắt lặng, ậm ừ và đoạn lạc đề; gửi ảnh tổng để duyệt nhịp trước khi đặt thẻ.
-3. **Bản hoàn thiện.** Đủ thẻ, phụ đề và thanh tiến độ, đã tự xem lại và tự chấm 7 tiêu chí (mục 7).
-4. **Xuất.** Thẻ xuất (người dùng bấm xác nhận), đọc kết quả kiểm tệp xuất, kèm nội dung đăng.
-Người dùng nói «làm luôn» thì gộp 1–3 thành một lần báo cuối. Riêng bảng tên riêng và con số vẫn phải đưa ra, và vẫn dừng
-ở thẻ xuất.
+# Làm luôn, hỏi ít
+Nhận video là làm ngay trong cùng lượt, không gửi danh sách câu hỏi:
+1. Chép lời, soát lời (mục 2), dàn ý thành thẻ (mục 3).
+2. Gửi **kịch bản** trong một tin ngắn: bảng dàn ý (giây · loại thẻ · chữ trên thẻ) + các tên riêng, con số đã soát. Gửi xong
+   là đặt thẻ luôn, không chờ trả lời.
+3. Đặt thẻ, hoàn thiện, tự xem lại và tự sửa (mục 4–7).
+4. Báo xong trong 2–4 dòng: video dài bao nhiêu, mấy thẻ, những chỗ đã tự chọn, tên / số còn chưa chắc, rồi đưa thẻ xuất.
+
+Chỉ dừng lại khi:
+- **Thẻ của app**: tải bộ làm video, chép lời bằng dịch vụ AI (tốn phí theo phút), xuất tệp. Đưa thẻ là đủ, không hỏi thêm
+  bằng lời.
+- **Chưa có video bài nói** nào để dựng.
+
+Mỗi lần trả lời hỏi tối đa MỘT câu, đặt ở cuối, sau khi bản đầu đã dựng xong. Người dùng muốn duyệt dàn ý trước thì dừng ở
+bước 2 đúng như họ muốn.
 
 # 1. Đồ nghề
 - Thiếu phần nào của bộ làm video (bộ dựng, phông, phong cách, tiếng hiệu ứng, chép lời trên máy) thì đề xuất thẻ
@@ -44,6 +50,8 @@ Người dùng nói «làm luôn» thì gộp 1–3 thành một lần báo cu�
 - `video_styles` phải có năm phong cách bài nói: `talk_hook`, `talk_point`, `talk_stats`, `talk_steps`, `talk_end`. Không
   có nghĩa là gói «Phong cách video» trên máy đã cũ, cần đưa thẻ tải lại gói đó. Đừng tự chế trang HTML thay khi người dùng
   chưa đồng ý.
+- Công cụ báo không nhận `overlay` (thẻ phủ) hay kiểu phụ đề `talk`: Cowork trên máy là bản cũ, nhắc người dùng cập nhật
+  Cowork lên bản mới nhất.
 - Dự án: khung theo video gốc (bài nói ở hội trường thường là 16:9). Muốn thêm bản dọc 9:16 thì làm dự án thứ hai sau khi bản
   ngang xong. Năm phong cách bài nói tự xếp lại cho khung dọc.
 
@@ -51,18 +59,20 @@ Người dùng nói «làm luôn» thì gộp 1–3 thành một lần báo cu�
 Phụ đề sai là hỏng cả video, vì thẻ được dàn từ lời. Làm phần này kỹ nhất.
 - **Chọn cách chép lời** (`video_project_auto_captions`):
   - Hội trường, có loa vọng, khán giả ồn, hoặc bài dài trên 3 phút: dùng `engine: "cloud"` (tốn ít phí theo phút, nghe tốt
-    hơn nhiều). Nói phí với người dùng trước.
+    hơn nhiều). Thẻ chép lời đã ghi phí, đưa thẻ là đủ.
   - Thu gần micro, phòng yên, bài ngắn: dùng `"device"` (miễn phí, có mốc từng từ).
   - Đã chép bằng máy mà nhiều câu vô nghĩa: đề xuất chép lại bằng `"cloud"`. Không cố sửa từng chữ trên một bản nghe sai.
 - **Soát lời** (`video_project_get`, đọc hết phụ đề rồi sửa bằng `video_project_edit` → `update` từng dòng):
   - Tên riêng và thuật ngữ: viết đúng cách thương hiệu tự viết (CDP, CRM, Zalo OA, Mini App, omnichannel…). Lấy tên ở Hồ sơ
-    kinh doanh, slide, tiêu đề video, hoặc hỏi người dùng.
+    kinh doanh, tiêu đề video, chữ trên slide / màn hình trong video (`video_project_inspect` có lưới khung để đọc).
   - Con số: «ba nghìn» thành 3.000, «sáu năm» thành 6 năm, phần trăm viết %. Giữ đúng số người nói đưa ra.
   - Bỏ «à, ừm, thì, là» ở đầu dòng. Câu nói lại thì giữ bản sau. Không viết lại ý của người nói.
-  - Câu nghe không ra: đánh dấu và hỏi người dùng ở điểm duyệt 1, đừng đoán.
-- **Kiểu phụ đề**: «Từ khoá nổi» (`video_project_edit` → «set_project», `caption_style: "keyword"`). Mỗi trang một từ khoá (con số, tên giải pháp,
-  lợi ích) trên khối màu nhấn đúng lúc được nói. Tự chọn từ khoá cho các câu quan trọng bằng `key`, khớp với chữ trên thẻ đang
-  hiện.
+  - Câu nghe không ra: giữ phần chắc chắn, bỏ phần không nghe được, ghi vào danh sách «chưa chắc» ở báo cáo cuối. Không
+    đoán chữ.
+- **Kiểu phụ đề**: «Bài nói» (`video_project_edit` → «set_project», `caption_style: "talk"`): một dòng trên nền tối, lời
+  sáng dần theo người nói, một từ khoá (con số, tên giải pháp) trên khối màu nhấn từ lúc được nói. App báo không có kiểu này
+  (bản cũ) thì dùng «Từ khoá nổi» (`"keyword"`). Tự chọn từ khoá cho các câu quan trọng bằng `key`, khớp với chữ trên thẻ
+  đang hiện.
 
 # 3. Dàn ý thành thẻ
 Đọc toàn bộ lời đã soát rồi chia thành các nhịp. Mỗi nhịp là một ý, thường 15–40 giây lời nói. Mỗi nhịp nhận **một** thẻ:
@@ -85,7 +95,8 @@ Phụ đề sai là hỏng cả video, vì thẻ được dàn từ lời. Làm 
   - Giữa hai thẻ để người nói hiện toàn khung ít nhất 3–5 giây, vì gương mặt tạo tin cậy.
   - Không hơn một thẻ mỗi 10 giây.
   - Không che lúc người nói kể chuyện, đùa hay biểu cảm mạnh.
-- Bảng dàn ý gửi người dùng ở điểm duyệt 1, mỗi dòng gồm: `giây` · `loại thẻ` · `chữ trên thẻ` · `câu người nói lúc đó`.
+- Bảng dàn ý nằm trong tin kịch bản (gửi rồi đặt thẻ luôn), mỗi dòng gồm: `giây` · `loại thẻ` · `chữ trên thẻ` · `câu người
+  nói lúc đó`.
 
 # 4. Đặt thẻ phủ
 - Mỗi thẻ là một lần `video_project_motion`, gồm `template` (phong cách bài nói), `fields`, `seconds`, và
@@ -100,9 +111,11 @@ Phụ đề sai là hỏng cả video, vì thẻ được dàn từ lời. Làm 
   `pip`. Sửa chữ: `video_project_motion` với `replace` = id thẻ, chỉ đưa trường cần đổi.
 - Hai thẻ không được trùng giờ, thẻ không được chạy quá cuối video. `video_project_review` báo cả hai lỗi này.
 
-# 5. Cắt ngắn (khi cần)
-- Bài dài hơn 3 phút mà người dùng muốn đăng mạng xã hội: đề xuất 1 video 60–120 giây theo mạch chính, hoặc vài video ngắn,
-  mỗi video một ý lớn có móc riêng. Dùng `cut` theo mốc phụ đề và cắt ở chỗ hết câu.
+# 5. Độ dài và cắt ngắn
+- Mặc định giữ cả bài (dự án tối đa 10 phút), chỉ bỏ lặng và ậm ừ. Không hỏi trước có cắt ngắn không.
+- Người dùng nói «video ngắn», «đăng TikTok / Reels»: tự làm 1 video 60–120 giây theo mạch chính, hoặc vài video ngắn mỗi
+  video một ý lớn có móc riêng. Dùng `cut` theo mốc phụ đề, cắt ở chỗ hết câu, ghi rõ trong kịch bản đã bỏ đoạn nào.
+- Bài dài hơn 10 phút: tự chọn phần chính (ghi rõ trong kịch bản), phần còn lại làm video sau nếu người dùng muốn.
 - Muốn biết bài nói có những đoạn lặng nào, độ to ra sao: soi tệp gốc bằng `video_project_inspect`.
 - Bỏ lặng và ậm ừ bằng `video_project_autotrim` **trước** khi đặt thẻ. Cắt sau khi đặt thì thẻ phía sau tự dời theo, nhưng
   nên xem lại.
@@ -118,7 +131,7 @@ Dùng `video_project_review` (dựng bản nháp, kiểm tự động, gửi ả
 1. Giây 0–3 đã có thẻ móc với câu hỏi hoặc vấn đề rõ.
 2. Mỗi ý chính có thẻ hiện đúng lúc được nói, lệch không quá 1 giây.
 3. Chữ trên thẻ không bị phụ đề hoặc ô người nói đè (đọc kết quả kiểm và nhìn ảnh tổng).
-4. Phụ đề đúng chính tả, đúng tên riêng và con số đã soát ở điểm duyệt 1.
+4. Phụ đề đúng chính tả, đúng tên riêng và con số đã soát ở mục 2.
 5. Người nói hiện toàn khung ít nhất 40% thời lượng.
 6. Một bảng màu, một kiểu phụ đề cho cả video.
 7. Kết video có thẻ kêu gọi với website / hotline thật của người dùng.

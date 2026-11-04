@@ -18,13 +18,16 @@ phong cách có sẵn trong bộ làm video hoặc trang HTML tự viết. Chữ
 Nguyên tắc: chỉ dùng số liệu, giá, đánh giá, nguồn có thật người dùng đưa (không bịa con số, không bịa nguồn); chỉ dùng
 phông, phong cách, tiếng hiệu ứng của bộ làm video và logo / ảnh của người dùng; mọi bước người dùng thấy và hoàn tác được.
 
-# 1. Hỏi một lần
-Gom một tin, có gợi ý mặc định: sản phẩm + điểm khác biệt (`search_products` nếu có CRM); thông điệp chính; con số / đánh
-giá / tài liệu làm bằng chứng **kèm nguồn**; giá + ưu đãi + hạn; nơi đăng (mặc định 9:16); dài bao nhiêu (video toàn chữ:
-10–20 giây; đoạn chen trong video clip: 2–5 giây); màu shop (Hồ sơ kinh doanh) hay bộ màu của phong cách.
+# 1. Tự lấy thông tin, làm luôn
+Không gửi danh sách câu hỏi. Lấy từ lời người dùng, Hồ sơ kinh doanh, CRM (`search_products`), ảnh / tài liệu họ gửi:
+sản phẩm + điểm khác biệt; thông điệp chính; con số / đánh giá làm bằng chứng **kèm nguồn**; giá + ưu đãi + hạn. Phần thiếu
+dùng mặc định: nơi đăng 9:16; video toàn chữ 10–20 giây, đoạn chen trong video clip 2–5 giây; màu shop (theme «brand») nếu
+Hồ sơ kinh doanh có màu, không thì bộ màu của phong cách. Không có số / giá / nguồn thật thì bỏ cảnh đó, không bịa; cuối báo
+một dòng «thiếu …: gửi là em thêm vào». Hỏi tối đa MỘT câu, đặt ở cuối, sau khi đã dựng xong bản đầu.
 
-# 2. Kịch bản theo giây + khung sườn (duyệt trước khi dựng)
-Bảng: giây · câu (lời / phụ đề) · hình · chữ trên màn hình · chuyển động · tiếng. Khung sườn video toàn chữ 15 giây:
+# 2. Kịch bản theo giây + khung sườn (gửi rồi dựng luôn)
+Gửi bảng trong một tin ngắn rồi dựng ngay trong cùng lượt, không chờ duyệt (người dùng muốn duyệt trước thì mới dừng):
+giây · câu (lời / phụ đề) · hình · chữ trên màn hình · chuyển động · tiếng. Khung sườn video toàn chữ 15 giây:
 | Giây | Cảnh | Phong cách gợi ý |
 |---|---|---|
 | 0–3 | Móc: con số / câu hỏi / giá sốc, có chữ ngay khung 0 | Chữ trang trí TikTok, Đếm ngược, Flash sale |
