@@ -99,17 +99,23 @@ Phụ đề sai là hỏng cả video, vì thẻ được dàn từ lời. Làm 
   nói lúc đó`.
 
 # 4. Đặt thẻ phủ
-- Mỗi thẻ là một lần `video_project_motion`, gồm `template` (phong cách bài nói), `fields`, `seconds`, và
-  `overlay: { start, pip }`:
-  - `start` = giây người nói **bắt đầu** nói ý đó (tra mốc phụ đề), sớm hơn 0,3–0,5 giây cho mắt kịp đọc.
-  - `seconds` = độ dài đoạn nói về ý đó, thường 5–10 giây. `talk_steps` cần đủ thời gian để mỗi bước hiện đúng lúc được kể:
-    người nói kể 4 bước trong 12 giây thì dùng `seconds: 12`.
-  - `pip: "top_right"` để hình người nói (tiếng vẫn chạy) thu vào ô bo góc viền màu nhấn ở góc phải trên. Các phong cách bài
-    nói đã chừa sẵn góc này. Thẻ kết dùng `pip: null`.
-  - `theme`: `"brand"` (màu Hồ sơ kinh doanh) hoặc bảng màu của phong cách. Cả video dùng **một** bảng màu.
+- **Cả loạt thẻ trong MỘT lần gọi** `video_project_cards` (app Cowork bản mới). Với mỗi thẻ đưa `template` (phong cách bài
+  nói), `fields`, và `at_text` = vài chữ liền nhau **đúng như trong phụ đề** ở chỗ người nói bắt đầu ý đó (đọc phụ đề bằng
+  `video_project_get` rồi chép lại). App tự tìm giây theo mốc từng từ, cho thẻ hiện sớm ~0,3 giây và cắt thẻ để không chồng
+  nhau, không quá cuối video:
+  - Muốn thẻ ở tới lúc nói xong ý thì thêm `until_text` (vài chữ cuối ý); không thì thẻ dài theo phong cách. `talk_steps` cần
+    `until_text` ở bước cuối để mỗi bước hiện đúng lúc được kể.
+  - Ô người nói mặc định ở góc phải trên; thẻ kết (`talk_end`) không có ô. Muốn thẻ che kín thì `pip: null`.
+  - `theme`: `"brand"` (màu Hồ sơ kinh doanh) hoặc một bảng màu của phong cách, cho cả loạt. Cả video dùng **một** bảng màu.
+  - Báo lỗi «Thẻ N: không thấy …» nghĩa là chữ chưa khớp phụ đề: chép lại đúng vài chữ, hoặc đưa `start` (giây).
+  - Làm lại cả loạt: thêm `clear: true` để bỏ thẻ phủ cũ.
+- App chưa có `video_project_cards` (bản cũ): mỗi thẻ là một lần `video_project_motion` với `template`, `fields`, `seconds` và
+  `overlay: { start, pip }`. `start` là giây người nói bắt đầu ý (tra mốc phụ đề), trừ đi 0,3–0,5 giây. `seconds` là độ dài
+  đoạn nói về ý đó, thường 5–10 giây.
 - Sửa giờ hoặc ô người nói của một thẻ: `video_project_edit` → `update` thẻ phủ (id bắt đầu bằng `o`) với `start`, `end`,
   `pip`. Sửa chữ: `video_project_motion` với `replace` = id thẻ, chỉ đưa trường cần đổi.
-- Hai thẻ không được trùng giờ, thẻ không được chạy quá cuối video. `video_project_review` báo cả hai lỗi này.
+- Phụ đề kiểu «Bài nói» / «Từ khoá nổi» tự tô cùng `[[từ khoá]]` với thẻ đang hiện, nên chọn từ khoá trên thẻ đúng chữ người
+  nói.
 
 # 5. Độ dài và cắt ngắn
 - Mặc định giữ cả bài (dự án tối đa 10 phút), chỉ bỏ lặng và ậm ừ. Không hỏi trước có cắt ngắn không.
