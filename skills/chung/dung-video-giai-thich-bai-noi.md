@@ -62,7 +62,8 @@ Phụ đề sai là hỏng cả video, vì thẻ được dàn từ lời. Làm 
     hơn nhiều). Thẻ chép lời đã ghi phí, đưa thẻ là đủ.
   - Thu gần micro, phòng yên, bài ngắn: dùng `"device"` (miễn phí, có mốc từng từ).
   - Đã chép bằng máy mà nhiều câu vô nghĩa: đề xuất chép lại bằng `"cloud"`. Không cố sửa từng chữ trên một bản nghe sai.
-- **Soát lời** (`video_project_get`, đọc hết phụ đề rồi sửa bằng `video_project_edit` → `update` từng dòng):
+- **Soát lời** (`video_project_get`, đọc hết phụ đề rồi sửa bằng `video_project_edit` → `update` từng dòng; mỗi lần đọc được
+  200 câu, bài dài thì đọc tiếp bằng `captions_from` = giây của câu cuối vừa đọc):
   - Tên riêng và thuật ngữ: viết đúng cách thương hiệu tự viết (CDP, CRM, Zalo OA, Mini App, omnichannel…). Lấy tên ở Hồ sơ
     kinh doanh, tiêu đề video, chữ trên slide / màn hình trong video (`video_project_inspect` có lưới khung để đọc).
   - Con số: «ba nghìn» thành 3.000, «sáu năm» thành 6 năm, phần trăm viết %. Giữ đúng số người nói đưa ra.
