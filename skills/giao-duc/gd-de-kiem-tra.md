@@ -34,6 +34,7 @@ Cần: môn, lớp, kì (giữa / cuối kì I / II), phạm vi (các bài / ch�
 5. Gọi `create_exam` (versions = số mã đề, mặc định 4). App tự trộn câu và phương án, đổi đáp án theo từng mã, lập ma trận + bản đặc tả, ghi 4 tệp: đề (mọi mã), đáp án + hướng dẫn chấm, ma trận + đặc tả (Word ngang), ma trận Excel.
 6. Ma trận / bản đặc tả: mỗi câu có thể ghi «chapter» (Chủ đề/Chương) và «topic» (Nội dung/đơn vị kiến thức); bỏ trống thì app lấy theo yêu cầu cần đạt.
 7. Tổ chuyên môn muốn soát trước: chuyền qua chuỗi «Ra đề kiểm tra» của Văn phòng AI (Tổ chuyên môn AI) rồi mới gọi `create_exam`.
+8. Thầy cô giao bài trên Azota (azota.vn): đặt «azota» = "equation" — app ghi thêm «… - Azota.docx» đúng quy cách nhập đề Word của Azota (PHẦN I./II./III., «Câu n.», phương án mỗi dòng, bảng đáp án sau chữ «HẾT»; đề gốc mã đầu, Azota tự trộn). Azota hiện công thức sai thì xuất lại với «azota» = "text" (công thức thành chữ thường).
 
 # Xong
 Tóm tắt (số câu từng dạng, tỉ lệ mức độ, số mã) + «Tiếp theo…» (vd «Tiếp theo: bấm Xác nhận để lưu bộ đề — mã đầu là đề gốc, số câu trong bản đặc tả theo mã đó.»).
