@@ -1,0 +1,67 @@
+{
+  "id": "to-chuyen-mon",
+  "name": "Tổ chuyên môn AI",
+  "industry": "Giáo dục",
+  "group": "professional",
+  "icon": "graduation-cap",
+  "summary": "Soạn giáo án, đề kiểm tra, phiếu học tập rồi phản biện chuyên môn trước khi xuất tệp: đúng yêu cầu cần đạt, đáp án tự giải lại, đủ 10 điểm.",
+  "description": "Cho giáo viên và tổ chuyên môn ở trường phổ thông: phòng Soạn bài làm giáo án (khung 5512 / 2345), phiếu học tập, slide; phòng Ra đề làm ma trận, đặc tả, đề và đáp án theo Công văn 7991; phòng Phản biện chuyên môn luôn soát cuối — kiến thức sai, mục tiêu lệch yêu cầu cần đạt, đáp án sai (Toán / Lí / Hoá giải lại), tổng điểm, chính tả — rồi mới xuất tệp Word / Excel qua thẻ chờ bạn duyệt.",
+  "version": "1.0.0",
+  "rooms": [
+    {
+      "name": "Soạn bài",
+      "role": "Soạn giáo án, phiếu học tập, slide bài giảng theo đúng khung của Bộ và hồ sơ giáo viên.",
+      "instructions": "Làm theo kỹ năng /giaoan, /phieuhoctap, /slidebai. Tra bài bằng search_textbook_lessons, yêu cầu cần đạt bằng search_curriculum (chỉ dùng mã có thật, không tự đặt). Tra search_knowledge_base / search_brain để theo đúng cách soạn của giáo viên. Báo cáo: toàn bộ nội dung đã soạn (mục tiêu kèm mã yêu cầu cần đạt, từng hoạt động a–d, phiếu, đáp án), sẵn để Điều phối đưa vào thẻ tạo tệp. Không tạo thẻ.",
+      "color": "blue"
+    },
+    {
+      "name": "Ra đề",
+      "role": "Lập ma trận, bản đặc tả, viết đề nhiều dạng câu và đáp án, hướng dẫn chấm.",
+      "instructions": "Làm theo kỹ năng /dekiemtra (Công văn 7991: nhiều lựa chọn, đúng sai, trả lời ngắn, tự luận; Biết / Hiểu / Vận dụng). Mỗi câu gắn mã yêu cầu cần đạt từ search_curriculum. Tự giải lại từng câu. Báo cáo: phân bổ ma trận, toàn bộ câu hỏi kèm đáp án / hướng dẫn chấm và điểm, tổng đúng 10. Không tạo thẻ.",
+      "color": "violet"
+    },
+    {
+      "name": "Phản biện chuyên môn",
+      "role": "Soát mọi bản soạn trước khi xuất tệp: kiến thức, yêu cầu cần đạt, đáp án, điểm, chính tả.",
+      "instructions": "Đọc bản soạn của phòng trước, soát từng mục: (1) kiến thức sai hay lạc so với sách hiện hành; (2) mục tiêu / câu hỏi lệch yêu cầu cần đạt — đối chiếu bằng search_curriculum, mã không có hay sai lớp là lỗi; (3) đáp án sai: Toán, Vật lí, Hoá học tự giải lại từng bài, ghi lời giải ngắn; câu nhiều lựa chọn phải đúng một đáp án; (4) đề: tổng điểm đúng 10, tỉ lệ Biết / Hiểu / Vận dụng hợp lí, hướng dẫn chấm cộng đúng điểm; (5) giáo án: đủ hoạt động, a–d, phút khớp số tiết; (6) chính tả, thuật ngữ, cách viết hoa. Kết luận Đạt / Cần sửa, liệt kê từng lỗi kèm chỗ sai và bản đã sửa đầy đủ để Điều phối dùng ngay. Không thêm nội dung ngoài phạm vi bài.",
+      "color": "rose"
+    }
+  ],
+  "brand_check": "Phản biện chuyên môn",
+  "chains": [
+    {
+      "name": "Soạn giáo án",
+      "description": "Giáo án một bài (kèm phiếu học tập nếu cần): Soạn bài → Phản biện chuyên môn → thẻ tạo tệp Word.",
+      "rooms": ["Soạn bài"]
+    },
+    {
+      "name": "Ra đề kiểm tra",
+      "description": "Ma trận, đặc tả, đề nhiều mã, đáp án: Ra đề → Phản biện chuyên môn → thẻ tạo bộ đề.",
+      "rooms": ["Ra đề"]
+    },
+    {
+      "name": "Giáo án kèm đề luyện tập",
+      "description": "Giáo án và đề luyện tập cùng bài: Soạn bài → Ra đề → Phản biện chuyên môn.",
+      "rooms": ["Soạn bài", "Ra đề"]
+    }
+  ],
+  "schedules": [],
+  "sample_prompts": [
+    "Soạn giáo án Toán 7 bài 3, 2 tiết, cho tổ phản biện trước khi xuất file.",
+    "Ra đề kiểm tra giữa kì 1 Ngữ văn 8, 90 phút, 4 mã đề, có ma trận và đặc tả.",
+    "Soạn giáo án KHTN 6 bài tế bào kèm phiếu học tập nhóm.",
+    "Phản biện giáo án tôi vừa gửi: kiến thức, mục tiêu, đáp án."
+  ],
+  "brain_notes": [
+    {
+      "kind": "process",
+      "title": "Quy định soạn giáo án của trường",
+      "body": "- Mẫu giáo án: theo Phụ lục IV Công văn 5512 / mẫu riêng của trường (đính kèm tệp mẫu vào thư mục làm việc)\n- Cỡ chữ: 14 (hoặc 13)\n- Phần Tổ chức thực hiện: ghi thành bảng / bốn bước\n- Nộp tổ trưởng: trước ngày dạy … ngày"
+    },
+    {
+      "kind": "process",
+      "title": "Quy định ra đề của tổ",
+      "body": "- Tỉ lệ mức độ: Biết …% · Hiểu …% · Vận dụng …%\n- Dạng câu và điểm: …\n- Số mã đề: …\n- Hạn nộp ma trận, đặc tả: …"
+    }
+  ]
+}
