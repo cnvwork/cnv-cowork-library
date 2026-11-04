@@ -1,0 +1,103 @@
+{
+  "id": "talk_steps",
+  "version": 1,
+  "label": "Bài nói: sơ đồ bước",
+  "hint": "Quy trình / vòng lặp 3–5 bước: vòng tròn biểu tượng nối mũi tên chấm, hiện lần lượt theo lời; bước cuối màu nhấn.",
+  "group": "info",
+  "tags": [
+    "bài nói",
+    "quy trình",
+    "sơ đồ",
+    "các bước",
+    "vòng lặp"
+  ],
+  "seconds": 7,
+  "fields": [
+    {
+      "key": "kicker",
+      "label": "Nhãn nhỏ",
+      "placeholder": "Sự dịch chuyển",
+      "max": 50,
+      "optional": true
+    },
+    {
+      "key": "title",
+      "label": "Tiêu đề",
+      "placeholder": "Từ bán đa kênh tới [[gom một mối]]",
+      "max": 70
+    },
+    {
+      "key": "st1",
+      "label": "Bước 1 (tên | chú thích | biểu tượng)",
+      "placeholder": "Đa kênh | đa nền tảng | users",
+      "max": 70
+    },
+    {
+      "key": "st2",
+      "label": "Bước 2",
+      "placeholder": "Gom dữ liệu || database",
+      "max": 70
+    },
+    {
+      "key": "st3",
+      "label": "Bước 3",
+      "placeholder": "Phân loại | và xử lý | eye",
+      "max": 70,
+      "optional": true
+    },
+    {
+      "key": "st4",
+      "label": "Bước 4",
+      "placeholder": "Tự động hoá | chăm sóc · nhắc lại | chat",
+      "max": 70,
+      "optional": true
+    },
+    {
+      "key": "st5",
+      "label": "Bước 5",
+      "placeholder": "Chuyển đổi | qua đa kênh | cart",
+      "max": 70,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "cnv",
+      "label": "Tím cam",
+      "bg": "#170D33",
+      "bg2": "#3B1259",
+      "accent": "#FF6A3D",
+      "ink": "#FFFFFF",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "ocean",
+      "label": "Biển đêm",
+      "bg": "#071A33",
+      "bg2": "#0E3A5C",
+      "accent": "#2DD4BF",
+      "ink": "#04211D",
+      "text": "#F2FAFB"
+    },
+    {
+      "id": "paper",
+      "label": "Giấy sáng",
+      "bg": "#FBF8F3",
+      "bg2": "#EFE7FB",
+      "accent": "#E8552E",
+      "ink": "#FFFFFF",
+      "text": "#1B1530"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "whoosh",
+    "pop",
+    "ding"
+  ],
+  "rules": "Nhãn nhỏ + tiêu đề góc trái trên (chừa ô người nói). Khung ngang: các bước xếp một hàng giữa vùng chữ, vòng tròn 9–10vmin viền 0,35vmin màu phụ (bước cuối màu nhấn, có quầng), biểu tượng nét 1,9; mũi tên chấm nối các vòng chạy từ trái sang 0,35 giây. Khung dọc: các bước xếp một cột, nối mũi tên xuống. Bước hiện lần lượt đều tới 80% thời lượng (khớp lúc người nói liệt kê), vòng bật 0,6 → 1; tên bước 700 cỡ 3–3,3vmin, chú thích 500 cỡ 2,5vmin mờ. Tiếng: whoosh lúc vào, pop mỗi bước, ding ở bước cuối. Biểu tượng có sẵn: bolt, cart, chart, chat, check, clock, database, eye, gift, growth, heart, idea, loop, megaphone, phone, qr, search, shield, star, store, target, truck, user, users, warning."
+}

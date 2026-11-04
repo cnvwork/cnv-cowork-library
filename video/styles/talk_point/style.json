@@ -1,0 +1,76 @@
+{
+  "id": "talk_point",
+  "version": 1,
+  "label": "Bài nói: ý chính",
+  "hint": "Một ý của bài nói: nhãn nhỏ (vấn đề / thực tế / bước đầu), câu lớn có khối từ khoá, ô biểu tượng.",
+  "group": "info",
+  "tags": [
+    "bài nói",
+    "giải thích",
+    "ý chính",
+    "vấn đề",
+    "nhấn mạnh"
+  ],
+  "seconds": 5,
+  "fields": [
+    {
+      "key": "kicker",
+      "label": "Nhãn nhỏ",
+      "placeholder": "Vấn đề của đa số cửa hàng",
+      "max": 50,
+      "optional": true
+    },
+    {
+      "key": "title",
+      "label": "Câu lớn ([[…]] = khối từ khoá)",
+      "placeholder": "Dữ liệu [[phân mảnh]]: mỗi kênh một sổ khách riêng",
+      "max": 110
+    },
+    {
+      "key": "icon",
+      "label": "Biểu tượng",
+      "placeholder": "database",
+      "max": 20,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "cnv",
+      "label": "Tím cam",
+      "bg": "#170D33",
+      "bg2": "#3B1259",
+      "accent": "#FF6A3D",
+      "ink": "#FFFFFF",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "ocean",
+      "label": "Biển đêm",
+      "bg": "#071A33",
+      "bg2": "#0E3A5C",
+      "accent": "#2DD4BF",
+      "ink": "#04211D",
+      "text": "#F2FAFB"
+    },
+    {
+      "id": "paper",
+      "label": "Giấy sáng",
+      "bg": "#FBF8F3",
+      "bg2": "#EFE7FB",
+      "accent": "#E8552E",
+      "ink": "#FFFFFF",
+      "text": "#1B1530"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "whoosh",
+    "pop"
+  ],
+  "rules": "Ô biểu tượng màu nhấn (9–11vmin, bo 22%) bật 0–0,35 giây; nhãn nhỏ chữ hoa màu nhấn 2,6vmin có gạch đầu 0,15–0,5 giây; câu lớn 800 cỡ 6–9vmin hiện lên 0,3–0,9 giây, mỗi khối [[từ khoá]] quét màu từ trái 0,3 giây nối tiếp nhau sau 0,9 giây. Khối chữ canh trái, giữa theo chiều dọc vùng chữ (chừa góc ô người nói, 20% dưới cho phụ đề). Tiếng: whoosh lúc vào, pop khi khối từ khoá đầu tiên hiện. Biểu tượng có sẵn: bolt, cart, chart, chat, check, clock, database, eye, gift, growth, heart, idea, loop, megaphone, phone, qr, search, shield, star, store, target, truck, user, users, warning."
+}

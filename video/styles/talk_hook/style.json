@@ -1,0 +1,83 @@
+{
+  "id": "talk_hook",
+  "version": 1,
+  "label": "Bài nói: câu hỏi móc",
+  "hint": "Mở video giải thích: nhãn nguồn, câu hỏi lớn có khối từ khoá, ý phụ hiện dần theo lời, biểu tượng nổi.",
+  "group": "hook",
+  "tags": [
+    "bài nói",
+    "hội thảo",
+    "giải thích",
+    "câu hỏi",
+    "móc"
+  ],
+  "seconds": 6,
+  "fields": [
+    {
+      "key": "tags",
+      "label": "Nhãn nguồn (cách nhau bằng ·)",
+      "placeholder": "Trích bài chia sẻ · Hội thảo bán lẻ · Tên diễn giả",
+      "max": 80,
+      "optional": true
+    },
+    {
+      "key": "title",
+      "label": "Câu lớn ([[…]] = khối từ khoá)",
+      "placeholder": "Bán hàng [[đa kênh]]",
+      "max": 70
+    },
+    {
+      "key": "sub",
+      "label": "Ý phụ (hiện dần theo lời)",
+      "placeholder": "nhưng dữ liệu khách hàng nằm ở đâu?",
+      "max": 90,
+      "optional": true
+    },
+    {
+      "key": "icon",
+      "label": "Biểu tượng",
+      "placeholder": "database",
+      "max": 20,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "cnv",
+      "label": "Tím cam",
+      "bg": "#170D33",
+      "bg2": "#3B1259",
+      "accent": "#FF6A3D",
+      "ink": "#FFFFFF",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "ocean",
+      "label": "Biển đêm",
+      "bg": "#071A33",
+      "bg2": "#0E3A5C",
+      "accent": "#2DD4BF",
+      "ink": "#04211D",
+      "text": "#F2FAFB"
+    },
+    {
+      "id": "paper",
+      "label": "Giấy sáng",
+      "bg": "#FBF8F3",
+      "bg2": "#EFE7FB",
+      "accent": "#E8552E",
+      "ink": "#FFFFFF",
+      "text": "#1B1530"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "whoosh",
+    "pop"
+  ],
+  "rules": "Nhãn nguồn là các viên chữ hoa 2,5vmin (viên đầu viền màu nhấn) hiện 0–0,4 giây. Câu lớn 800 cỡ 7–10vmin lộ từng dòng (snap) 0,15–0,7 giây, từ khoá trong [[ ]] trên khối màu nhấn. Ý phụ 600 cỡ 4,5–6vmin hiện từng chữ đều tới 75% thời lượng (khớp lời đang nói). Ô biểu tượng màu nhấn bo 22% nổi nhẹ ở góc phải dưới (khung dọc: góc trái trên, nhãn nguồn ngay dưới; câu lớn + ý phụ ở thân, dưới ô người nói). Chừa góc phải trên (ô người nói) và 20% dưới (phụ đề). Tiếng: whoosh lúc vào, pop khi ô biểu tượng bật. Biểu tượng có sẵn: bolt, cart, chart, chat, check, clock, database, eye, gift, growth, heart, idea, loop, megaphone, phone, qr, search, shield, star, store, target, truck, user, users, warning."
+}

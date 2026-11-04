@@ -1,0 +1,90 @@
+{
+  "id": "talk_end",
+  "version": 1,
+  "label": "Bài nói: thẻ kết",
+  "hint": "Kết video giải thích: biểu tượng tròn, câu chốt, dòng giải pháp, nút website + hotline.",
+  "group": "ending",
+  "tags": [
+    "bài nói",
+    "kết",
+    "kêu gọi",
+    "liên hệ",
+    "website"
+  ],
+  "seconds": 5,
+  "fields": [
+    {
+      "key": "title",
+      "label": "Câu chốt",
+      "placeholder": "Gom dữ liệu để [[tăng trưởng]]",
+      "max": 70
+    },
+    {
+      "key": "sub",
+      "label": "Dòng giải pháp",
+      "placeholder": "Một sổ khách · chăm sóc tự động · bán lại đúng lúc",
+      "max": 90,
+      "optional": true
+    },
+    {
+      "key": "url",
+      "label": "Website",
+      "placeholder": "tencuahang.vn",
+      "max": 40,
+      "optional": true
+    },
+    {
+      "key": "phone",
+      "label": "Hotline",
+      "placeholder": "Hotline 09xx xxx xxx",
+      "max": 40,
+      "optional": true
+    },
+    {
+      "key": "icon",
+      "label": "Biểu tượng",
+      "placeholder": "heart",
+      "max": 20,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "cnv",
+      "label": "Tím cam",
+      "bg": "#170D33",
+      "bg2": "#3B1259",
+      "accent": "#FF6A3D",
+      "ink": "#FFFFFF",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "ocean",
+      "label": "Biển đêm",
+      "bg": "#071A33",
+      "bg2": "#0E3A5C",
+      "accent": "#2DD4BF",
+      "ink": "#04211D",
+      "text": "#F2FAFB"
+    },
+    {
+      "id": "paper",
+      "label": "Giấy sáng",
+      "bg": "#FBF8F3",
+      "bg2": "#EFE7FB",
+      "accent": "#E8552E",
+      "ink": "#FFFFFF",
+      "text": "#1B1530"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "whoosh",
+    "ding"
+  ],
+  "rules": "Mọi thứ canh giữa vùng chữ. Vòng biểu tượng màu nhấn 11vmin bật 0–0,45 giây (outBack) có quầng; câu chốt 800 cỡ 6–8vmin hiện 0,3–0,8 giây; dòng giải pháp 500 cỡ 2,8vmin mờ; hai nút viên: website nền màu nhấn chữ đậm, hotline viền mờ — trượt lên lần lượt từ 0,9 giây. Chỉ dùng website / số điện thoại thật của shop. Thẻ kết không bật ô người nói (khung dọc khối chữ lên cao tới vùng ô đó). Tiếng: whoosh lúc vào, ding khi nút hiện. Biểu tượng có sẵn: bolt, cart, chart, chat, check, clock, database, eye, gift, growth, heart, idea, loop, megaphone, phone, qr, search, shield, star, store, target, truck, user, users, warning."
+}

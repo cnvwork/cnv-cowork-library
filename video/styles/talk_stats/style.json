@@ -1,0 +1,94 @@
+{
+  "id": "talk_stats",
+  "version": 1,
+  "label": "Bài nói: số liệu",
+  "hint": "Hai ba con số của diễn giả trên thẻ: ô biểu tượng, số lớn, chú thích, gạch màu dưới thẻ, nguồn.",
+  "group": "info",
+  "tags": [
+    "bài nói",
+    "số liệu",
+    "bằng chứng",
+    "thống kê"
+  ],
+  "seconds": 6,
+  "fields": [
+    {
+      "key": "kicker",
+      "label": "Nhãn nhỏ",
+      "placeholder": "Con số trong bài nói",
+      "max": 50,
+      "optional": true
+    },
+    {
+      "key": "title",
+      "label": "Tiêu đề",
+      "placeholder": "Khách cũ mua lại [[nhiều hơn]]",
+      "max": 70
+    },
+    {
+      "key": "s1",
+      "label": "Số 1 (số | chú thích | biểu tượng)",
+      "placeholder": "5+ năm | bán hàng đa kênh | clock",
+      "max": 80
+    },
+    {
+      "key": "s2",
+      "label": "Số 2 (số | chú thích | biểu tượng)",
+      "placeholder": "1.200+ | khách quay lại mỗi tháng | users",
+      "max": 80
+    },
+    {
+      "key": "s3",
+      "label": "Số 3 (tuỳ chọn)",
+      "placeholder": "",
+      "max": 80,
+      "optional": true
+    },
+    {
+      "key": "source",
+      "label": "Nguồn",
+      "placeholder": "Nguồn: chia sẻ của diễn giả tại sự kiện",
+      "max": 90,
+      "optional": true
+    }
+  ],
+  "palettes": [
+    {
+      "id": "cnv",
+      "label": "Tím cam",
+      "bg": "#170D33",
+      "bg2": "#3B1259",
+      "accent": "#FF6A3D",
+      "ink": "#FFFFFF",
+      "text": "#FFFFFF"
+    },
+    {
+      "id": "ocean",
+      "label": "Biển đêm",
+      "bg": "#071A33",
+      "bg2": "#0E3A5C",
+      "accent": "#2DD4BF",
+      "ink": "#04211D",
+      "text": "#F2FAFB"
+    },
+    {
+      "id": "paper",
+      "label": "Giấy sáng",
+      "bg": "#FBF8F3",
+      "bg2": "#EFE7FB",
+      "accent": "#E8552E",
+      "ink": "#FFFFFF",
+      "text": "#1B1530"
+    }
+  ],
+  "fonts": {
+    "display": "Be Vietnam Pro",
+    "body": "Be Vietnam Pro",
+    "number": "Be Vietnam Pro"
+  },
+  "sfx": [
+    "whoosh",
+    "pop"
+  ],
+  "rules": "Nhãn nhỏ + tiêu đề 800 cỡ 5,5–7vmin góc trái trên (chừa ô người nói). Hai / ba thẻ số nền trong mờ bo 2,2vmin hiện lần lượt cách 0,35 giây từ 0,6 giây, trượt lên 4vmin; mỗi thẻ: ô biểu tượng (thẻ đầu màu nhấn, thẻ sau màu phụ), số 800 cỡ 7–9vmin, chú thích 600 cỡ 2,7vmin ≤ 2 dòng, gạch màu dưới chạy hết bề ngang 0,5 giây. Nguồn 2,5vmin mờ dưới thẻ. Chỉ số người nói / người dùng đưa, không bịa. Tiếng: whoosh lúc vào, pop mỗi thẻ. Biểu tượng có sẵn: bolt, cart, chart, chat, check, clock, database, eye, gift, growth, heart, idea, loop, megaphone, phone, qr, search, shield, star, store, target, truck, user, users, warning."
+}

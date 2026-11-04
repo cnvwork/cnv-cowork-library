@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #170D33; --bg2: #3B1259; --accent: #FF6A3D; --ink: #FFFFFF; --text: #FFFFFF; --font-display: "Be Vietnam Pro", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; --font-number: "Be Vietnam Pro", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { color: var(--text); font-family: var(--font-body); background:
+  radial-gradient(120% 110% at 105% 108%, color-mix(in srgb, var(--accent) 26%, transparent) 0%, transparent 52%),
+  radial-gradient(90% 90% at -5% -10%, color-mix(in srgb, var(--bg2) 75%, transparent) 0%, transparent 62%),
+  linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%); }
+.kicker { position: absolute; display: flex; align-items: center; color: var(--accent); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap; }
+.kicker::before { content: ''; display: block; width: 2.4em; height: 0.18em; margin-right: 0.8em; border-radius: 1em; background: var(--accent); }
+.title { position: absolute; font-family: var(--font-display); font-weight: 800; line-height: 1.22; letter-spacing: -0.01em; text-wrap: balance; }
+.hl { background: var(--accent); color: var(--ink); padding: 0 0.14em; border-radius: 0.12em; white-space: nowrap; }
+.glow { position: absolute; left: 52%; top: 18%; width: 95vmin; height: 95vmin; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%); }
+.soft { color: color-mix(in srgb, var(--text) 70%, transparent); }
+.tile { display: flex; align-items: center; justify-content: center; border-radius: 22%; background: var(--accent); color: var(--ink); box-shadow: 0 0.8vmin 2.4vmin color-mix(in srgb, var(--accent) 35%, transparent); }
+.tile.alt { background: color-mix(in srgb, var(--text) 20%, var(--bg2)); color: var(--text); box-shadow: none; }
+.tile svg, .node svg { width: 56%; height: 56%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.card { position: absolute; border-radius: 2.2vmin; background: color-mix(in srgb, var(--text) 7%, transparent); border: 0.14vmin solid color-mix(in srgb, var(--text) 12%, transparent); overflow: hidden; }
+.stat { position: absolute; display: flex; flex-direction: column; }
+.stat .num { font-family: var(--font-number); font-weight: 800; line-height: 1.05; letter-spacing: -0.01em; white-space: nowrap; }
+.stat .lab { font-weight: 600; line-height: 1.3; color: color-mix(in srgb, var(--text) 78%, transparent); text-wrap: balance; }
+.stat .txt { display: flex; flex-direction: column; gap: 0.8vmin; min-width: 0; }
+.stat .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 0.5vmin; background: var(--accent); transform-origin: left; }
+.stat.second .bar { background: color-mix(in srgb, var(--text) 45%, var(--bg2)); }
+.source { position: absolute; font-weight: 500; color: color-mix(in srgb, var(--text) 50%, transparent); }
+</style>
+</head>
+<body>
+<div class="glow" id="glow"></div>
+<div class="kicker" id="kicker"></div>
+<div class="title" id="title"></div>
+<div id="stats"></div>
+<div class="source" id="source"></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+const ICONS = {"users": "<circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5\"/><circle cx=\"16.6\" cy=\"9\" r=\"2.5\"/><path d=\"M15.6 14.2c2.4-.2 4.3 1.3 5 4.3\"/>", "user": "<circle cx=\"12\" cy=\"8.5\" r=\"3.6\"/><path d=\"M5 20c.8-3.8 3.6-5.8 7-5.8s6.2 2 7 5.8\"/>", "database": "<ellipse cx=\"12\" cy=\"6\" rx=\"7\" ry=\"2.8\"/><path d=\"M5 6v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8V6\"/><path d=\"M5 12v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-6\"/>", "eye": "<path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>", "chat": "<path d=\"M4 5.5h16v10H9.5L5 19v-3.5H4z\"/><path d=\"M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01\"/>", "cart": "<path d=\"M3 4.5h2.2l2.1 9.7h10.4L20 7.5H6.3\"/><circle cx=\"9\" cy=\"19\" r=\"1.5\"/><circle cx=\"17\" cy=\"19\" r=\"1.5\"/>", "qr": "<rect x=\"4\" y=\"4\" width=\"6\" height=\"6\" rx=\"1.2\"/><rect x=\"14\" y=\"4\" width=\"6\" height=\"6\" rx=\"1.2\"/><rect x=\"4\" y=\"14\" width=\"6\" height=\"6\" rx=\"1.2\"/><path d=\"M14 14h2.5v2.5H14zM18 18h2v2h-2zM14 19.5h1M19.5 14v1.5\"/>", "phone": "<rect x=\"7\" y=\"2.5\" width=\"10\" height=\"19\" rx=\"2.2\"/><path d=\"M11 18.5h2\"/>", "heart": "<path d=\"M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z\"/>", "chart": "<path d=\"M4 20h16\"/><path d=\"M7 16.5v-5M12 16.5V7M17 16.5V9.5\"/>", "growth": "<path d=\"M4 17.5 9.5 12 13 15.5l7-7.5\"/><path d=\"M15 8h5v5\"/>", "target": "<circle cx=\"12\" cy=\"12\" r=\"8\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/><circle cx=\"12\" cy=\"12\" r=\".9\"/>", "bolt": "<path d=\"M13 2.5 5 13.5h6l-1 8 8-11h-6z\"/>", "shield": "<path d=\"M12 3 5 6v5.5c0 4.4 3 7.8 7 9.5 4-1.7 7-5.1 7-9.5V6z\"/><path d=\"m9 12 2 2 4-4\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path d=\"M12 7.5V12l3 2\"/>", "star": "<path d=\"m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z\"/>", "check": "<path d=\"m5 12.5 4.5 4.5L19 7.5\"/>", "gift": "<rect x=\"4\" y=\"9\" width=\"16\" height=\"11\" rx=\"1.2\"/><path d=\"M3 9h18M12 9v11\"/><path d=\"M12 9S10.3 4.6 8 5.2C6.2 5.7 6.8 9 12 9zM12 9s1.7-4.4 4-3.8c1.8.5 1.2 3.8-4 3.8z\"/>", "truck": "<path d=\"M3 6.5h11v9H3zM14 10h4l3 3v2.5h-7\"/><circle cx=\"7\" cy=\"17.5\" r=\"1.7\"/><circle cx=\"17.5\" cy=\"17.5\" r=\"1.7\"/>", "store": "<path d=\"M4 9.5 5.5 4.5h13L20 9.5\"/><path d=\"M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0\"/><path d=\"M5.5 12v8h13v-8\"/><path d=\"M10 20v-4.5h4V20\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"m16 16 4.5 4.5\"/>", "megaphone": "<path d=\"M4 10v4h3l7 4.5v-13L7 10z\"/><path d=\"M17.5 9.5a3.5 3.5 0 0 1 0 5\"/>", "loop": "<path d=\"M19.5 12a7.5 7.5 0 0 1-13.4 4.6M4.5 12a7.5 7.5 0 0 1 13.4-4.6\"/><path d=\"M18 3.5v4h-4M6 20.5v-4h4\"/>", "idea": "<path d=\"M9 18h6M10 21h4\"/><path d=\"M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z\"/>", "warning": "<path d=\"M12 3.5 2.8 19.5h18.4z\"/><path d=\"M12 9.5v4.5M12 17h.01\"/>"};
+const icon = (id, fallback) => '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[id] || ICONS[fallback] || ICONS.star) + '</svg>';
+/**
+ * Chữ có [[từ khoá]] → khối màu nhấn (không xuống dòng giữa khối); trả các khối. Chữ thường mỗi chữ một nút: khung chữ đo
+ * đúng từng dòng (câu xuống dòng không bị bộ kiểm coi là đè lên khối từ khoá).
+ */
+function markup(el, text) {
+  el.textContent = '';
+  const parts = String(text || '').split(/(\[\[[^\]]+\]\])/);
+  const blocks = [];
+  for (const part of parts) {
+    if (!part) continue;
+    const m = /^\[\[([^\]]+)\]\]$/.exec(part);
+    if (m) {
+      const span = document.createElement('span');
+      span.className = 'hl';
+      span.textContent = m[1].trim();
+      el.appendChild(span);
+      blocks.push(span);
+      continue;
+    }
+    for (const piece of part.split(/(\s+)/)) {
+      if (!piece) continue;
+      if (/^\s+$/.test(piece)) el.appendChild(document.createTextNode(' '));
+      else {
+        const word = document.createElement('span');
+        word.textContent = piece;
+        el.appendChild(word);
+      }
+    }
+  }
+  return blocks;
+}
+/** Quầng màu nhấn trôi chậm sau chữ (nền không đứng im). */
+function ambient(t) {
+  const g = $('glow');
+  if (!g) return;
+  const v = k.vmin;
+  g.style.transform = 'translate(' + Math.sin(t * 0.45) * v * 7 + 'px,' + Math.cos(t * 0.35) * v * 5 + 'px)';
+}
+/** «Nhãn | chú thích | biểu tượng» → { label, sub, icon }. */
+function item(text) {
+  const [label, sub, ic] = String(text || '').split('|').map((s) => s.trim());
+  return { label: label || '', sub: sub || '', icon: (ic || '').toLowerCase() };
+}
+const wide = () => k.W / k.H > 1.2;
+/**
+ * Vùng chữ: chừa góc phải trên cho ô người nói (thẻ phủ) và mép dưới cho phụ đề. Khung dọc: phần đầu (`headTop`, tới
+ * `headRight`) nằm cạnh ô người nói, thân (`top`…`bottom`) dưới ô người nói, trên phụ đề.
+ */
+function area() {
+  const W = k.W, H = k.H, v = k.vmin;
+  if (wide()) return { left: W * 0.055, right: W * 0.945, top: H * 0.085, bottom: H * 0.79, textRight: W * 0.64, headTop: H * 0.085, headRight: W * 0.64 };
+  const right = W - Math.max(k.safe.right, W * 0.08);
+  return { left: W * 0.08, right, top: H * 0.34, bottom: H * 0.64, textRight: right, headTop: H * 0.1, headRight: W * 0.64 };
+}
+const fadeOut = (t) => 1 - k.ease.inCubic(k.clamp((t - (S - 0.28)) / 0.28));
+
+const kicker = k.field('kicker');
+const stats = ['s1', 's2', 's3'].map((key) => item(k.field(key))).filter((s) => s.label);
+let cards = [];
+let laid = false;
+function layout() {
+  laid = true;
+  const a = area();
+  const v = k.vmin;
+  const kick = $('kicker');
+  kick.textContent = kicker;
+  kick.style.fontSize = v * 2.6 + 'px';
+  if (!kicker) kick.style.display = 'none';
+  kick.style.left = a.left + 'px';
+  kick.style.top = a.headTop + 'px';
+  const title = $('title');
+  const width = a.headRight - a.left;
+  title.style.left = a.left + 'px';
+  title.style.width = width + 'px';
+  markup(title, k.field('title', 'Con số trong bài nói'));
+  k.fit(title, { max: v * (wide() ? 6.4 : 7), min: v * 4.6, maxWidth: width, maxHeight: v * 7 * 1.22 * 2.2 });
+  const kickH = kicker ? kick.getBoundingClientRect().height + v * 1.6 : 0;
+  title.style.top = a.headTop + kickH + 'px';
+  const headBottom = a.headTop + kickH + title.getBoundingClientRect().height;
+  const n = Math.max(1, stats.length);
+  const gap = v * 2.6;
+  const host = $('stats');
+  const cw = wide() ? Math.min(v * 46, (a.right - a.left - gap * (n - 1)) / n) : a.right - a.left;
+  const bodyTop = Math.max(a.top, headBottom + v * 4);
+  const ch = wide() ? v * 30 : Math.min(v * 22, (a.bottom - bodyTop - gap * (n - 1)) / n);
+  const total = wide() ? cw * n + gap * (n - 1) : ch * n + gap * (n - 1);
+  const startX = wide() ? (k.W - total) / 2 : a.left;
+  const startY = wide() ? Math.max(headBottom + v * 5, (a.bottom + headBottom) / 2 - ch / 2) : bodyTop;
+  cards = stats.map((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'card stat' + (i ? ' second' : '');
+    el.style.width = cw + 'px';
+    el.style.height = ch + 'px';
+    el.style.left = (wide() ? startX + i * (cw + gap) : startX) + 'px';
+    el.style.top = (wide() ? startY : startY + i * (ch + gap)) + 'px';
+    el.style.padding = v * 3 + 'px';
+    el.style.gap = v * 1.4 + 'px';
+    const size = v * (wide() ? 6.4 : 5.6);
+    el.innerHTML = '<div class="tile' + (i ? ' alt' : '') + '" style="flex:none;width:' + size + 'px;height:' + size + 'px">' + icon(s.icon, i ? 'users' : 'clock') + '</div><div class="txt"><div class="num"></div><div class="lab"></div></div><div class="bar"></div>';
+    host.appendChild(el);
+    const num = el.querySelector('.num');
+    num.textContent = s.label;
+    const lab = el.querySelector('.lab');
+    lab.textContent = s.sub;
+    lab.style.fontSize = v * 2.7 + 'px';
+    el.style.flexDirection = wide() ? 'column' : 'row';
+    if (wide()) el.style.justifyContent = 'flex-end';
+    else {
+      el.style.alignItems = 'center';
+      el.style.gap = v * 3 + 'px';
+    }
+    k.fit(num, { max: v * (wide() ? 8.4 : 7.4), min: v * 4.6, maxWidth: wide() ? cw - v * 6 : cw - v * 9 - size });
+    return el;
+  });
+  const src = $('source');
+  src.textContent = k.field('source');
+  src.style.fontSize = v * 2.5 + 'px';
+  src.style.left = startX + 'px';
+  src.style.top = (wide() ? startY + ch + v * 2.4 : startY + total + v * 2) + 'px';
+}
+cwSfx('whoosh', 0, 0.5);
+stats.forEach((_, i) => cwSfx('pop', 0.6 + i * 0.35, 0.55));
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  ambient(t);
+  const out = fadeOut(t);
+  const pk = k.ease.outCubic(k.clamp(t / 0.35));
+  $('kicker').style.opacity = String(pk * out);
+  const pt = k.ease.snap(k.clamp((t - 0.1) / 0.5));
+  $('title').style.opacity = String(Math.min(1, pt * 1.3) * out);
+  $('title').style.transform = 'translateY(' + (1 - pt) * k.vmin * 2.4 + 'px)';
+  cards.forEach((el, i) => {
+    const p = k.ease.outBack(k.clamp((t - 0.6 - i * 0.35) / 0.5));
+    el.style.opacity = String(k.clamp((t - 0.6 - i * 0.35) / 0.2) * out);
+    el.style.transform = 'translateY(' + (1 - p) * k.vmin * 4 + 'px)';
+    el.querySelector('.bar').style.transform = 'scaleX(' + k.ease.inOutCubic(k.clamp((t - 0.9 - i * 0.35) / 0.5)) + ')';
+  });
+  $('source').style.opacity = String(k.ease.outCubic(k.clamp((t - 1.6) / 0.4)) * out);
+};
+</script>
+</body>
+</html>

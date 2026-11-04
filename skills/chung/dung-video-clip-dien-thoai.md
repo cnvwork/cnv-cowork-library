@@ -35,6 +35,9 @@ Không làm vượt một điểm duyệt khi người dùng chưa gật:
 4. **Xuất** — thẻ xuất (người dùng bấm xác nhận), đọc kết quả kiểm tệp xuất, kèm nội dung đăng.
 Người dùng nói «làm luôn, không cần hỏi» thì gộp 1–3 thành một lần báo cuối, vẫn dừng ở thẻ xuất.
 
+Video là **một người nói dài** (bài chia sẻ ở hội thảo, phỏng vấn, bài giảng) và người dùng muốn video giải thích dễ hiểu, có thẻ
+phủ lên hình trong lúc lời vẫn chạy: làm theo kỹ năng «Dựng video giải thích từ bài nói» (/giaithich).
+
 # 0. Đồ nghề
 - Thiếu phần nào của bộ làm video (bộ dựng, phông, phong cách, tiếng hiệu ứng, giọng đọc, chép lời trên máy): đề xuất thẻ
   `video_kit_install` với đúng các phần đó. Tự cắt lặng / ậm ừ và phụ đề trên máy cần phần «chép lời trên máy».

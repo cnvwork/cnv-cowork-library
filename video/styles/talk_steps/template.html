@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --bg: #170D33; --bg2: #3B1259; --accent: #FF6A3D; --ink: #FFFFFF; --text: #FFFFFF; --font-display: "Be Vietnam Pro", sans-serif; --font-body: "Be Vietnam Pro", sans-serif; --font-number: "Be Vietnam Pro", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { color: var(--text); font-family: var(--font-body); background:
+  radial-gradient(120% 110% at 105% 108%, color-mix(in srgb, var(--accent) 26%, transparent) 0%, transparent 52%),
+  radial-gradient(90% 90% at -5% -10%, color-mix(in srgb, var(--bg2) 75%, transparent) 0%, transparent 62%),
+  linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%); }
+.kicker { position: absolute; display: flex; align-items: center; color: var(--accent); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap; }
+.kicker::before { content: ''; display: block; width: 2.4em; height: 0.18em; margin-right: 0.8em; border-radius: 1em; background: var(--accent); }
+.title { position: absolute; font-family: var(--font-display); font-weight: 800; line-height: 1.22; letter-spacing: -0.01em; text-wrap: balance; }
+.hl { background: var(--accent); color: var(--ink); padding: 0 0.14em; border-radius: 0.12em; white-space: nowrap; }
+.glow { position: absolute; left: 52%; top: 18%; width: 95vmin; height: 95vmin; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%); }
+.soft { color: color-mix(in srgb, var(--text) 70%, transparent); }
+.tile { display: flex; align-items: center; justify-content: center; border-radius: 22%; background: var(--accent); color: var(--ink); box-shadow: 0 0.8vmin 2.4vmin color-mix(in srgb, var(--accent) 35%, transparent); }
+.tile.alt { background: color-mix(in srgb, var(--text) 20%, var(--bg2)); color: var(--text); box-shadow: none; }
+.tile svg, .node svg { width: 56%; height: 56%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.card { position: absolute; border-radius: 2.2vmin; background: color-mix(in srgb, var(--text) 7%, transparent); border: 0.14vmin solid color-mix(in srgb, var(--text) 12%, transparent); overflow: hidden; }
+.node { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--text);
+  border: 0.35vmin solid color-mix(in srgb, var(--text) 38%, var(--bg2)); background: color-mix(in srgb, var(--text) 8%, transparent); }
+.node.last { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 1.2vmin color-mix(in srgb, var(--accent) 18%, transparent); }
+.step { position: absolute; text-align: center; }
+.step b { display: block; font-weight: 700; line-height: 1.25; }
+.step small { display: block; font-weight: 500; line-height: 1.3; color: color-mix(in srgb, var(--text) 62%, transparent); }
+.link { position: absolute; height: 0; border-top: 0.32vmin dotted color-mix(in srgb, var(--accent) 80%, transparent); transform-origin: left; }
+.link::after { content: ''; position: absolute; right: -0.4vmin; top: -1.05vmin; border: 0.9vmin solid transparent; border-left-color: color-mix(in srgb, var(--accent) 90%, transparent); }
+.vlink { position: absolute; width: 0; border-left: 0.32vmin dotted color-mix(in srgb, var(--accent) 80%, transparent); transform-origin: top; }
+</style>
+</head>
+<body>
+<div class="glow" id="glow"></div>
+<div class="kicker" id="kicker"></div>
+<div class="title" id="title"></div>
+<div id="flow"></div>
+<script>
+const k = window.cwKit;
+k.vars();
+const S = (window.CW_DATA && window.CW_DATA.seconds) || window.CW.seconds;
+const $ = (id) => document.getElementById(id);
+const ICONS = {"users": "<circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5\"/><circle cx=\"16.6\" cy=\"9\" r=\"2.5\"/><path d=\"M15.6 14.2c2.4-.2 4.3 1.3 5 4.3\"/>", "user": "<circle cx=\"12\" cy=\"8.5\" r=\"3.6\"/><path d=\"M5 20c.8-3.8 3.6-5.8 7-5.8s6.2 2 7 5.8\"/>", "database": "<ellipse cx=\"12\" cy=\"6\" rx=\"7\" ry=\"2.8\"/><path d=\"M5 6v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8V6\"/><path d=\"M5 12v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-6\"/>", "eye": "<path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>", "chat": "<path d=\"M4 5.5h16v10H9.5L5 19v-3.5H4z\"/><path d=\"M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01\"/>", "cart": "<path d=\"M3 4.5h2.2l2.1 9.7h10.4L20 7.5H6.3\"/><circle cx=\"9\" cy=\"19\" r=\"1.5\"/><circle cx=\"17\" cy=\"19\" r=\"1.5\"/>", "qr": "<rect x=\"4\" y=\"4\" width=\"6\" height=\"6\" rx=\"1.2\"/><rect x=\"14\" y=\"4\" width=\"6\" height=\"6\" rx=\"1.2\"/><rect x=\"4\" y=\"14\" width=\"6\" height=\"6\" rx=\"1.2\"/><path d=\"M14 14h2.5v2.5H14zM18 18h2v2h-2zM14 19.5h1M19.5 14v1.5\"/>", "phone": "<rect x=\"7\" y=\"2.5\" width=\"10\" height=\"19\" rx=\"2.2\"/><path d=\"M11 18.5h2\"/>", "heart": "<path d=\"M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z\"/>", "chart": "<path d=\"M4 20h16\"/><path d=\"M7 16.5v-5M12 16.5V7M17 16.5V9.5\"/>", "growth": "<path d=\"M4 17.5 9.5 12 13 15.5l7-7.5\"/><path d=\"M15 8h5v5\"/>", "target": "<circle cx=\"12\" cy=\"12\" r=\"8\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/><circle cx=\"12\" cy=\"12\" r=\".9\"/>", "bolt": "<path d=\"M13 2.5 5 13.5h6l-1 8 8-11h-6z\"/>", "shield": "<path d=\"M12 3 5 6v5.5c0 4.4 3 7.8 7 9.5 4-1.7 7-5.1 7-9.5V6z\"/><path d=\"m9 12 2 2 4-4\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path d=\"M12 7.5V12l3 2\"/>", "star": "<path d=\"m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z\"/>", "check": "<path d=\"m5 12.5 4.5 4.5L19 7.5\"/>", "gift": "<rect x=\"4\" y=\"9\" width=\"16\" height=\"11\" rx=\"1.2\"/><path d=\"M3 9h18M12 9v11\"/><path d=\"M12 9S10.3 4.6 8 5.2C6.2 5.7 6.8 9 12 9zM12 9s1.7-4.4 4-3.8c1.8.5 1.2 3.8-4 3.8z\"/>", "truck": "<path d=\"M3 6.5h11v9H3zM14 10h4l3 3v2.5h-7\"/><circle cx=\"7\" cy=\"17.5\" r=\"1.7\"/><circle cx=\"17.5\" cy=\"17.5\" r=\"1.7\"/>", "store": "<path d=\"M4 9.5 5.5 4.5h13L20 9.5\"/><path d=\"M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0\"/><path d=\"M5.5 12v8h13v-8\"/><path d=\"M10 20v-4.5h4V20\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"m16 16 4.5 4.5\"/>", "megaphone": "<path d=\"M4 10v4h3l7 4.5v-13L7 10z\"/><path d=\"M17.5 9.5a3.5 3.5 0 0 1 0 5\"/>", "loop": "<path d=\"M19.5 12a7.5 7.5 0 0 1-13.4 4.6M4.5 12a7.5 7.5 0 0 1 13.4-4.6\"/><path d=\"M18 3.5v4h-4M6 20.5v-4h4\"/>", "idea": "<path d=\"M9 18h6M10 21h4\"/><path d=\"M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z\"/>", "warning": "<path d=\"M12 3.5 2.8 19.5h18.4z\"/><path d=\"M12 9.5v4.5M12 17h.01\"/>"};
+const icon = (id, fallback) => '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[id] || ICONS[fallback] || ICONS.star) + '</svg>';
+/**
+ * Chữ có [[từ khoá]] → khối màu nhấn (không xuống dòng giữa khối); trả các khối. Chữ thường mỗi chữ một nút: khung chữ đo
+ * đúng từng dòng (câu xuống dòng không bị bộ kiểm coi là đè lên khối từ khoá).
+ */
+function markup(el, text) {
+  el.textContent = '';
+  const parts = String(text || '').split(/(\[\[[^\]]+\]\])/);
+  const blocks = [];
+  for (const part of parts) {
+    if (!part) continue;
+    const m = /^\[\[([^\]]+)\]\]$/.exec(part);
+    if (m) {
+      const span = document.createElement('span');
+      span.className = 'hl';
+      span.textContent = m[1].trim();
+      el.appendChild(span);
+      blocks.push(span);
+      continue;
+    }
+    for (const piece of part.split(/(\s+)/)) {
+      if (!piece) continue;
+      if (/^\s+$/.test(piece)) el.appendChild(document.createTextNode(' '));
+      else {
+        const word = document.createElement('span');
+        word.textContent = piece;
+        el.appendChild(word);
+      }
+    }
+  }
+  return blocks;
+}
+/** Quầng màu nhấn trôi chậm sau chữ (nền không đứng im). */
+function ambient(t) {
+  const g = $('glow');
+  if (!g) return;
+  const v = k.vmin;
+  g.style.transform = 'translate(' + Math.sin(t * 0.45) * v * 7 + 'px,' + Math.cos(t * 0.35) * v * 5 + 'px)';
+}
+/** «Nhãn | chú thích | biểu tượng» → { label, sub, icon }. */
+function item(text) {
+  const [label, sub, ic] = String(text || '').split('|').map((s) => s.trim());
+  return { label: label || '', sub: sub || '', icon: (ic || '').toLowerCase() };
+}
+const wide = () => k.W / k.H > 1.2;
+/**
+ * Vùng chữ: chừa góc phải trên cho ô người nói (thẻ phủ) và mép dưới cho phụ đề. Khung dọc: phần đầu (`headTop`, tới
+ * `headRight`) nằm cạnh ô người nói, thân (`top`…`bottom`) dưới ô người nói, trên phụ đề.
+ */
+function area() {
+  const W = k.W, H = k.H, v = k.vmin;
+  if (wide()) return { left: W * 0.055, right: W * 0.945, top: H * 0.085, bottom: H * 0.79, textRight: W * 0.64, headTop: H * 0.085, headRight: W * 0.64 };
+  const right = W - Math.max(k.safe.right, W * 0.08);
+  return { left: W * 0.08, right, top: H * 0.34, bottom: H * 0.64, textRight: right, headTop: H * 0.1, headRight: W * 0.64 };
+}
+const fadeOut = (t) => 1 - k.ease.inCubic(k.clamp((t - (S - 0.28)) / 0.28));
+
+const kicker = k.field('kicker');
+const steps = ['st1', 'st2', 'st3', 'st4', 'st5'].map((key) => item(k.field(key))).filter((s) => s.label);
+const ICON_DEFAULT = ['users', 'database', 'eye', 'chat', 'cart'];
+let nodes = [];
+let links = [];
+let labels = [];
+let laid = false;
+function layout() {
+  laid = true;
+  const a = area();
+  const v = k.vmin;
+  const kick = $('kicker');
+  kick.textContent = kicker;
+  kick.style.fontSize = v * 2.6 + 'px';
+  if (!kicker) kick.style.display = 'none';
+  kick.style.left = a.left + 'px';
+  kick.style.top = a.headTop + 'px';
+  const title = $('title');
+  const width = a.headRight - a.left;
+  title.style.left = a.left + 'px';
+  title.style.width = width + 'px';
+  markup(title, k.field('title', 'Các bước'));
+  k.fit(title, { max: v * (wide() ? 6.4 : 7), min: v * 4.6, maxWidth: width, maxHeight: v * 7 * 1.22 * 2.2 });
+  const kickH = kicker ? kick.getBoundingClientRect().height + v * 1.6 : 0;
+  title.style.top = a.headTop + kickH + 'px';
+  const headBottom = a.headTop + kickH + title.getBoundingClientRect().height;
+  const flow = $('flow');
+  const n = steps.length;
+  const last = n - 1;
+  if (wide()) {
+    const size = v * Math.min(10.5, 52 / Math.max(3, n));
+    const slot = (a.right - a.left) / n;
+    const cy = Math.max(headBottom + v * 10 + size / 2, (a.bottom + headBottom) / 2 - v * 2);
+    steps.forEach((s, i) => {
+      const cx = a.left + slot * (i + 0.5);
+      const node = document.createElement('div');
+      node.className = 'node' + (i === last ? ' last' : '');
+      node.style.width = node.style.height = size + 'px';
+      node.style.left = cx - size / 2 + 'px';
+      node.style.top = cy - size / 2 + 'px';
+      node.innerHTML = icon(s.icon, ICON_DEFAULT[i]);
+      flow.appendChild(node);
+      nodes.push(node);
+      const label = document.createElement('div');
+      label.className = 'step';
+      label.style.width = slot - v * 2 + 'px';
+      label.style.left = cx - (slot - v * 2) / 2 + 'px';
+      label.style.top = cy + size / 2 + v * 2.2 + 'px';
+      label.innerHTML = '<b></b><small></small>';
+      label.querySelector('b').textContent = s.label;
+      label.querySelector('b').style.fontSize = v * (n > 4 ? 3 : 3.3) + 'px';
+      label.querySelector('small').textContent = s.sub;
+      label.querySelector('small').style.fontSize = v * 2.5 + 'px';
+      flow.appendChild(label);
+      labels.push(label);
+      if (i > 0) {
+        const link = document.createElement('div');
+        link.className = 'link';
+        const x0 = a.left + slot * (i - 0.5) + size / 2 + v * 1.2;
+        const x1 = cx - size / 2 - v * 1.6;
+        link.style.left = x0 + 'px';
+        link.style.width = Math.max(v, x1 - x0) + 'px';
+        link.style.top = cy + 'px';
+        flow.appendChild(link);
+        links.push(link);
+      }
+    });
+  } else {
+    const bodyTop = Math.max(a.top, headBottom + v * 4);
+    const rowH = Math.min(v * 17, (a.bottom - bodyTop) / Math.max(1, n));
+    const size = Math.min(v * 9, rowH * 0.78);
+    steps.forEach((s, i) => {
+      const cy = bodyTop + rowH * (i + 0.5);
+      const node = document.createElement('div');
+      node.className = 'node' + (i === last ? ' last' : '');
+      node.style.width = node.style.height = size + 'px';
+      node.style.left = a.left + 'px';
+      node.style.top = cy - size / 2 + 'px';
+      node.innerHTML = icon(s.icon, ICON_DEFAULT[i]);
+      flow.appendChild(node);
+      nodes.push(node);
+      const label = document.createElement('div');
+      label.className = 'step';
+      label.style.textAlign = 'left';
+      label.style.left = a.left + size + v * 3 + 'px';
+      label.style.width = a.right - a.left - size - v * 3 + 'px';
+      label.innerHTML = '<b></b><small></small>';
+      label.querySelector('b').textContent = s.label;
+      label.querySelector('b').style.fontSize = v * 3.2 + 'px';
+      label.querySelector('small').textContent = s.sub;
+      label.querySelector('small').style.fontSize = v * 2.5 + 'px';
+      flow.appendChild(label);
+      label.style.top = cy - label.getBoundingClientRect().height / 2 + 'px';
+      labels.push(label);
+      if (i > 0) {
+        const link = document.createElement('div');
+        link.className = 'vlink';
+        link.style.left = a.left + size / 2 + 'px';
+        link.style.top = cy - rowH + size / 2 + v * 0.8 + 'px';
+        link.style.height = Math.max(v, rowH - size - v * 1.6) + 'px';
+        flow.appendChild(link);
+        links.push(link);
+      }
+    });
+  }
+}
+const n = steps.length;
+const gap = n > 1 ? Math.max(0.35, Math.min(1.1, (S * 0.8 - 0.8) / (n - 1))) : 0.5;
+const at = (i) => 0.7 + i * gap;
+cwSfx('whoosh', 0, 0.5);
+steps.forEach((_, i) => cwSfx(i === n - 1 ? 'ding' : 'pop', at(i), i === n - 1 ? 0.5 : 0.5));
+window.cwFrame = (t) => {
+  if (!laid) layout();
+  ambient(t);
+  const out = fadeOut(t);
+  $('kicker').style.opacity = String(k.ease.outCubic(k.clamp(t / 0.35)) * out);
+  const pt = k.ease.snap(k.clamp((t - 0.1) / 0.5));
+  $('title').style.opacity = String(Math.min(1, pt * 1.3) * out);
+  $('title').style.transform = 'translateY(' + (1 - pt) * k.vmin * 2.4 + 'px)';
+  nodes.forEach((node, i) => {
+    const p = k.ease.outBack(k.clamp((t - at(i)) / 0.4));
+    node.style.opacity = String(k.clamp((t - at(i)) / 0.15) * out);
+    node.style.transform = 'scale(' + (0.6 + 0.4 * p) + ')';
+    const pl = k.ease.outCubic(k.clamp((t - at(i) - 0.12) / 0.35));
+    labels[i].style.opacity = String(pl * out);
+    labels[i].style.transform = 'translateY(' + (1 - pl) * k.vmin * 1.4 + 'px)';
+  });
+  links.forEach((link, i) => {
+    const p = k.ease.inOutCubic(k.clamp((t - at(i + 1) + 0.35) / 0.35));
+    link.style.opacity = String(Math.min(1, p * 3) * out);
+    link.style.transform = (wide() ? 'scaleX(' : 'scaleY(') + p + ')';
+  });
+};
+</script>
+</body>
+</html>
