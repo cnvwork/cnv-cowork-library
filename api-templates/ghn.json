@@ -1,0 +1,39 @@
+{
+  "id": "ghn",
+  "name": "GHN",
+  "vendor": "Giao Hàng Nhanh",
+  "category": "shipping",
+  "color": "#F26522",
+  "initials": "GHN",
+  "tagline": "Tính phí, tra trạng thái vận đơn, lấy link in nhãn; tạo / huỷ vận đơn qua thẻ duyệt.",
+  "status": "ready",
+  "base_url": "https://online-gateway.ghn.vn/shiip/public-api",
+  "auth_type": "header",
+  "auth_name": "Token",
+  "fixed_headers": {
+    "ShopId": "{shop_id}"
+  },
+  "read_posts": [
+    "/v2/shipping-order/fee",
+    "/v2/shipping-order/available-services",
+    "/v2/shipping-order/preview",
+    "/v2/a5/gen-token"
+  ],
+  "fields": [
+    {
+      "key": "shop_id",
+      "label": "ShopId",
+      "kind": "number",
+      "placeholder": "123456",
+      "help": "Mã cửa hàng trên GHN (thông tin tài khoản / cửa hàng)."
+    }
+  ],
+  "secret_label": "Token API",
+  "secret_help": "Đăng nhập developer.ghn.vn bằng tài khoản GHN › menu tài khoản › «Quản lý token» › bấm biểu tượng con mắt ở thẻ Token API, nhập OTP gửi về điện thoại rồi chép. Không cần xin GHN cấp.",
+  "test_path": "/v2/shop/all?offset=0&limit=1",
+  "rate_per_minute": 60,
+  "docs": "# GHN (Giao Hàng Nhanh) API\nNguồn: https://developer.ghn.vn/llms-full.txt (bản đầy đủ của developer.ghn.vn, đọc 07/11/2026).\nĐịa chỉ gốc https://online-gateway.ghn.vn/shiip/public-api. Cowork tự gắn header `Token` và `ShopId`: không tự đặt hai header này.\n\n## Tra cứu (chạy luôn)\n- `GET /v2/shop/all` (`offset`, `limit`): danh sách cửa hàng + ShopId.\n- Địa chỉ 3 cấp (cũ): `GET /master-data/province`, `GET /master-data/district?province_id=`, `GET /master-data/ward?district_id=`.\n- Địa chỉ 2 cấp (mới, sau sáp nhập 01/07/2025): `GET /v3/master-data/province/all`, `GET /v3/master-data/ward/all-by-province-id?province_id=&offset=&limit=` (limit ≤ 200).\n- `POST /v2/shipping-order/fee` (chỉ đọc): tính phí. `weight` (gram), `to_district_id`, `to_ward_code`, `service_type_id` (2 = dưới 20 kg, 5 = từ 20 kg), `length`, `width`, `height` (cm), `insurance_value`, `cod_value`.\n- `POST /v2/shipping-order/available-services` (chỉ đọc); `POST /v2/shipping-order/preview` (chỉ đọc: chạy thử tạo đơn, không tạo).\n- `GET /v2/shipping-order/detail?order_code=…`; `GET /v2/shipping-order/detail-by-client-code?client_order_code=…`.\n- `POST /v2/a5/gen-token` thân `{\"order_codes\": […]}` (chỉ đọc): lấy mã in nhãn (hạn khoảng 30 phút); đưa người dùng link `https://online-gateway.ghn.vn/a5/public-api/printA5?token=…` (hoặc `print80x80`, `print52x70`) để tự mở.\n\n## Ghi (qua thẻ duyệt)\n- `POST /v2/shipping-order/create`: tạo vận đơn. `to_name`, `to_phone`, `to_address`, `to_ward_name`, `to_district_name` (bắt buộc khi `is_new_to_address` = false), `to_province_name`, `is_new_to_address` (mặc định false), `weight` (gram, tối đa 50.000), `length` / `width` / `height` (cm), `service_type_id`, `payment_type_id` (1 = shop trả phí, 2 = người nhận trả), `required_note` (KHONGCHOXEMHANG | CHOXEMHANGKHONGTHU | CHOTHUHANG), `cod_amount`, `client_order_code` (mã đơn của shop: gửi lại không tạo trùng), `content` hoặc `items[]` (bắt buộc khi `service_type_id` = 5).\n- `POST /v2/switch-status/cancel` thân `{\"order_codes\": […], \"reason_code\": \"GHN-CO001\" | \"GHN-CO002\" | \"GHN-CO003\" | \"GHN-CANCEL-OTHER\", \"reason\": \"…\"}` (huỷ cả lô hoặc không huỷ đơn nào).\n\n## Đơn vị\n- Tiền VND, cân gram, kích thước cm, giờ ISO 8601. Shop bật «Danh sách IP được phép» ở GHN thì máy này phải nằm trong danh sách.\n",
+  "docs_url": "https://developer.ghn.vn/en/docs/getting-started/overview",
+  "docs_read_at": "2026-11-07",
+  "website": "https://ghn.vn"
+}

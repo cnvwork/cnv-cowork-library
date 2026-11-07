@@ -1,0 +1,20 @@
+{
+  "id": "haravan",
+  "name": "Haravan",
+  "vendor": "Haravan",
+  "category": "sales",
+  "color": "#1C8DF0",
+  "initials": "HV",
+  "tagline": "Web bán hàng + đa kênh: tra sản phẩm, tồn kho, đơn hàng, khách; tạo / xác nhận / huỷ đơn qua thẻ duyệt.",
+  "status": "ready",
+  "base_url": "https://apis.haravan.com/com",
+  "auth_type": "bearer",
+  "secret_label": "Mã ứng dụng riêng (Private token)",
+  "secret_help": "Trang quản trị Haravan › Ứng dụng › Ứng dụng riêng (Private app) › Tạo ứng dụng riêng, chọn quyền cần dùng (đọc sản phẩm, đơn hàng, khách…), Lưu rồi chép mã. Chỉ chủ cửa hàng tạo được.",
+  "test_path": "/orders/count.json",
+  "rate_per_minute": 120,
+  "docs": "# Haravan Omni API\nNguồn: https://docs.haravan.com/docs/omni-apis/ (đọc 07/11/2026). Địa chỉ gốc https://apis.haravan.com/com (đường dẫn dưới đây tính từ đó).\nCowork tự gắn `Authorization: Bearer <mã ứng dụng riêng>`. Mã chỉ làm được việc mà quyền của ứng dụng riêng cho: com.read_products / com.write_products, com.read_orders / com.write_orders, com.read_customers / com.write_customers, com.read_inventories / com.write_inventories.\n\n## Tra cứu (GET, chạy luôn)\n- `GET /products.json`: sản phẩm. `sku`, `barcode`, `vendor`, `product_type`, `collection_id`, `updated_at_min`, `fields`, `limit`, `page`, `since_id`. Biến thể có `inventory_quantity`.\n- `GET /inventory_locations.json?location_ids=…&variant_ids=…` (mỗi loại tối đa 50 mã): `qty_onhand`, `qty_available`, `qty_commited`.\n- `GET /orders.json`: đơn hàng. `created_at_min`, `created_at_max`, `status` (open | closed | cancelled | any), `financial_status`, `fulfillment_status`, `order`, `limit` (tối đa 50), `page`.\n- `GET /orders/{id}.json`, `GET /orders/count.json`.\n- `GET /customers/search.json?query=…` (tìm chữ tự do), `GET /customers/{id}.json`.\n\n## Ghi (qua thẻ duyệt)\n- `POST /orders.json` thân `{\"order\": {\"line_items\": [{\"variant_id\": …, \"quantity\": …}], \"email\": …, \"financial_status\": …}}`. `financial_status` chỉ đặt được lúc tạo.\n- `POST /orders/{id}/confirm.json`; `POST /orders/{id}/cancel.json` (`reason` bắt buộc: customer | inventory | fraud | declined | other); `POST /orders/{id}/close.json`, `/open.json`; `PUT /orders/{id}.json` (không sửa được dòng hàng).\n- `POST /orders/{id}/transactions.json` thân `{\"transaction\": {\"amount\": …, \"kind\": \"Capture\"}}`: ghi nhận đã thu tiền.\n\n## Giới hạn, ngày\n- 80 lượt dồn, xả 4 lượt mỗi giây; header `X-Haravan-Api-Call-Limit`; quá thì HTTP 429 kèm `Retry-After`.\n- Ngày giờ ISO 8601 UTC, ví dụ `2026-11-01T00:00:00.000Z` (giờ Việt Nam trừ 7 tiếng).\n",
+  "docs_url": "https://docs.haravan.com/docs/omni-apis/",
+  "docs_read_at": "2026-11-07",
+  "website": "https://www.haravan.com"
+}

@@ -625,3 +625,68 @@ export function loadVideoEngine() {
   }
   return { engine: problems.length ? null : { builds }, problems };
 }
+
+// ── Mẫu kết nối API tuỳ chỉnh ──────────────────────────────────────────────────────────────
+
+export const API_TEMPLATES = path.join(ROOT, 'api-templates');
+const API_TEMPLATE_CATEGORIES = ['sales', 'shipping', 'bank', 'invoice'];
+const API_AUTH_TYPES = ['none', 'bearer', 'header', 'query', 'basic', 'client_credentials'];
+const API_TEMPLATE_KEYS = new Set([
+  'id', 'name', 'vendor', 'category', 'color', 'initials', 'tagline', 'status', 'partner_note', 'base_url', 'auth_type', 'auth_name', 'auth_scheme',
+  'fixed_headers', 'fixed_query', 'read_posts', 'token', 'fields', 'secret_label', 'username_label', 'secret_help', 'test_path', 'read_needs_approval',
+  'rate_per_minute', 'docs', 'docs_url', 'docs_read_at', 'website',
+]);
+
+function httpsTemplateUrl(value) {
+  try {
+    const url = new URL(String(value).replace(/\{[a-z_]{1,20}\}/g, 'x'));
+    return url.protocol === 'https:' && !url.username && !url.password && !url.search && !url.hash;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Mẫu kết nối dựng sẵn của API tuỳ chỉnh (`api-templates/<id>.json`: KiotViet, GHN, SePay…) → `content.api_templates` của danh
+ * mục (app THAY bản mang sẵn khi đúng khuôn, xem cnv-cowork `src/main/services/customApi/templates.ts`). Kiểm lỏng ở đây, app kiểm
+ * đủ; sai một mẫu là app bỏ CẢ danh sách (dùng bản trong app), nên phải sạch.
+ */
+export function loadApiTemplates(config = {}) {
+  if (!fs.existsSync(API_TEMPLATES)) return { entries: [], problems: [] };
+  const problems = [];
+  const entries = [];
+  const files = fs.readdirSync(API_TEMPLATES).filter((name) => name.endsWith('.json')).sort();
+  for (const name of files) {
+    const where = `api-templates/${name}`;
+    let t;
+    try {
+      t = readJson(path.join(API_TEMPLATES, name));
+    } catch (err) {
+      problems.push(`${where}: không đọc được JSON (${err.message}).`);
+      continue;
+    }
+    const before = problems.length;
+    if (`${t.id}.json` !== name || !ID.test(t.id ?? '')) problems.push(`${where}: «id» phải trùng tên tệp, chữ thường không dấu.`);
+    for (const key of Object.keys(t)) if (!API_TEMPLATE_KEYS.has(key)) problems.push(`${where}: khoá lạ «${key}» (app bỏ cả danh sách).`);
+    for (const key of ['name', 'vendor', 'tagline', 'secret_label', 'secret_help', 'docs']) if (typeof t[key] !== 'string' || !t[key].trim()) problems.push(`${where}: thiếu «${key}».`);
+    if (!API_TEMPLATE_CATEGORIES.includes(t.category)) problems.push(`${where}: «category» ∈ ${API_TEMPLATE_CATEGORIES.join(', ')}.`);
+    if (!['ready', 'partner'].includes(t.status)) problems.push(`${where}: «status» là ready hoặc partner.`);
+    if (t.status === 'partner' && !t.partner_note) problems.push(`${where}: mẫu «partner» phải có «partner_note» (cần đăng ký gì, ở đâu).`);
+    if (!API_AUTH_TYPES.includes(t.auth_type)) problems.push(`${where}: «auth_type» không hợp lệ.`);
+    if (t.auth_type === 'client_credentials' && !httpsTemplateUrl(t.token?.url ?? '')) problems.push(`${where}: client_credentials cần «token.url» https.`);
+    if (!/^#[0-9A-Fa-f]{6}$/.test(t.color ?? '')) problems.push(`${where}: «color» dạng #RRGGBB.`);
+    if (typeof t.initials !== 'string' || t.initials.length < 1 || t.initials.length > 4) problems.push(`${where}: «initials» 1–4 ký tự.`);
+    for (const key of ['base_url', 'docs_url', 'website']) if (!httpsTemplateUrl(t[key] ?? '')) problems.push(`${where}: «${key}» phải là https.`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(t.docs_read_at ?? '')) problems.push(`${where}: «docs_read_at» dạng YYYY-MM-DD (ngày đọc tài liệu chính thức).`);
+    if ((t.docs ?? '').length > 20_000) problems.push(`${where}: «docs» quá 20.000 ký tự.`);
+    const keys = new Set((t.fields ?? []).map((field) => field.key));
+    const used = [t.base_url, ...Object.values(t.fixed_headers ?? {}), ...Object.values(t.fixed_query ?? {})].flatMap((value) => [...String(value).matchAll(/\{([a-z_]{1,20})\}/g)].map((m) => m[1]));
+    for (const key of used) if (!keys.has(key)) problems.push(`${where}: dùng ô «${key}» chưa khai trong «fields».`);
+    for (const field of t.fields ?? []) if (!['subdomain', 'number', 'text'].includes(field.kind)) problems.push(`${where}: ô «${field.key}» kiểu không hợp lệ.`);
+    for (const p of t.read_posts ?? []) if (!/^\/[A-Za-z0-9_./{}-]*$/.test(p)) problems.push(`${where}: «read_posts» «${p}» không hợp lệ.`);
+    if (problems.length === before) entries.push(t);
+  }
+  const fileList = files.map((name) => ({ rel: `api-templates/${name}`, abs: path.join(API_TEMPLATES, name) }));
+  problems.push(...scanSecrets(fileList, config.scan_allow ?? [], config.skills_scan_allow_words ?? []).map((line) => `bí mật? ${line}`));
+  return { entries, problems };
+}

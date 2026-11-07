@@ -1,0 +1,30 @@
+{
+  "id": "sapo",
+  "name": "Sapo",
+  "vendor": "Sapo",
+  "category": "sales",
+  "color": "#00A651",
+  "initials": "SP",
+  "tagline": "Web bán hàng Sapo: tra sản phẩm, tồn kho biến thể, đơn hàng, khách; ghi giao dịch thanh toán qua thẻ duyệt.",
+  "status": "ready",
+  "base_url": "https://{store}.mysapo.net/admin",
+  "auth_type": "basic",
+  "fields": [
+    {
+      "key": "store",
+      "label": "Tên cửa hàng",
+      "kind": "subdomain",
+      "placeholder": "tencuahang",
+      "help": "Phần trước «.mysapo.net» trong địa chỉ trang quản trị Sapo."
+    }
+  ],
+  "username_label": "API Key",
+  "secret_label": "API Secret",
+  "secret_help": "Trang quản trị Sapo › Ứng dụng › «Bạn đang làm việc với nhà phát triển?» › Ứng dụng riêng › Tạo ứng dụng riêng, chọn quyền (Chỉ đọc / Đọc và ghi) từng mục rồi chép API Key và API Secret.",
+  "test_path": "/products.json?limit=1&fields=id",
+  "rate_per_minute": 40,
+  "docs": "# Sapo API (Sapo Web, ứng dụng riêng)\nNguồn: https://support.sapo.vn/tai-lieu-nha-phat-trien, https://support.sapo.vn/ung-dung-rieng-private-apps (đọc 07/11/2026).\nĐịa chỉ gốc https://<tên cửa hàng>.mysapo.net/admin; Cowork tự gắn API Key + API Secret theo chuẩn Basic.\n\n## Tra cứu (GET, chạy luôn)\n- `GET /products.json`: sản phẩm. `query` (lọc theo tên), `vendor`, `product_type`, `collection_id`, `modified_on_min`, `fields`, `limit` (mặc định 50, tối đa 250), `page`, `since_id`.\n- `GET /products/{id}/variants.json`, `GET /variants/{id}.json`: `inventory_quantity` (chỉ có khi `inventory_management` = `bizweb`).\n- `GET /orders.json`: đơn. `created_on_min`, `created_on_max`, `modified_on_min`, `status` (open mặc định | closed | cancelled | any), `financial_status` (pending | paid | partially_paid | unpaid…), `fulfillment_status`, `customer_id`.\n- `GET /orders/{id}.json`.\n- `GET /customers.json`: `created_on_min`, `modified_on_min`, `since_id`, `limit`, `page` (tài liệu không có tìm theo số điện thoại: đọc danh sách rồi lọc).\n\n## Ghi (qua thẻ duyệt)\n- `POST /orders.json`, `PUT /orders/{id}.json` (không đổi được dòng hàng), `POST /orders/{id}/close.json` | `/open.json` | `/cancel.json`.\n- `POST /orders/{id}/transactions.json`: `kind` authorization | capture | sale | void | refund (đơn tạo qua API chưa có giao dịch nào).\n\n## Ngày, phân trang\n- Tham số ngày dạng `2026-11-01 03:00`; phản hồi ISO 8601. Phân trang `limit` + `page` hoặc `since_id`.\n- Tài liệu là Sapo Web (bản cũ, chưa có số phiên bản trên đường dẫn). Sapo Omni / POS có thể không có mục «Ứng dụng riêng».\n",
+  "docs_url": "https://support.sapo.vn/tai-lieu-nha-phat-trien",
+  "docs_read_at": "2026-11-07",
+  "website": "https://www.sapo.vn"
+}

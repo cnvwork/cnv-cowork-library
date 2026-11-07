@@ -1,0 +1,48 @@
+{
+  "id": "nhanh",
+  "name": "Nhanh.vn",
+  "vendor": "Nhanh.vn",
+  "category": "sales",
+  "color": "#0B7BD8",
+  "initials": "NH",
+  "tagline": "Quản lý bán hàng đa kênh: tra sản phẩm, tồn kho, đơn trong 31 ngày, khách theo số điện thoại (API v3).",
+  "status": "partner",
+  "partner_note": "Nhanh.vn chỉ cấp mã qua ứng dụng đăng ký ở open.nhanh.vn (tạo ứng dụng có Redirect URL https, tài khoản giám đốc duyệt quyền rồi đổi mã). Cowork chưa làm bước đăng nhập này: ai đã có ứng dụng thì dán App ID, Business ID và mã truy cập (hạn 1 năm).",
+  "base_url": "https://pos.open.nhanh.vn/v3.0",
+  "auth_type": "header",
+  "auth_name": "Authorization",
+  "fixed_query": {
+    "appId": "{app_id}",
+    "businessId": "{business_id}"
+  },
+  "read_posts": [
+    "/product/list",
+    "/product/inventory",
+    "/order/list",
+    "/customer/list",
+    "/shipping/location"
+  ],
+  "fields": [
+    {
+      "key": "app_id",
+      "label": "App ID",
+      "kind": "number",
+      "placeholder": "12345",
+      "help": "Mã ứng dụng ở open.nhanh.vn."
+    },
+    {
+      "key": "business_id",
+      "label": "Business ID",
+      "kind": "number",
+      "placeholder": "67890",
+      "help": "Mã doanh nghiệp trên Nhanh.vn (trả về cùng mã truy cập)."
+    }
+  ],
+  "secret_label": "Mã truy cập (accessToken)",
+  "secret_help": "Bật «Cho phép kết nối Open API» ở Nhanh.vn › Cài đặt chung › Cài đặt Open API, tạo ứng dụng ở open.nhanh.vn rồi đổi mã duyệt lấy accessToken (hạn 1 năm, cấp mã mới thì mã cũ hết sau 15 phút).",
+  "rate_per_minute": 60,
+  "docs": "# Nhanh.vn Open API v3\nNguồn: https://apidocs.nhanh.vn/v3/readme.md, https://developers.nhanh.group/app/access-token/ (đọc 07/11/2026).\nĐịa chỉ gốc https://pos.open.nhanh.vn/v3.0. MỌI lời gọi là POST thân JSON. Cowork tự gắn `appId`, `businessId` lên địa chỉ và mã vào header `Authorization` (không có chữ Bearer).\nAPI v2 ngừng hỗ trợ sau 30/11/2026: chỉ dùng v3.\n\n## Tra cứu (POST chỉ đọc, chạy luôn)\n- `POST /product/list`: sản phẩm. `filters` (`name`, `ids`, `updatedAtFrom`), `paginator`.\n- `POST /product/inventory`: tồn kho (`depotIds`).\n- `POST /order/list`: đơn. `filters`: `createdAtFrom`, `createdAtTo` (Unix giây; mỗi lần tối đa 31 ngày), `statuses`, `ids` (xem chi tiết một đơn = lọc theo `ids`), `shippingAddress.mobile`.\n- `POST /customer/list`: khách. `filters`: `mobile`, `ids`, `lastBoughtDateFrom` (yyyy-mm-dd), `type` (không tìm theo tên).\n- `POST /shipping/location`: địa giới (`locationVersion` v1 | v2, `type` CITY | DISTRICT | WARD, `parentId`).\n\n## Ghi (qua thẻ duyệt)\n- `POST /order/add` (`info`, `channel.appOrderId`, `shippingAddress`, `carrier`, `products` tối đa 500, `payment`), `POST /customer/add`, `POST /order/cancelcarrier` (`orderId`).\n\n## Phân trang, lỗi, giới hạn\n- `paginator`: `size` (≤ 100), `sort`, `next`: gửi lại `next` đúng như nhận để đọc trang sau.\n- Ngày giờ là Unix timestamp. Lỗi báo trong thân (`code: 0`) dù HTTP vẫn 200: đọc thân trước khi kết luận.\n- 150 lần gọi mỗi 30 giây cho mỗi đường dẫn; quá thì `ERR_429` kèm `unlockedAt`, càng gọi càng bị khoá lâu.\n- Mã chỉ làm được việc + kho mà giám đốc đã cấp lúc duyệt ứng dụng (thiếu thì `ERR_403`).\n",
+  "docs_url": "https://apidocs.nhanh.vn/v3/readme.md",
+  "docs_read_at": "2026-11-07",
+  "website": "https://nhanh.vn"
+}

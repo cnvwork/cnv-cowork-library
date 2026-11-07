@@ -1,0 +1,33 @@
+{
+  "id": "ghtk",
+  "name": "GHTK",
+  "vendor": "Giao Hàng Tiết Kiệm",
+  "category": "shipping",
+  "color": "#069255",
+  "initials": "GHTK",
+  "tagline": "Tính phí, tra trạng thái đơn, kho lấy hàng; tạo / huỷ đơn giao qua thẻ duyệt.",
+  "status": "ready",
+  "base_url": "https://services.giaohangtietkiem.vn",
+  "auth_type": "header",
+  "auth_name": "Token",
+  "fixed_headers": {
+    "X-Client-Source": "{shop_code}"
+  },
+  "fields": [
+    {
+      "key": "shop_code",
+      "label": "Mã shop",
+      "kind": "text",
+      "placeholder": "S1234567",
+      "help": "Mã shop GHTK (dạng S…), ở trang Thông tin shop."
+    }
+  ],
+  "secret_label": "API Token",
+  "secret_help": "Trang khách hàng GHTK (khachhang.giaohangtietkiem.vn) › Thông tin shop › Cấu hình API › «Tạo Token»: đặt tên, ngày hết hạn, chọn quyền (tạo đơn, tính phí, xem trạng thái…) rồi chép mã.",
+  "test_path": "/services/authenticated",
+  "rate_per_minute": 30,
+  "docs": "# GHTK (Giao Hàng Tiết Kiệm) API\nNguồn: https://api.ghtk.vn/docs/submit-order/logistic-overview, https://api.ghtk.vn/docs/submit-order/submit-order-express (đọc 07/11/2026).\nĐịa chỉ gốc https://services.giaohangtietkiem.vn. Cowork tự gắn header `Token` và `X-Client-Source` (mã shop): không tự đặt.\nGHTK nhận địa chỉ bằng TÊN (tỉnh, huyện, xã), không có API danh sách tỉnh / huyện.\n\n## Tra cứu (GET, chạy luôn)\n- `GET /services/authenticated`: kiểm mã.\n- `GET /services/shipment/fee`: tính phí. `pick_province`, `pick_district`, `province`, `district` (tên), `weight` (gram), `value`, `transport` (road | fly).\n- `GET /services/shipment/v2/{mã vận đơn hoặc mã đơn của shop}`: trạng thái, chi tiết.\n- `GET /services/shipment/list_pick_add`: kho lấy hàng.\n- `GET /services/address/getAddressLevel4?province=&district=&ward_street=`: địa chỉ cấp 4.\n- `GET /services/kho-hang/thong-tin-san-pham?term=`: tìm sản phẩm.\n- `GET /services/label/{mã vận đơn}?original=portrait|landscape&page_size=A5|A6`: nhãn in (tệp PDF; trợ lý chỉ thấy ghi chú, người dùng in ở trang GHTK).\n\n## Ghi (qua thẻ duyệt)\n- `POST /services/shipment/order` (ví dụ của GHTK có `?ver=1.5`): thân `{\"products\": [{\"name\", \"weight\" (kg), \"quantity\", \"price\", \"product_code\"}], \"order\": {…}}`. Bắt buộc trong `order`: `id` (mã đơn của shop), `pick_name`, `pick_money` (tiền thu hộ, 0 = không thu), `pick_address`, `pick_province`, `pick_ward`, `pick_tel`, `name`, `address`, `province`, `ward`, `street` hoặc `hamlet`, `tel`, `value`.\n- `POST /services/shipment/cancel/{mã vận đơn}` hoặc `/services/shipment/cancel/partner_id:{mã đơn của shop}`: chỉ huỷ được khi đơn ở trạng thái 1, 2 hoặc 12.\n\n## Lưu ý\n- Cân nặng: tính phí dùng gram, tạo đơn mặc định kg.\n- Nhiều lỗi trả HTTP 200 kèm `\"success\": false`: đọc thân trước khi báo xong. Mã hết hạn theo ngày shop đặt lúc tạo.\n- Ngày lấy / giao khi tạo đơn dạng `YYYY/MM/DD`; giờ trạng thái dạng `2026-10-31 22:32:08`.\n",
+  "docs_url": "https://api.ghtk.vn/docs/submit-order/logistic-overview",
+  "docs_read_at": "2026-11-07",
+  "website": "https://giaohangtietkiem.vn"
+}

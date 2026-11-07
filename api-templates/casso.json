@@ -1,0 +1,21 @@
+{
+  "id": "casso",
+  "name": "Casso",
+  "vendor": "Casso",
+  "category": "bank",
+  "color": "#00A99D",
+  "initials": "CA",
+  "tagline": "Đọc giao dịch ngân hàng đã đồng bộ về Casso để đối soát chuyển khoản với đơn (chỉ đọc).",
+  "status": "ready",
+  "base_url": "https://oauth.casso.vn/v2",
+  "auth_type": "bearer",
+  "auth_scheme": "Apikey",
+  "secret_label": "API Key",
+  "secret_help": "Ứng dụng Casso › Thiết lập › API Keys › «Tạo API Key» › «Tạo và xem API Key» rồi chép. Mã không hết hạn: xoá ở Casso là thu hồi.",
+  "test_path": "/userInfo",
+  "rate_per_minute": 10,
+  "docs": "# Casso API v2 (giao dịch ngân hàng)\nNguồn: https://developer.casso.vn/casso-api/api/lay-giao-dich.md, https://developer.casso.vn/casso-api/chung-thuc (đọc 07/11/2026).\nĐịa chỉ gốc https://oauth.casso.vn/v2. Cowork tự gắn `Authorization: Apikey <mã>` (Casso đã ngừng OAuth 2 từ 05/03/2024).\n\n## Tra cứu (GET, chạy luôn)\n- `GET /userInfo`: thông tin doanh nghiệp + `bankAccs[]` (`id`, `bankSubAccId`, `bankAccountName`, `connectStatus`, `balance`).\n- `GET /transactions`: `fromDate` (mặc định 7 ngày trước), `toDate` (mặc định hôm nay) dạng `YYYY-MM-DD`, `page`, `pageSize` (mặc định 10), `sort` (ASC | DESC). Mỗi giao dịch: `id`, `tid`, `description` (nội dung chuyển khoản), `amount` (âm = tiền ra), `cusum_balance`, `when`, `bankSubAccId`, `corresponsiveName`, `corresponsiveAccount`. Phản hồi `data{page, pageSize, nextPage, totalPages, totalRecords, records}`. KHÔNG có lọc theo số tiền / nội dung: đọc theo ngày rồi tự lọc.\n- `GET /transactions/{id}`.\n- `GET /accounts`, `GET /accounts/{accountId}`, `GET /accounts/{accountId}/transactions` (ngày `YYYY-MM-DD`; bản ghi có `reference`, `bookingDate`, `amount`, `description`, `runningBalance`, `counterAccountNumber`).\n\n## Ghi (qua thẻ duyệt)\n- `POST /sync` thân `{\"bank_acc_id\": …}`: bắt Casso đồng bộ ngay (mỗi tài khoản 1 lần / phút).\n\n## Giới hạn\n- Danh sách giao dịch: gói SPONSOR 2 lần / phút, PIONEER 5, STANDARD 20. Gọi ít, gom một lần đọc cả khoảng ngày.\n- Đối soát: khớp `amount` + mã đơn trong `description` với đơn trong CRM; ghi thanh toán vào CRM chỉ qua thẻ duyệt.\n",
+  "docs_url": "https://developer.casso.vn/casso-api/api/lay-giao-dich.md",
+  "docs_read_at": "2026-11-07",
+  "website": "https://casso.vn"
+}

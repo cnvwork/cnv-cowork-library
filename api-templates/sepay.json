@@ -1,0 +1,20 @@
+{
+  "id": "sepay",
+  "name": "SePay",
+  "vendor": "SePay",
+  "category": "bank",
+  "color": "#1A56DB",
+  "initials": "SE",
+  "tagline": "Đọc giao dịch chuyển khoản vào tài khoản ngân hàng để đối soát đơn đã trả tiền (chỉ đọc).",
+  "status": "ready",
+  "base_url": "https://userapi.sepay.vn/v2",
+  "auth_type": "bearer",
+  "secret_label": "Mã API (API Token)",
+  "secret_help": "my.sepay.vn › Cấu hình Công ty › API Access › «+ Thêm API»: đặt tên, Trạng thái = Hoạt động, bấm Thêm rồi chép mã. Mã SePay có toàn quyền, cất kỹ và xoá ở SePay khi thôi dùng.",
+  "test_path": "/bank-accounts?per_page=1",
+  "rate_per_minute": 60,
+  "docs": "# SePay API v2 (giao dịch ngân hàng)\nNguồn: https://developer.sepay.vn/vi/sepay-api/v2/bat-dau-nhanh, …/v2/giao-dich/danh-sach, …/v2/tai-khoan-ngan-hang/danh-sach (đọc 07/11/2026).\nĐịa chỉ gốc https://userapi.sepay.vn/v2. Cowork tự gắn `Authorization: Bearer <mã API>`.\n\n## Tra cứu (GET, chạy luôn)\n- `GET /transactions`: giao dịch. Lọc:\n  - chữ: `q` (tìm trong mã tham chiếu, nội dung, mã), `transaction_content`, `reference_number` (khớp đúng);\n  - ngày: `transaction_date_from`, `transaction_date_to` dạng `YYYY-MM-DD HH:mm:ss`;\n  - tiền: `amount_in_min`, `amount_in_max`, `amount_out_min`, `amount_out_max`;\n  - tài khoản: `bank_account_id` (mã UUID từ /bank-accounts), `transfer_type` = in | out, `bank_brand_name`;\n  - trang: `page`, `per_page` (mặc định 20, tối đa 100), `since_id`, `transaction_date_sort`.\n  Mỗi giao dịch: `id`, `transaction_date`, `account_number`, `transfer_type`, `amount_in`, `amount_out`, `transaction_content`, `reference_number`, `code`, `bank_brand_name`. Phản hồi `{status, data, meta.pagination{total, per_page, current_page, last_page, has_more}}`.\n- `GET /transactions/{id}`: một giao dịch.\n- `GET /bank-accounts` (`q`, `bank_short_name`, `active`), `GET /bank-accounts/{id}`: tài khoản ngân hàng đã nối SePay.\n\n## Lưu ý\n- Tối đa 3 lần gọi mỗi giây (theo IP); quá thì HTTP 429 kèm `Retry-After`.\n- Tiền là số nguyên VND. Muốn đọc giao dịch mới: sắp xếp tăng dần, đọc hết trang, lần sau gửi `since_id` = `id` cuối.\n- Mã SePay có TOÀN QUYỀN (SePay chưa phân quyền mã). Không gọi các đường dẫn ghi (tạo / xoá đơn, tài khoản ảo) trừ khi người dùng nhờ rõ.\n- Đối soát: khớp `amount_in` + mã đơn / mã báo giá trong `transaction_content` với đơn trong CRM; ghi thanh toán vào CRM chỉ qua thẻ duyệt.\n",
+  "docs_url": "https://developer.sepay.vn/vi/sepay-api/v2/bat-dau-nhanh",
+  "docs_read_at": "2026-11-07",
+  "website": "https://sepay.vn"
+}

@@ -1,0 +1,39 @@
+{
+  "id": "misa-meinvoice",
+  "name": "MISA meInvoice",
+  "vendor": "MISA",
+  "category": "invoice",
+  "color": "#0072BC",
+  "initials": "MI",
+  "tagline": "Hoá đơn điện tử: tra danh sách / trạng thái hoá đơn; lưu nháp, phát hành, gửi khách qua thẻ duyệt trên máy.",
+  "status": "partner",
+  "partner_note": "MISA chỉ cấp ClientID / ClientSecret khi doanh nghiệp tạo ứng dụng ở developer.misa.vn và gửi yêu cầu tích hợp meInvoice được MISA duyệt. Cowork chưa tự lấy mã xác thực (cần cả mật khẩu meInvoice): dán mã xác thực 14 ngày vào ô bảo mật.",
+  "base_url": "https://developer.misa.vn/apis/itg/meinvoice",
+  "auth_type": "bearer",
+  "fixed_headers": {
+    "ClientID": "{client_id}"
+  },
+  "read_posts": [
+    "/invoice/paging",
+    "/invoice/status",
+    "/invoice/Download",
+    "/invoiceweb/paging"
+  ],
+  "fields": [
+    {
+      "key": "client_id",
+      "label": "ClientID",
+      "kind": "text",
+      "placeholder": "ClientID MISA cấp",
+      "help": "Mã ứng dụng MISA cấp sau khi duyệt yêu cầu tích hợp (không phải ClientSecret)."
+    }
+  ],
+  "secret_label": "Mã xác thực (token)",
+  "secret_help": "Lấy bằng POST /invoice/token theo tài liệu MISA (hạn 14 ngày), hết hạn thì dán mã mới ở Sửa. Đăng ký: developer.misa.vn › Tạo ứng dụng mới › Gửi yêu cầu tích hợp.",
+  "read_needs_approval": false,
+  "rate_per_minute": 20,
+  "docs": "# MISA meInvoice (hoá đơn điện tử) Open API\nNguồn: https://developer.misa.vn/products-openapi/MEINVOICE, https://developer.misa.vn/faq (đọc 07/11/2026).\nĐịa chỉ gốc https://developer.misa.vn/apis/itg/meinvoice. Cowork tự gắn `Authorization: Bearer <mã xác thực>` và header `ClientID`.\nMã xác thực lấy bằng `POST /invoice/token` (header ClientID + ClientSecret, thân taxcode / username / password), hạn 14 ngày: Cowork CHƯA tự lấy, người dùng dán mã vào ô bảo mật và thay khi hết hạn.\n\n## Tra cứu (chạy luôn)\n- `GET /invoice/templates?invoiceWithCode=&ticket=&year=`: mẫu / ký hiệu hoá đơn.\n- `POST /invoice/paging?invoiceWithCode=…` (chỉ đọc) thân `{\"FromDate\": \"yyyy-MM-dd\", \"ToDate\": \"yyyy-MM-dd\", \"Skip\": 0, \"Take\": 50, \"ListInvTemplate\": […]}`: danh sách hoá đơn (`TransactionID`, `InvNo`, `InvDate`, `BuyerName`, `TotalAmount`, `Status`). Khoảng ngày ngắn (dữ liệu nhiều thì 1 ngày) để khỏi quá giờ.\n- `POST /invoice/status?inputType=1|2` (chỉ đọc) thân danh sách TransactionID / RefID: trạng thái, số hoá đơn, đã gửi thuế chưa.\n- `POST /invoice/Download?downloadDataType=Pdf|Xml` (chỉ đọc): tệp base64 (trợ lý không mở được tệp; người dùng tải ở meInvoice).\n- `POST /invoiceweb/paging` (chỉ đọc) thân `{\"Start\", \"Length\" (≤ 100), \"FromDate\", \"ToDate\", \"PublishStatus\"}`.\n\n## Ghi (qua thẻ duyệt, chỉ trên máy)\n- `POST /invoiceweb/insert`: lưu hoá đơn NHÁP (an toàn nhất).\n- `POST /invoice/publishing`: PHÁT HÀNH hoá đơn (gửi cơ quan thuế, không rút lại được). Tối đa 30 hoá đơn / lần, 400 dòng / hoá đơn, `RefID` không trùng.\n- `POST /invoice/sendemail`: gửi hoá đơn cho khách.\n",
+  "docs_url": "https://developer.misa.vn/products-openapi/MEINVOICE",
+  "docs_read_at": "2026-11-07",
+  "website": "https://www.meinvoice.vn"
+}

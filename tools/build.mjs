@@ -9,7 +9,7 @@
 // Không bao giờ commit khoá bí mật.
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildOfficePack, buildSkillPack, buildZip, DIST, imageMetadataProblems, LIMITS, listFiles, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
+import { DIST, LIMITS, buildOfficePack, buildSkillPack, buildZip, imageMetadataProblems, listFiles, loadApiTemplates, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
 import { buildVideoKit, loadVideoKit } from './videokit.mjs';
 
 function arg(name) {
@@ -83,6 +83,10 @@ const changelog = loadChangelog();
 problems.push(...changelog.problems);
 if (changelog.entries.length) console.log(`✔ changelog: ${changelog.entries.length} bản đè nhật ký «Có gì mới» của app`);
 
+const apiTemplates = loadApiTemplates(config);
+problems.push(...apiTemplates.problems);
+if (apiTemplates.entries.length) console.log(`✔ api-templates: ${apiTemplates.entries.length} mẫu kết nối API (nằm luôn trong danh mục)`);
+
 const video = loadVideoEngine();
 problems.push(...video.problems);
 if (video.engine) console.log(`✔ video: bộ dựng cho ${Object.keys(video.engine.builds).join(', ')} (tải thẳng từ nơi phát hành)`);
@@ -109,6 +113,7 @@ const content = {
   skills: skillPack,
   offices: officePack,
   ...(changelog.entries.length ? { changelog: changelog.entries } : {}),
+  ...(apiTemplates.entries.length ? { api_templates: apiTemplates.entries } : {}),
   ...(video.engine ? { video_engine: video.engine } : {}),
   ...(videoKit ? { video_kit: videoKit.content } : {}),
 };

@@ -1,0 +1,39 @@
+{
+  "id": "kiotviet",
+  "name": "KiotViet",
+  "vendor": "KiotViet",
+  "category": "sales",
+  "color": "#0A6CF1",
+  "initials": "KV",
+  "tagline": "Phần mềm bán hàng: tra hàng hoá, tồn kho theo chi nhánh, hoá đơn, đặt hàng, khách theo số điện thoại.",
+  "status": "ready",
+  "base_url": "https://public.kiotapi.com",
+  "auth_type": "client_credentials",
+  "token": {
+    "url": "https://id.kiotviet.vn/connect/token",
+    "params": {
+      "scopes": "PublicApi.Access"
+    }
+  },
+  "fixed_headers": {
+    "Retailer": "{retailer}"
+  },
+  "fields": [
+    {
+      "key": "retailer",
+      "label": "Tên gian hàng",
+      "kind": "subdomain",
+      "placeholder": "taphoaxyz",
+      "help": "Phần trước «.kiotviet.vn» trong địa chỉ trang quản lý của bạn."
+    }
+  ],
+  "username_label": "Client ID",
+  "secret_label": "Mã bảo mật (Client Secret)",
+  "secret_help": "Đăng nhập KiotViet bằng tài khoản chủ cửa hàng › Thiết lập cửa hàng › Thiết lập kết nối API: chép Client ID và Mã bảo mật. Không thấy mục này thì liên hệ CSKH KiotViet.",
+  "test_path": "/branches",
+  "rate_per_minute": 60,
+  "docs": "# KiotViet Public API (bản bán lẻ)\nNguồn: https://www.kiotviet.vn/huong-dan-su-dung-public-api-retail/ (đọc 07/11/2026).\nCowork tự đổi Client ID + Client Secret lấy mã tạm (24 giờ) và tự gắn header `Retailer` + `Authorization` vào mọi lần gọi: KHÔNG tự đặt các header này.\n\n## Tra cứu (GET, chạy luôn)\n- `GET /products`: hàng hoá. Tham số `name`, `categoryId`, `isActive`, `lastModifiedFrom`, `includeInventory=true` (kèm tồn kho `onHand`, `reserved` theo chi nhánh).\n- `GET /products/code/{mã hàng}`: một mặt hàng theo mã.\n- `GET /productOnHands`: tồn kho theo chi nhánh (`branchIds`, `lastModifiedFrom`).\n- `GET /invoices`: hoá đơn bán. `fromPurchaseDate`, `toPurchaseDate`, `status`, `customerIds`, `customerCode`, `branchIds`, `includePayment=true`, `orderBy`, `orderDirection`. Trạng thái hoá đơn: 1 hoàn thành, 2 đã huỷ, 3 đang xử lý, 5 không giao được.\n- `GET /invoices/{id}`, `GET /invoices/code/{mã hoá đơn}`.\n- `GET /orders`: đặt hàng. `status`, `customerIds`, `branchIds`, `createdDate`, `toDate`, `lastModifiedFrom`. `GET /orders/{id}`, `GET /orders/code/{mã}`.\n- `GET /customers`: khách. `contactNumber` (tìm theo số điện thoại), `name`, `code`, `lastModifiedFrom`, `orderBy`.\n- `GET /branches`: chi nhánh (cần `branchId` khi tạo đơn).\n\n## Ghi (qua thẻ duyệt)\n- `POST /orders`: tạo đặt hàng (`branchId`, `customer`, `orderDetails`, `totalPayment`, `method`, `makeInvoice`). `PUT /orders/{id}`. `DELETE /orders/{id}?IsVoidPayment=true|false` (huỷ).\n- `POST /invoices` (`method`: Cash, Card, Transfer), `PUT /invoices/{id}` (`status`, `deliveryDetail`).\n- `POST /payments`: ghi một khoản thanh toán cho hoá đơn (`invoiceId`, `amount`, `method`, `accountId`).\n\n## Phân trang, ngày, giới hạn\n- `pageSize` mặc định 20, tối đa 100; `currentItem` là vị trí bắt đầu (0, 100, 200…). Phản hồi có `total` và `data`.\n- Ngày giờ kiểu ISO, ví dụ `2026-11-01T00:00:00` (giờ Việt Nam).\n- GET tối đa 5.000 lần mỗi giờ.\n",
+  "docs_url": "https://www.kiotviet.vn/huong-dan-su-dung-public-api-retail/",
+  "docs_read_at": "2026-11-07",
+  "website": "https://www.kiotviet.vn"
+}
