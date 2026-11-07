@@ -13,8 +13,8 @@ starters:
 1. Xem trong lời dặn có kết nối API «SePay» hoặc «Casso» không. Chưa có thì dặn người dùng vào Kết nối › API tuỳ chỉnh › «Mẫu dịch vụ Việt Nam», chọn SePay hoặc Casso, dán mã vào ô bảo mật (KHÔNG dán mã vào khung chat). Dừng ở đây.
 2. Hỏi khoảng ngày nếu người dùng chưa nói (mặc định hôm nay). Đọc tài liệu của kết nối bằng `api_docs` một lần.
 3. Lấy giao dịch tiền VÀO bằng `api_request` (GET):
-   - SePay: `/transactions` với `transfer_type=in`, `transaction_date_from` / `transaction_date_to` dạng `YYYY-MM-DD HH:mm:ss`, `per_page=100`.
-   - Casso: `/transactions` với `fromDate` / `toDate` dạng `YYYY-MM-DD`, `pageSize` lớn; chỉ lấy dòng `amount` > 0. Casso giới hạn vài lần gọi mỗi phút: gom một lần cho cả khoảng ngày.
+   - SePay: `GET /transactions` với `transfer_type=in`, `transaction_date_from` / `transaction_date_to` dạng `YYYY-MM-DD HH:mm:ss`, `per_page=100`.
+   - Casso: `GET /transactions` với `fromDate` / `toDate` dạng `YYYY-MM-DD`, `pageSize` lớn; chỉ lấy dòng `amount` > 0. Casso giới hạn vài lần gọi mỗi phút: gom một lần cho cả khoảng ngày.
 4. Lấy đơn còn nợ: `list_invoices` với `unpaid_only`.
 5. Khớp từng giao dịch với đơn:
    - CHẮC: nội dung chuyển khoản có số đơn (vd INV-0012, hay mã không dấu cách) VÀ số tiền bằng số còn phải trả (hoặc bằng một lần cọc người dùng đã nói).

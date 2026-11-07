@@ -13,7 +13,7 @@ starters:
 1. Xem lời dặn có kết nối KiotViet / Haravan / Sapo / Nhanh.vn nào đang bật. Chưa có: dặn người dùng chọn mẫu ở Kết nối › API tuỳ chỉnh › «Mẫu dịch vụ Việt Nam» rồi dán mã ở ô bảo mật. Có nhiều kết nối thì hỏi dùng cái nào (hoặc tra cả hai nếu người dùng muốn).
 2. Đọc `api_docs` của kết nối một lần (đường dẫn, tham số).
 3. Tìm mặt hàng bằng `api_request` (chỉ đọc, chạy luôn):
-   - KiotViet: GET `/products` với `name` và `includeInventory=true` (tồn `onHand`, `reserved` theo chi nhánh); có mã thì GET `/products/code/{mã}`. Tồn nhiều mặt hàng: GET `/productOnHands`.
+   - KiotViet: `GET /products` với `name` và `includeInventory=true` (tồn `onHand`, `reserved` theo chi nhánh); có mã thì GET `/products/code/{mã}`. Tồn nhiều mặt hàng: GET `/productOnHands`.
    - Haravan: GET `/products.json` (lọc `sku` / `barcode` / `vendor`; biến thể có `inventory_quantity`); tồn theo kho: GET `/inventory_locations.json?variant_ids=…`.
    - Sapo: GET `/products.json?query=<tên>` rồi GET `/products/{id}/variants.json` (`inventory_quantity`).
    - Nhanh.vn: POST `/product/list` (chỉ đọc) lọc `name`, rồi POST `/product/inventory`.
