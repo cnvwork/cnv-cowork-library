@@ -1,0 +1,30 @@
+{
+  "id": "botcake",
+  "name": "Botcake",
+  "vendor": "Pancake",
+  "category": "sales",
+  "color": "#6168F3",
+  "initials": "BC",
+  "tagline": "Chatbot bán hàng: tra khách, nhãn, flow, thống kê tin nhắn và chi phí; gửi flow cho một khách qua thẻ duyệt.",
+  "status": "ready",
+  "base_url": "https://botcake.io/api/public_api/v1/pages/{page_id}",
+  "auth_type": "header",
+  "auth_name": "access-token",
+  "fields": [
+    {
+      "key": "page_id",
+      "label": "ID trang",
+      "kind": "text",
+      "placeholder": "104438181227821",
+      "help": "ID của trang đã nối Botcake (trang Facebook: dãy số ID trang). Mỗi trang một mã, mỗi trang một kết nối."
+    }
+  ],
+  "secret_label": "API Key của trang",
+  "secret_help": "Botcake › chọn trang › Cấu hình › Tích hợp › Public API › «Tạo API Key» rồi bấm biểu tượng sao chép. Làm mới / xoá mã ở đó là mọi kết nối dùng mã cũ ngừng chạy.",
+  "test_path": "/get_list_tag",
+  "rate_per_minute": 60,
+  "docs": "# Botcake Public API (chatbot bán hàng)\nNguồn: https://docs.pancake.biz/botcake/st-f7/st-p2.md?lang=vi (tạo mã), đặc tả OpenAPI https://developers.botcake.io/botcake.yaml (đọc 08/11/2026).\nĐịa chỉ gốc https://botcake.io/api/public_api/v1/pages/<ID trang> (đường dẫn dưới đây tính từ đó). Cowork tự gắn header `access-token` (mã Public API của trang): không tự đặt header này.\n`psid` là mã của một khách trên trang (lấy ở danh sách khách).\n\n## Tra cứu (GET, chạy luôn)\n- `GET /customer`: khách đang theo dõi trang (`full_name`, `phone_number` [danh sách], `psid`, `id`). `page` (tài liệu ghi: cỡ trang, tối đa 100).\n- `GET /customer/{psid}/info`: một khách (có cả khách đã huỷ theo dõi). `GET /customer/{psid}/customer_fields`: trường tuỳ chỉnh của khách. `GET /custom_fields`: các trường tuỳ chỉnh của trang.\n- `GET /get_list_tag`: nhãn (tag). `GET /get_tag_statistic?start_date=&end_date=` (Unix giây, `page`): thống kê nhãn.\n- `GET /flows`, `GET /flows/{path}` (theo thư mục): luồng tin nhắn (flow). `GET /flows/{flow_id}/statistics`: thống kê một flow.\n- `GET /sequences/`, `GET /sequences/{sequence_id}/statistics`, `GET /sequences/{sequence_id}/statistics/{message_id}` (khách đã tương tác với tin đó).\n- `GET /keywords` (từ khoá), `GET /ice_breaker`, `GET /main_menu`, `GET /tools`, `GET /default_reply` (trả lời mặc định).\n- `GET /broadcasts/{broadcast_id}/statistic`: kết quả một đợt gửi hàng loạt (mã sai vẫn HTTP 200 kèm `success: false`).\n- `GET /message_statistics?start_date=&end_date=` (Unix giây, tính theo ngày giờ Việt Nam): số tin trang đã gửi mỗi ngày + chi phí (`free`, `paid`, `cost`; AI tính theo token, `ai_cost` bằng USD). `GET /ai/usage?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD` (`group_by` = day | model): chi phí AI của trang.\n- `GET /ai/agents`, `GET /ai/agents/{agent_id}`: AI agent của bot.\n\n## Ghi (qua thẻ duyệt, chỉ khi người dùng nhờ rõ)\n- `POST /flows/send_flow` thân `{\"psid\": \"…\", \"flow_id\": 123}`: gửi một flow cho MỘT khách (tin nhắn tới khách thật).\n- `POST /flows/send_content` thân `{\"psid\": \"…\", \"data\": {\"version\": \"…\", \"content\": {\"messages\": […]}}, \"message_tag\": \"…\"}`: gửi nội dung cho một khách.\n- `POST /customer/{psid}/customer_fields` thân `{\"data\": [{\"id\": \"<mã trường>\", \"value\": \"…\"}]}`: sửa trường tuỳ chỉnh của khách.\n- KHÔNG dùng kết nối này để tạo / bật / gửi Marketing Messages (`/marketing_messages/…`: chạy bằng ngân sách tài khoản quảng cáo, tốn tiền), sửa trả lời mặc định, từ khoá hay AI agent của bot (đổi lời bot tự trả lời khách), trừ khi người dùng tự nhờ đúng việc đó.\n\n## Lỗi\n- Lỗi trả HTTP 400 kèm `{\"success\": false, \"message\": …}` (vd `invalid_token`: mã sai). Đọc thân trước khi báo xong.\n- `limit_reached`: gọi quá nhanh, chờ rồi thử lại.\n- Làm mới / xoá mã ở Botcake là mọi kết nối dùng mã cũ ngừng chạy.\n",
+  "docs_url": "https://developers.botcake.io/",
+  "docs_read_at": "2026-11-08",
+  "website": "https://botcake.io"
+}
