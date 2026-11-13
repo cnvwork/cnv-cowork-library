@@ -18,6 +18,9 @@ scenarios/<id>/
   …                  mã nguồn
 skills/<nhóm>/<tên>.md  kỹ năng CÓ SẴN của trợ lý (nhóm: chung hoặc mã ngành) — nơi DUY NHẤT sửa kỹ năng có sẵn
 offices/<id>.json       mẫu Thư viện văn phòng (văn phòng AI theo ngành) — nơi DUY NHẤT sửa mẫu văn phòng
+community/skills/<id>/  kỹ năng CỘNG ĐỒNG (bài người dùng gửi, CNV đã duyệt): SKILL.md + meta.json (tác giả, phiên bản, ngày duyệt, gói)
+community/plugins/<id>/ plugin: plugin.json (mô tả, tác giả, máy chủ MCP gợi ý, mẫu API) + skills/*.md
+api-templates/<id>.json mẫu kết nối API dựng sẵn (KiotViet, GHN, Viettel Post…) — app có bản sao, sửa thì sửa cả hai
 changelog.json       sửa câu chữ nhật ký «Có gì mới» của app không cần ra bản mới (rỗng = không đè gì)
 video/engine.json    bộ dựng video (ffmpeg + ffprobe) của Trình dựng video theo nền tảng: link + sha256 + số byte
 video/kit.json       bộ làm video: nhãn các gói + model chép lời trên máy (Hugging Face, ghim commit + sha256)
@@ -40,7 +43,9 @@ App giải nén theo luật của Thư mục làm việc, sai một tệp là t�
 - **Không dữ liệu riêng của ai**: IP, mã thiết bị (DUID), token, mã album, đường dẫn chứng chỉ, ảnh cá nhân.
   Cái người dùng phải tự điền thì để thành cấu hình mẫu (vd `app/js/config.js` của Nobita TV) và ghi rõ trong README.
   `check` quét mẫu khoá / token / IP phổ biến và mọi chuỗi trong `~/.config/cnv-cowork-library/denylist.txt`
-  (danh sách chuỗi riêng của CNV, nằm NGOÀI repo).
+  (danh sách chuỗi riêng của CNV, nằm NGOÀI repo). Dòng bắt đầu bằng `!` trong tệp đó là CỤM được phép: chữ cấm nằm trong
+  đúng cụm thì qua, đứng chỗ khác vẫn báo (vd tên một hãng có mẫu kết nối mà một chữ của nó trùng chuỗi riêng). Đừng dùng
+  `skills_scan_allow_words` cho việc này: nó gỡ hẳn chữ khỏi danh sách cấm cho cả nhóm tệp. Không ghi cụm được phép vào repo.
 - Thư viện bên thứ ba: chép vào kịch bản kèm thông báo bản quyền, ghi trong README + `license` của manifest.
 - Trợ lý Cowork không chạy lệnh / tệp chạy: kỹ năng chỉ dặn trợ lý đọc, đề xuất sửa từng tệp (người dùng duyệt),
   và chỉ người dùng lệnh để họ tự chạy.
@@ -80,6 +85,31 @@ danh mục, app đang chạy tự tải khi sha256 đổi, không cần bản ap
 - Công cụ trợ lý nhắc trong hướng dẫn (`search_contacts`…) phải có thật trong app: app kiểm bản chụp của nó bằng test.
 - Bộ cài Cowork mang một bản chụp để máy chưa tải được gì vẫn có kỹ năng: ở repo `cnv-cowork` chạy `npm run skills:sync`
   khi muốn bản cài mới mang luôn bộ mới.
+
+## Chợ kỹ năng cộng đồng và plugin
+
+Người dùng Cowork bấm «Gửi lên Cộng đồng» ở Trợ lý › Kỹ năng: app gửi nguyên SKILL.md + tên tác giả họ tự gõ (+ liên hệ /
+lời nhắn tuỳ chọn) tới API Cowork của CNV Work (`POST /api/v1/cowork/community/submissions`). Bài chỉ nằm ở máy chủ, CHƯA tới
+máy ai. Người duyệt của CNV (console CNV Work › Cowork › Bài gửi kỹ năng):
+
+1. Đọc trọn bài: đúng việc bán hàng / văn phòng, không lừa trợ lý (bỏ qua lời dặn, đòi mã / mật khẩu), không dữ liệu riêng
+   của ai (số điện thoại, email khách…), không quảng cáo trá hình, không chép bài có bản quyền của người khác.
+2. Duyệt: chép vào `community/skills/<mã>/SKILL.md` (sửa chính tả được, không đổi ý), `meta.json`:
+   `{ "author": { "name": "<tên tác giả ghi khi gửi>", "url"?: "https://…" }, "version": "1.0.0", "reviewed_at": "YYYY-MM-DD",
+   "plan"?: "team" | "business", "tags"?: […] }`. Ghi «Đã duyệt» + mã kỹ năng ở console (người gửi thấy trong app).
+   Không chép liên hệ / lời nhắn của người gửi vào repo (repo công khai).
+3. `npm run check` (tên / lệnh không trùng kỹ năng có sẵn, quét bí mật + danh sách chặn), `npm run build`, phát hành như thường:
+   bộ `community-<sha>.json` ghim trong danh mục ký (`content.community`), mọi máy tự tải.
+
+Plugin = gói kỹ năng + máy chủ MCP gợi ý + mẫu API: `community/plugins/<mã>/plugin.json` (`name`, `summary`, `description`,
+`author`, `version`, `reviewed_at`, `plan`?, `tags`?, `mcp_servers`: mã trong danh mục máy chủ MCP gợi ý của app — chỉ máy chủ
+chính chủ, `api_templates`: mã trong `api-templates/`) + `skills/*.md`. App cài một lần qua hộp / thẻ, từng phần theo luật của
+nó: kỹ năng qua bộ quét nhập kỹ năng, máy chủ MCP thêm như nút «Thêm» ở Kết nối (công cụ mặc định hỏi trước; máy chủ cần mã
+thì người dùng tự thêm), mẫu API KHÔNG tự tạo kết nối (mã chỉ dán ở ô bảo mật của app).
+
+**Nội dung theo gói**: `plan` (`team` / `business`) ở `manifest.json` của kịch bản, `meta.json` của kỹ năng cộng đồng,
+`plugin.json`; bỏ trống = mọi gói. App kiểm key trên máy, gói thấp hơn thấy «Cần gói Team / Business». Repo này CÔNG KHAI nên
+đây chỉ là cổng trong app (ai đọc repo vẫn thấy mã): đừng đặt thứ cần giữ kín vào nội dung theo gói.
 
 ## Nhật ký «Có gì mới» của app
 

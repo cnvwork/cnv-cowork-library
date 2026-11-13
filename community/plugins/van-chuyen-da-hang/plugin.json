@@ -1,0 +1,11 @@
+{
+  "name": "Vận chuyển đa hãng",
+  "summary": "So cước GHN, GHTK, Viettel Post cho cùng một đơn rồi tạo vận đơn ở hãng rẻ / nhanh nhất qua thẻ duyệt.",
+  "description": "Gói cho shop gửi hàng qua nhiều hãng:\n- Kỹ năng /sosanhcuoc: trợ lý gom cân nặng, địa chỉ, tiền thu hộ một lần, tính cước ở mọi hãng bạn đã nối (chỉ đọc), bày bảng so sánh rồi đề xuất tạo vận đơn ở hãng bạn chọn (thẻ duyệt).\n- Ba mẫu kết nối: GHN, GHTK, Viettel Post (mã của từng hãng bạn tự dán ở Kết nối).\nKhông thêm máy chủ MCP nào.",
+  "author": { "name": "CNV" },
+  "version": "1.0.0",
+  "reviewed_at": "2026-11-14",
+  "tags": ["vận chuyển", "giao hàng", "so sánh cước"],
+  "mcp_servers": [],
+  "api_templates": ["ghn", "ghtk", "viettelpost"]
+}

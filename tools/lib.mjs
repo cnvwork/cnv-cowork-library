@@ -11,6 +11,7 @@ export const ROOT = path.resolve(import.meta.dirname, '..');
 export const SCENARIOS = path.join(ROOT, 'scenarios');
 export const SKILLS = path.join(ROOT, 'skills');
 export const OFFICES = path.join(ROOT, 'offices');
+export const COMMUNITY = path.join(ROOT, 'community');
 export const DIST = path.join(ROOT, 'dist');
 export const CATALOG_FORMAT = 'cnv-cowork-library-catalog';
 /** Chuỗi đứng trước dữ liệu khi ký: chữ ký danh mục không dùng lại được cho việc khác (và ngược lại). */
@@ -115,18 +116,34 @@ const IPV4 = /\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d
 /**
  * Danh sách chuỗi riêng của CNV (DUID TV, mã album, địa chỉ máy chủ…) KHÔNG nằm trong repo: tệp
  * `~/.config/cnv-cowork-library/denylist.txt`, mỗi dòng một chuỗi. Chuỗi nằm trong repo là tự lộ.
+ *
+ * Dòng bắt đầu bằng `!` là CỤM ĐƯỢC PHÉP (vd tên một hãng có mẫu kết nối mà một chữ của nó trùng chuỗi riêng): chữ cấm nằm
+ * TRONG đúng cụm đó thì không báo, chữ cấm đứng ở chỗ khác trên cùng dòng vẫn báo. Cụm được phép cũng nằm ngoài repo (cụm trong
+ * repo sẽ tự lộ chữ cấm), khác `skills_scan_allow_words` (gỡ hẳn một chữ khỏi danh sách cấm cho cả nhóm tệp).
  */
 function denylist() {
   const file = process.env.CNV_LIBRARY_DENYLIST ?? path.join(os.homedir(), '.config', 'cnv-cowork-library', 'denylist.txt');
+  let lines = [];
   try {
-    return fs
+    lines = fs
       .readFileSync(file, 'utf8')
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter((line) => line && !line.startsWith('#'));
   } catch {
-    return [];
+    lines = [];
   }
+  return {
+    words: lines.filter((line) => !line.startsWith('!')),
+    phrases: lines.filter((line) => line.startsWith('!')).map((line) => line.slice(1).trim()).filter(Boolean),
+  };
+}
+
+/** Bỏ các cụm được phép khỏi dòng trước khi dò chữ cấm (cụm dài trước, để cụm chứa cụm ngắn hơn vẫn bỏ trọn). */
+function withoutPhrases(line, phrases) {
+  let rest = line;
+  for (const phrase of [...phrases].sort((a, b) => b.length - a.length)) rest = rest.split(phrase).join(' ');
+  return rest;
 }
 
 /**
@@ -134,7 +151,8 @@ function denylist() {
  * danh sách cấm được phép ở nhóm tệp này (vd tên nền tảng trong kỹ năng bán hàng).
  */
 export function scanSecrets(files, allow = [], allowWords = []) {
-  const denied = denylist().filter((word) => !allowWords.includes(word));
+  const { words, phrases } = denylist();
+  const denied = words.filter((word) => !allowWords.includes(word));
   const findings = [];
   for (const file of files) {
     if (!TEXT_EXT.test(file.rel) || file.rel.includes('/vendor/')) continue;
@@ -148,7 +166,8 @@ export function scanSecrets(files, allow = [], allowWords = []) {
       for (const ip of line.match(IPV4) ?? []) {
         if (!['127.0.0.1', '0.0.0.0', ...allow].includes(ip)) findings.push(`${where}: địa chỉ IP ${ip}`);
       }
-      for (const word of denied) if (line.includes(word)) findings.push(`${where}: chuỗi trong danh sách cấm (denylist)`);
+      const checked = phrases.length ? withoutPhrases(line, phrases) : line;
+      for (const word of denied) if (checked.includes(word)) findings.push(`${where}: chuỗi trong danh sách cấm (denylist)`);
     });
   }
   return findings;
@@ -192,6 +211,9 @@ export function imageMetadataProblems(files) {
 
 // ── Kịch bản ───────────────────────────────────────────────────────────────────────────────
 
+/** Gói tối thiểu của một mục danh mục (khớp `ContentPlan` của app, src/shared/license.ts). */
+export const CONTENT_PLANS = ['team', 'business'];
+
 function text(value, max) {
   return typeof value === 'string' && value.trim() && value.length <= max;
 }
@@ -217,6 +239,8 @@ export function loadScenario(id, config) {
   }
   if (!text(manifest.license, 300)) problems.push('license: 1–300 ký tự');
   if (manifest.tags !== undefined && (!Array.isArray(manifest.tags) || manifest.tags.length > 10 || !manifest.tags.every((tag) => text(tag, 30)))) problems.push('tags: tối đa 10, mỗi cái ≤ 30 ký tự');
+  // Gói tối thiểu (app: «Cần gói Team / Business», kiểm key trên máy). Không ghi = mọi gói.
+  if (manifest.plan !== undefined && !CONTENT_PLANS.includes(manifest.plan)) problems.push(`plan: ${CONTENT_PLANS.join(' hoặc ')} (bỏ trống = mọi gói)`);
   for (const key of ['readme', 'skill']) {
     const rel = manifest[key];
     if (rel === null || (key === 'skill' && rel === undefined)) continue;
@@ -689,4 +713,201 @@ export function loadApiTemplates(config = {}) {
   const fileList = files.map((name) => ({ rel: `api-templates/${name}`, abs: path.join(API_TEMPLATES, name) }));
   problems.push(...scanSecrets(fileList, config.scan_allow ?? [], config.skills_scan_allow_words ?? []).map((line) => `bí mật? ${line}`));
   return { entries, problems };
+}
+
+// ── Chợ kỹ năng cộng đồng + plugin ─────────────────────────────────────────────────────────
+
+export const COMMUNITY_PACK_FORMAT = 'cnv-cowork-community';
+/** Trần khớp app (src/shared/skillMarket.ts `MARKET_LIMITS`): vượt thì app bỏ riêng mục đó, nên chặn ở đây trước. */
+const MARKET = { skills: 300, plugins: 100, idChars: 64, authorChars: 80, skillChars: 30_000, pluginSkills: 10, pluginMcp: 5, pluginApi: 8, tags: 8, tagChars: 30, packBytes: 4 * 1024 * 1024 };
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+const SKILL_META_KEYS = new Set(['author', 'version', 'reviewed_at', 'plan', 'tags']);
+const PLUGIN_KEYS = new Set(['name', 'summary', 'description', 'author', 'version', 'reviewed_at', 'plan', 'tags', 'mcp_servers', 'api_templates']);
+
+function authorProblems(author, where) {
+  const problems = [];
+  if (!author || typeof author !== 'object' || Array.isArray(author)) return [`${where}: «author» là { "name": …, "url"?: "https://…" }`];
+  for (const key of Object.keys(author)) if (!['name', 'url'].includes(key)) problems.push(`${where}: author có khoá lạ «${key}»`);
+  if (!text(author.name, MARKET.authorChars)) problems.push(`${where}: author.name 1–${MARKET.authorChars} ký tự (tên tác giả tự ghi khi gửi bài)`);
+  if (author.url !== undefined && author.url !== null && !httpsTemplateUrl(author.url)) problems.push(`${where}: author.url phải là https`);
+  return problems;
+}
+
+function commonProblems(meta, where) {
+  const problems = [];
+  if (!VERSION.test(meta.version ?? '')) problems.push(`${where}: version dạng 1.2.3`);
+  if (!DATE.test(meta.reviewed_at ?? '')) problems.push(`${where}: reviewed_at dạng YYYY-MM-DD (ngày CNV duyệt)`);
+  if (meta.plan !== undefined && !CONTENT_PLANS.includes(meta.plan)) problems.push(`${where}: plan ${CONTENT_PLANS.join(' hoặc ')} (bỏ trống = mọi gói)`);
+  if (meta.tags !== undefined && (!Array.isArray(meta.tags) || meta.tags.length > MARKET.tags || !meta.tags.every((tag) => text(tag, MARKET.tagChars)))) problems.push(`${where}: tags tối đa ${MARKET.tags}, mỗi cái ≤ ${MARKET.tagChars} ký tự`);
+  return problems;
+}
+
+/** Kiểm một SKILL.md theo luật app nhập kỹ năng (phần đầu name / description, lệnh đúng khuôn, ≤ 30.000 ký tự). */
+function skillFileProblems(content, where) {
+  const problems = [];
+  const head = /^---\n([\s\S]*?)\n---\n/.exec(content)?.[1];
+  if (head === undefined) return { problems: [`${where}: thiếu phần đầu --- name / description ---`], name: '', command: '' };
+  const name = headerValue(head, 'name');
+  const command = headerValue(head, 'command').toLowerCase();
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name) || name.length > 64) problems.push(`${where}: "name" chữ thường không dấu, số, gạch nối (≤ 64)`);
+  if (!headerValue(head, 'description')) problems.push(`${where}: thiếu "description"`);
+  if (command && !/^\/[a-z0-9_]{2,32}$/.test(command)) problems.push(`${where}: lệnh ${command} sai khuôn (app chỉ nhận /a-z, 0-9, _; 2–32 ký tự)`);
+  if (content.length > MARKET.skillChars) problems.push(`${where}: dài quá ${MARKET.skillChars.toLocaleString('vi-VN')} ký tự`);
+  return { problems, name, command };
+}
+
+function readText(abs) {
+  return fs.readFileSync(abs, 'utf8').replace(/\r\n/g, '\n');
+}
+
+/**
+ * Chợ kỹ năng cộng đồng (`community/skills/<mã>/SKILL.md` + `meta.json`) và plugin (`community/plugins/<mã>/plugin.json` +
+ * `skills/*.md`). Bài người dùng gửi chỉ vào đây SAU KHI CNV đọc, sửa chính tả, duyệt (README mục «Chợ kỹ năng cộng đồng»).
+ * Tên / lệnh không trùng kỹ năng có sẵn (`builtin`: kết quả `loadSkills`) và không trùng nhau; mẫu API của plugin phải có trong
+ * `api-templates/`. Quét bí mật + danh sách chặn như mọi tệp của repo công khai.
+ */
+export function loadCommunity(config = {}, builtin = []) {
+  const skills = [];
+  const plugins = [];
+  const problems = [];
+  const files = [];
+  const names = new Map();
+  const commands = new Map();
+  for (const entry of builtin) {
+    const head = /^---\n([\s\S]*?)\n---\n/.exec(entry.content)?.[1] ?? '';
+    const name = headerValue(head, 'name');
+    const command = headerValue(head, 'command').toLowerCase();
+    if (name) names.set(name, `skills/${entry.path}`);
+    if (command) commands.set(command, `skills/${entry.path}`);
+  }
+  const claim = (name, command, where) => {
+    if (name && names.has(name)) problems.push(`${where}: tên "${name}" trùng ${names.get(name)}`);
+    if (name) names.set(name, where);
+    if (command && commands.has(command)) problems.push(`${where}: lệnh ${command} trùng ${commands.get(command)}`);
+    if (command) commands.set(command, where);
+  };
+  const dirs = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).filter((d) => !d.name.startsWith('.')) : []);
+  const templates = new Set(fs.existsSync(API_TEMPLATES) ? fs.readdirSync(API_TEMPLATES).filter((name) => name.endsWith('.json')).map((name) => name.slice(0, -5)) : []);
+
+  for (const dirent of dirs(path.join(COMMUNITY, 'skills')).sort((a, b) => (a.name < b.name ? -1 : 1))) {
+    const id = dirent.name;
+    const where = `community/skills/${id}`;
+    const dir = path.join(COMMUNITY, 'skills', id);
+    if (!dirent.isDirectory() || !ID.test(id) || id.length > MARKET.idChars) {
+      problems.push(`${where}: mỗi kỹ năng một thư mục, tên chữ thường không dấu, số, gạch nối (≤ ${MARKET.idChars})`);
+      continue;
+    }
+    const extra = fs.readdirSync(dir).filter((name) => !['SKILL.md', 'meta.json', '.DS_Store'].includes(name));
+    if (extra.length) problems.push(`${where}: chỉ có SKILL.md + meta.json (thừa ${extra.join(', ')})`);
+    let meta;
+    try {
+      meta = readJson(path.join(dir, 'meta.json'));
+    } catch (err) {
+      problems.push(`${where}/meta.json: ${err.message}`);
+      continue;
+    }
+    if (!fs.existsSync(path.join(dir, 'SKILL.md'))) {
+      problems.push(`${where}: thiếu SKILL.md`);
+      continue;
+    }
+    const before = problems.length;
+    for (const key of Object.keys(meta)) if (!SKILL_META_KEYS.has(key)) problems.push(`${where}/meta.json: khoá lạ «${key}»`);
+    problems.push(...authorProblems(meta.author, `${where}/meta.json`), ...commonProblems(meta, `${where}/meta.json`));
+    const content = readText(path.join(dir, 'SKILL.md'));
+    const checked = skillFileProblems(content, `${where}/SKILL.md`);
+    problems.push(...checked.problems);
+    claim(checked.name, checked.command, `${where}/SKILL.md`);
+    files.push({ rel: `${where}/SKILL.md`, abs: path.join(dir, 'SKILL.md') }, { rel: `${where}/meta.json`, abs: path.join(dir, 'meta.json') });
+    if (problems.length !== before) continue;
+    skills.push({
+      id,
+      author: { name: meta.author.name.trim(), ...(meta.author.url ? { url: meta.author.url } : {}) },
+      version: meta.version,
+      ...(meta.plan ? { plan: meta.plan } : {}),
+      reviewed_at: meta.reviewed_at,
+      tags: meta.tags ?? [],
+      content,
+    });
+  }
+
+  for (const dirent of dirs(path.join(COMMUNITY, 'plugins')).sort((a, b) => (a.name < b.name ? -1 : 1))) {
+    const id = dirent.name;
+    const where = `community/plugins/${id}`;
+    const dir = path.join(COMMUNITY, 'plugins', id);
+    if (!dirent.isDirectory() || !ID.test(id) || id.length > MARKET.idChars) {
+      problems.push(`${where}: mỗi plugin một thư mục, tên chữ thường không dấu, số, gạch nối (≤ ${MARKET.idChars})`);
+      continue;
+    }
+    let plugin;
+    try {
+      plugin = readJson(path.join(dir, 'plugin.json'));
+    } catch (err) {
+      problems.push(`${where}/plugin.json: ${err.message}`);
+      continue;
+    }
+    const before = problems.length;
+    for (const key of Object.keys(plugin)) if (!PLUGIN_KEYS.has(key)) problems.push(`${where}/plugin.json: khoá lạ «${key}»`);
+    if (!text(plugin.name, 80)) problems.push(`${where}/plugin.json: name 1–80 ký tự`);
+    if (!text(plugin.summary, 200)) problems.push(`${where}/plugin.json: summary 1–200 ký tự`);
+    if (!text(plugin.description, 4000)) problems.push(`${where}/plugin.json: description 1–4000 ký tự`);
+    problems.push(...authorProblems(plugin.author, `${where}/plugin.json`), ...commonProblems(plugin, `${where}/plugin.json`));
+    const mcp = plugin.mcp_servers ?? [];
+    const api = plugin.api_templates ?? [];
+    if (!Array.isArray(mcp) || mcp.length > MARKET.pluginMcp || !mcp.every((item) => typeof item === 'string' && ID.test(item))) {
+      problems.push(`${where}/plugin.json: mcp_servers là mã trong danh mục máy chủ MCP gợi ý của app (≤ ${MARKET.pluginMcp})`);
+    }
+    if (!Array.isArray(api) || api.length > MARKET.pluginApi || !api.every((item) => typeof item === 'string' && ID.test(item))) {
+      problems.push(`${where}/plugin.json: api_templates là mã mẫu trong api-templates/ (≤ ${MARKET.pluginApi})`);
+    } else {
+      for (const item of api) if (!templates.has(item)) problems.push(`${where}/plugin.json: chưa có mẫu api-templates/${item}.json`);
+    }
+    const skillDir = path.join(dir, 'skills');
+    const skillFiles = fs.existsSync(skillDir) ? fs.readdirSync(skillDir).filter((name) => name !== '.DS_Store').sort() : [];
+    const extra = fs.readdirSync(dir).filter((name) => !['plugin.json', 'skills', '.DS_Store'].includes(name));
+    if (extra.length) problems.push(`${where}: chỉ có plugin.json + skills/ (thừa ${extra.join(', ')})`);
+    if (skillFiles.length > MARKET.pluginSkills) problems.push(`${where}/skills: tối đa ${MARKET.pluginSkills} kỹ năng`);
+    const pluginSkills = [];
+    for (const file of skillFiles) {
+      const abs = path.join(skillDir, file);
+      if (!/^[a-z0-9]+(-[a-z0-9]+)*\.md$/.test(file) || !fs.lstatSync(abs).isFile()) {
+        problems.push(`${where}/skills/${file}: tên tệp chữ thường không dấu, gạch nối, đuôi .md`);
+        continue;
+      }
+      const content = readText(abs);
+      const checked = skillFileProblems(content, `${where}/skills/${file}`);
+      problems.push(...checked.problems);
+      claim(checked.name, checked.command, `${where}/skills/${file}`);
+      files.push({ rel: `${where}/skills/${file}`, abs });
+      pluginSkills.push({ path: `skills/${file}`, content });
+    }
+    files.push({ rel: `${where}/plugin.json`, abs: path.join(dir, 'plugin.json') });
+    if (!pluginSkills.length && !mcp.length && !api.length) problems.push(`${where}: plugin trống (cần ít nhất một kỹ năng / máy chủ MCP / mẫu API)`);
+    if (problems.length !== before) continue;
+    plugins.push({
+      id,
+      name: plugin.name.trim(),
+      summary: plugin.summary.trim(),
+      description: plugin.description.trim(),
+      author: { name: plugin.author.name.trim(), ...(plugin.author.url ? { url: plugin.author.url } : {}) },
+      version: plugin.version,
+      ...(plugin.plan ? { plan: plugin.plan } : {}),
+      reviewed_at: plugin.reviewed_at,
+      tags: plugin.tags ?? [],
+      skills: pluginSkills,
+      mcp_servers: mcp,
+      api_templates: api,
+    });
+  }
+  if (skills.length > MARKET.skills) problems.push(`community/skills: quá ${MARKET.skills} kỹ năng`);
+  if (plugins.length > MARKET.plugins) problems.push(`community/plugins: quá ${MARKET.plugins} plugin`);
+  problems.push(...scanSecrets(files, config.scan_allow ?? [], config.skills_scan_allow_words ?? []).map((line) => `bí mật? ${line}`));
+  return { skills, plugins, problems };
+}
+
+/** Bộ «Cộng đồng» dựng cố định (sắp theo mã, không khoảng trắng thừa): cùng nội dung thì cùng sha256. */
+export function buildCommunityPack({ skills, plugins }) {
+  const byId = (a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  const pack = Buffer.from(JSON.stringify({ format: COMMUNITY_PACK_FORMAT, version: 1, skills: [...skills].sort(byId), plugins: [...plugins].sort(byId) }), 'utf8');
+  if (pack.length > MARKET.packBytes) throw new Error(`Bộ «Cộng đồng» lớn quá ${MARKET.packBytes / 1024 / 1024} MB`);
+  return pack;
 }

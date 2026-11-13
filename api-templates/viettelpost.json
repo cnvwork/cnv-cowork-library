@@ -1,0 +1,29 @@
+{
+  "id": "viettelpost",
+  "name": "Viettel Post",
+  "vendor": "Viettel Post",
+  "category": "shipping",
+  "color": "#EE0033",
+  "initials": "VTP",
+  "tagline": "Tính cước, xem dịch vụ có trên tuyến, lấy mã in vận đơn; tạo / sửa / huỷ đơn giao qua thẻ duyệt.",
+  "status": "partner",
+  "partner_note": "API Viettel Post chỉ dành cho tài khoản Partner: bộ phận kinh doanh / CSKH Viettel Post tạo, hoặc xin đồng bộ tài khoản đang có (b2b@viettelpost.com.vn). Có tài khoản thì lấy mã dài hạn (1 năm) theo tài liệu rồi dán vào ô bảo mật.",
+  "base_url": "https://partner.viettelpost.vn",
+  "auth_type": "header",
+  "auth_name": "Token",
+  "read_posts": [
+    "/v2/order/getPriceAll",
+    "/v2/order/getPriceAllNlp",
+    "/v2/order/getPrice",
+    "/v2/order/getPriceNlp",
+    "/v2/order/printing-code"
+  ],
+  "secret_label": "Token (mã dài hạn)",
+  "secret_help": "Tài khoản Partner: gọi POST /v2/user/Login rồi /v2/user/ownerconnect (mã dài hạn 1 năm). Hoặc tạo token ở viettelpost.vn › Cấu hình tài khoản (cần OTP) rồi đổi qua POST /v2/user/LoginVTP. Dán mã nhận được vào đây; «Thử kết nối» chỉ kiểm máy chủ trả lời (danh sách tỉnh không cần mã), mã sai thì lần tính cước đầu báo «Token invalid».",
+  "test_path": "/v2/categories/listProvince",
+  "rate_per_minute": 60,
+  "docs": "# Viettel Post Open API (tài khoản Partner)\nNguồn: https://partner2.viettelpost.vn/document (tài liệu chính thức, đọc 14/11/2026). Địa chỉ gốc https://partner.viettelpost.vn (đường dẫn dưới đây tính từ đó; máy thử của Viettel Post: partnerdev.viettelpost.vn).\nCowork tự gắn header `Token` (mã dài hạn) vào mọi lần gọi: KHÔNG tự đặt header này. Thân gửi JSON.\n\n## Lưu ý chung\n- Lỗi vẫn trả HTTP 200: luôn đọc thân `{status, error, message, data}`; thành công là `error: false`, `message: \"OK\"`. `message: \"Token invalid\"` (hoặc `\"token\"`) = mã sai / hết hạn: người dùng dán mã mới ở Kết nối › Viettel Post › Sửa.\n- Tiền là số nguyên VND, khối lượng gram, kích thước cm. Ngày giờ dạng `dd/MM/yyyy HH:mm:ss`; `PICKUP_DATE` dạng `dd/MM/yyyy` (hôm nay, ngày mai hoặc ngày kia).\n\n## Tra cứu (chạy luôn)\n- Địa chỉ 3 cấp (cũ): `GET /v2/categories/listProvince`, `GET /v2/categories/listDistrict?provinceId=` (-1 = tất cả), `GET /v2/categories/listWards?districtId=` (-1 = tất cả).\n- Địa chỉ 2 cấp (mới, 34 tỉnh): `GET /v3/categories/listProvinceNew`, `GET /v3/categories/listWardsNew?provinceId=`.\n- `POST /v2/order/getPriceAll` (theo mã địa chỉ) / `POST /v2/order/getPriceAllNlp` (theo địa chỉ chữ): các dịch vụ chính có trên tuyến kèm cước và dịch vụ cộng thêm. Trường hay dùng: `SENDER_PROVINCE`, `SENDER_DISTRICT`, `RECEIVER_PROVINCE`, `RECEIVER_DISTRICT` (bản Nlp: `SENDER_ADDRESS`, `RECEIVER_ADDRESS`), `PRODUCT_TYPE` (\"HH\" hàng hoá / \"TH\" thư), `PRODUCT_WEIGHT` (gram), `PRODUCT_PRICE`, `MONEY_COLLECTION` (tiền thu hộ), `TYPE` (1 trong nước).\n- `POST /v2/order/getPrice` / `POST /v2/order/getPriceNlp`: cước của MỘT dịch vụ (`ORDER_SERVICE`, `ORDER_SERVICE_ADD`).\n- `POST /v2/order/printing-code` thân `{\"EXPIRY_TIME\": <mốc hết hạn, epoch mili giây, ở tương lai>, \"ORDER_ARRAY\": [mã vận đơn, tối đa 100]}`: mã in nằm ở `message`, không đổi gì trên đơn. Link in đưa người dùng tự mở: `https://digitalize.viettelpost.vn/DigitalizePrint/report.do?type=1&bill=<mã in>&showPostage=1` (type 1 = A5, 2 = A6, 100 = A7; `showPostage=0` ẩn cước).\n\n## Ghi (qua thẻ duyệt)\n- `POST /v2/order/createOrder` (theo mã địa chỉ) / `POST /v2/order/createOrderNlp` (theo địa chỉ chữ): tạo đơn. Trường chính: `ORDER_NUMBER` (mã đơn của shop), `GROUPADDRESS_ID` (kho lấy hàng; không có thì 0), `SENDER_FULLNAME`, `SENDER_ADDRESS`, `SENDER_PHONE`, `RECEIVER_FULLNAME`, `RECEIVER_ADDRESS`, `RECEIVER_PHONE` (+ mã tỉnh / huyện / xã ở bản theo mã), `PRODUCT_NAME`, `PRODUCT_QUANTITY`, `PRODUCT_PRICE`, `PRODUCT_WEIGHT` (gram, mặc định 50), `PRODUCT_TYPE`, `ORDER_PAYMENT` (1 không thu hộ, 2 thu tiền hàng + cước, 3 chỉ thu tiền hàng, 4 chỉ thu cước), `ORDER_SERVICE`, `MONEY_COLLECTION`, `LIST_ITEM`.\n- `POST /v2/order/edit`: sửa đơn khi `ORDER_STATUS` < 200 (chưa lấy hàng).\n- `POST /v2/order/UpdateOrder` thân `{\"TYPE\", \"ORDER_NUMBER\" (mã vận đơn), \"NOTE\"}`: TYPE 1 duyệt đơn, 2 duyệt hoàn (đơn 505), 3 phát tiếp (đơn 505), 4 huỷ (chỉ khi < 200), 5 xoá đơn đã huỷ (107).\n\n## Trạng thái vận đơn\n- Không có API tra trạng thái một đơn: Viettel Post chỉ đẩy trạng thái qua webhook khai ở trang Partner. Người dùng xem trên viettelpost.vn / trang Partner.\n- Mã trạng thái: 101 Viettel Post huỷ lấy hàng, 102 lấy hàng thất bại, 103 / 104 điều phối, 107 đối tác huỷ qua API, 200 đã lấy hàng, 201 Viettel Post huỷ đơn, 202 sửa phiếu gửi, 300 / 400 khai thác, 500 giao bưu tá đi phát, 501 phát thành công, 503 huỷ theo yêu cầu khách, 504 hoàn thành công, 505 yêu cầu chuyển hoàn, 506 phát thất bại, 507 khách đến bưu cục nhận, 508 / 550 phát tiếp, 509 chuyển tiếp bưu cục, 515 duyệt hoàn.\n",
+  "docs_url": "https://partner2.viettelpost.vn/document",
+  "docs_read_at": "2026-11-14",
+  "website": "https://viettelpost.com.vn"
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Kiểm mọi kịch bản, bộ kỹ năng, mẫu Thư viện văn phòng, nhật ký «Có gì mới» và bộ dựng video trước khi đóng gói: manifest, luật tên tệp (giống app), trần dung lượng, quét bí mật.
 //   node tools/check.mjs            (in lỗi, thoát mã 1 nếu có)
-import { imageMetadataProblems, listFiles, loadApiTemplates, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, scanSecrets, scenarioIds } from './lib.mjs';
+import { imageMetadataProblems, listFiles, loadApiTemplates, loadChangelog, loadCommunity, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, scanSecrets, scenarioIds } from './lib.mjs';
 import { loadVideoKit } from './videokit.mjs';
 
 const config = loadConfig({ needKey: false });
@@ -26,6 +26,14 @@ if (skills.problems.length) {
   for (const line of skills.problems) console.error(`   ${line}`);
 } else {
   console.log(`✔ skills: ${skills.entries.length} kỹ năng`);
+}
+const community = loadCommunity(config, skills.entries);
+if (community.problems.length) {
+  failed = true;
+  console.error('✖ community');
+  for (const line of community.problems) console.error(`   ${line}`);
+} else {
+  console.log(`✔ community: ${community.skills.length} kỹ năng cộng đồng, ${community.plugins.length} plugin`);
 }
 const offices = loadOffices(config);
 if (offices.problems.length) {

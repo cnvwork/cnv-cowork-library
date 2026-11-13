@@ -9,7 +9,7 @@
 // Không bao giờ commit khoá bí mật.
 import fs from 'node:fs';
 import path from 'node:path';
-import { DIST, LIMITS, buildOfficePack, buildSkillPack, buildZip, imageMetadataProblems, listFiles, loadApiTemplates, loadChangelog, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
+import { DIST, LIMITS, buildCommunityPack, buildOfficePack, buildSkillPack, buildZip, imageMetadataProblems, listFiles, loadApiTemplates, loadChangelog, loadCommunity, loadConfig, loadOffices, loadScenario, loadSkills, loadVideoEngine, openCatalog, scanSecrets, scenarioIds, sha256, signCatalog, signingKey } from './lib.mjs';
 import { buildVideoKit, loadVideoKit } from './videokit.mjs';
 
 function arg(name) {
@@ -79,6 +79,18 @@ if (offices.entries.length) {
   console.log(`✔ ${name}: ${offices.entries.length} mẫu văn phòng, ${(pack.length / 1024).toFixed(0)} KB`);
 }
 
+// Chợ kỹ năng cộng đồng + plugin (bài CNV đã duyệt): một tệp community-<sha>.json ghim trong danh mục (`content.community`).
+const community = loadCommunity(config, skills.entries);
+problems.push(...community.problems);
+let communityPack = null;
+if (community.skills.length || community.plugins.length) {
+  const pack = buildCommunityPack(community);
+  const name = `community-${sha256(pack).slice(0, 12)}.json`;
+  fs.writeFileSync(path.join(DIST, name), pack);
+  communityPack = { url: archiveUrl(name), sha256: sha256(pack), bytes: pack.length, count: community.skills.length + community.plugins.length };
+  console.log(`✔ ${name}: ${community.skills.length} kỹ năng cộng đồng, ${community.plugins.length} plugin, ${(pack.length / 1024).toFixed(0)} KB`);
+}
+
 const changelog = loadChangelog();
 problems.push(...changelog.problems);
 if (changelog.entries.length) console.log(`✔ changelog: ${changelog.entries.length} bản đè nhật ký «Có gì mới» của app`);
@@ -116,6 +128,7 @@ const content = {
   ...(apiTemplates.entries.length ? { api_templates: apiTemplates.entries } : {}),
   ...(video.engine ? { video_engine: video.engine } : {}),
   ...(videoKit ? { video_kit: videoKit.content } : {}),
+  ...(communityPack ? { community: communityPack } : {}),
 };
 const payload = { format: 1, issued_at: new Date().toISOString(), categories: config.categories, scenarios, content };
 const envelope = signCatalog(payload, await signingKey(arg('key-file')));
@@ -126,6 +139,7 @@ const files = [
   ...scenarios.map((scenario) => scenario.archive.url.split('/').pop()),
   ...(skillPack ? [skillPack.url.split('/').pop()] : []),
   ...(officePack ? [officePack.url.split('/').pop()] : []),
+  ...(communityPack ? [communityPack.url.split('/').pop()] : []),
   ...(videoKit ? videoKit.attachments : []),
 ];
 const where = owner ? `https://github.com/${owner}/${repo}` : '(chưa điền github.owner trong library.config.json)';
